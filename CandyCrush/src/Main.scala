@@ -2,6 +2,20 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
   def main(args: Array[String]): Unit = { //Funcion principal del programa -> Si se ejecuta en terminal: scala Main.scala sino no hace falta llamarla
     println("Hello world!")
     //Aquí dentro podríamos ejectuar el bucle principal del programa -> Bucle while mirando las vidas
+
+    //Inicializar semilla randoms
+
+    //Inicializar tablero con numeros aleatorios
+    crearMatriz(10, 10, 0)
+
+    //Bucle principal del juego -> while(vida > 0) -> Se pueden bucles while? o tiene que ser recursivo?
+    //Recursivo: funcion_principal(tablero,fila,columna,vidas)
+      //Mostrar tablero
+
+      //Solicitar al usuario que introduzca una fila y una columna
+
+      //Llamo a la funcion principal que empieza el juego -> Si es con bucle se llamaría aqui sino, es la funcion recursiva
+
   }
 
   def concatenar(x: List[Int], y: List[Int]): List[Int] = { //Esto es x:::y
@@ -39,6 +53,39 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       fila :: resto
     }
   }
+
+  def mostrarMatriz[T](matriz: List[List[T]]): Unit = {
+    matriz match {
+      case Nil => println()
+      case fila :: resto => {
+        fila match {
+          case Nil => println()
+          case celda :: resto => {
+            print(celda + " ")
+            mostrarMatriz(List(resto))
+          }
+        }
+        mostrarMatriz(resto)
+      }
+    }
+  }
+
+  def eliminarPosicion(tablero:List[List[Int]], fila:Int, columna:Int):List[List[Int]] = {
+    //Elimina (pone a 0) la posicion indicada
+    buscarJuntos(tablero, fila, columna,0) //Puedo hacer que devuelva el contador despues de haberlas eliminado?
+    tablero
+  }
+
+  def activarGravedad(tablero:List[List[Int]]):List[List[Int]] = {
+    //Baja las fichas que estén encima de una celda vacía
+    tablero
+  }
+
+  def buscarJuntos(tablero:List[List[Int]], fila:Int, columna:Int,contador:Int):Int = {
+    //Busca las fichas que estén juntas a la indicada y las elimina
+    contador
+  }
+
 
 
 }
