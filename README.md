@@ -1,12 +1,12 @@
-# Proyecto de Candy Crush
+# Proyecto de Candy Crosh
 
 ![Logo del proyecto](https://bit.ly/miraWhatsapp)
 
-Este es el repositorio para el proyecto de Computación Ubicua, el cual tiene como objetivo crear una universidad inteligente mediante el uso de IoT.
+Este es el repositorio para el proyecto de Candy Crosh de la asignatura de PPAAPP.
 
 ## Descripción
 
-El proyecto consiste en el desarrollo de una plataforma que permita automatizar distintas actividades dentro de una universidad. Algunas de las características que se están implementando son:
+El proyecto consiste en el desarrollo de una juego en el lenguaje Scala que tenga un comportamiento similar a Candy Crash Saga
 
 - Automatización de las taquillas de la universidad mediante el uso de ESP32.
 - Control de la temperatura de las aulas mediante sensores IoT.
@@ -26,7 +26,5 @@ Este proyecto es un trabajo cerrado y no está abierto a contribuciones externas
 
 ## Autores
 
-- [Javier Lombardía](https://github.com/lombaa)
 - [César Martín Guijarro](https://github.com/CesarMartin2002)
-- [Lucía Picado](https://github.com/LuciaPicado)
-- [Valeria Fernanda Villamares Félix](https://github.com/Valeriia632)
+- [Alejandro Raboso Vindel](https://github.com/alej1000)
