@@ -1,0 +1,9 @@
+# Ignorar todo
+*
+
+# Excepto directorios
+!*/
+
+# Excepto archivos de scala
+!*.scala
+
