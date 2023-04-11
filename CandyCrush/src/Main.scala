@@ -8,6 +8,9 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     val miPrueba = new Prueba(6,10,miMat)
     miPrueba.imprimir()
 
+    val prueba2 = new Prueba2ParaJuntarTodo(6,10)
+    prueba2.imprimir()
+
 
     //Funcion principal del programa -> Si se ejecuta en terminal: scala Main.scala sino no hace falta llamarla
     //Aquí dentro podríamos ejectuar el bucle principal del programa -> Bucle while mirando las vidas
