@@ -2,7 +2,7 @@ import scala.util.Random
 class Matrix(private val rows: Int, private val cols: Int, private val data: List[Int]) {
 
   // Constructor to create a matrix with given dimensions
-  def this(rows: Int, cols: Int) = {
+  /*def this(rows: Int, cols: Int) = {
     this(rows, cols, generarMatriz(rows, cols))
   }
 
@@ -12,7 +12,7 @@ class Matrix(private val rows: Int, private val cols: Int, private val data: Lis
     if (data.length != rows * cols) {
       throw new IllegalArgumentException("Data length does not match matrix dimensions.")
     }
-  }
+  }*/
 
   // Method to generate a random matrix with given dimensions
   def generarMatriz(filas: Int, columnas: Int): List[Int] = {
@@ -73,7 +73,7 @@ class Matrix(private val rows: Int, private val cols: Int, private val data: Lis
   }
 
     // Method to convert the matrix to a string
-    override def toString(): String = {
+    /*override def toString(): String = {
     val num = cols
     val l = data
     if (longitud(l) == 0) return ""
@@ -84,7 +84,7 @@ class Matrix(private val rows: Int, private val cols: Int, private val data: Lis
     } else {
         throw new Error("La lista no tiene una longitud de mútiplo 4")
     }
-    }
+    }*/
 
   def imprimirBonito(l:List[Int]):Unit={
     if (l.length == 0){

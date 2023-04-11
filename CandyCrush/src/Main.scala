@@ -2,8 +2,13 @@
 object Main { //Object, instancia unica que se utiliza en todo el programa
   def main(args: Array[String]): Unit = {
 
-    val miMatriz = new Matrix(6,10)
-    miMatriz.toString()
+    //val miMatriz = new Matrix(6,10)
+    //miMatriz.toString()
+    val miMat = generarMatriz(6,10)
+    val miPrueba = new Prueba(6,10,miMat)
+    miPrueba.imprimir()
+
+
     //Funcion principal del programa -> Si se ejecuta en terminal: scala Main.scala sino no hace falta llamarla
     //Aquí dentro podríamos ejectuar el bucle principal del programa -> Bucle while mirando las vidas
 
@@ -58,6 +63,24 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
   // }
 
 
+  def generarMatriz(filas: Int, columnas: Int): List[Int] = {
+    if (filas == 0) Nil
+    else {
+      concatenar(generarColumnas(columnas), generarMatriz(filas - 1, columnas))
+    }
+  }
 
+  // Method to generate a list of random integers with given length
+  def generarColumnas(n: Int): List[Int] = {
+    val rand = new scala.util.Random()
+    if (n == 0) Nil
+    else rand.nextInt(100) :: generarColumnas(n - 1) //Genero un número aleatorio entre 0 y 99
+  }
+
+  def concatenar(x: List[Int], y: List[Int]): List[Int] = {
+    x match {
+      case Nil => y
+      case head :: tail => head :: concatenar(tail, y)
+    }
+  }
 }
-
