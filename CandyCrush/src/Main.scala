@@ -4,12 +4,36 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     //val miMatriz = new Matrix(6,10)
     //miMatriz.toString()
-    val miMat = generarMatriz(6,10)
-    val miPrueba = new Prueba(6,10,miMat)
-    miPrueba.imprimir()
+//    val miMat = generarMatriz(6,10)
+//    val miPrueba = new Prueba(6,10,miMat)
+//    miPrueba.imprimir()
 
-    val prueba2 = new Prueba2ParaJuntarTodo(6,10)
-    prueba2.imprimir()
+    val prueba2 = new Matrix(6,10,2)
+    prueba2.toString()
+
+    def partida(tablero: Matrix, vidas: Int): Unit = {
+      if (vidas == 0) {
+        println("Has perdido")
+        return
+      }
+      println("Vidas: " + vidas)
+      tablero.toString()
+      println("Introduce la fila")
+      val fila = scala.io.StdIn.readInt()
+      println("Introduce la columna")
+      val columna = scala.io.StdIn.readInt()
+      val exito = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+      if (exito) {
+        partida(tablero, vidas)
+      }else{
+        partida(tablero, vidas-1)
+      }
+    }
+
+
+
+
+
 
 
     //Funcion principal del programa -> Si se ejecuta en terminal: scala Main.scala sino no hace falta llamarla
