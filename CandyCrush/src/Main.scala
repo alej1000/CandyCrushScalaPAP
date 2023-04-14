@@ -1,4 +1,4 @@
-
+import scala.util.Random
 object Main { //Object, instancia unica que se utiliza en todo el programa
   def main(args: Array[String]): Unit = {
 
@@ -8,25 +8,73 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 //    val miPrueba = new Prueba(6,10,miMat)
 //    miPrueba.imprimir()
 
-    val prueba2 = new Matrix(6,10,2)
-    prueba2.toString()
 
-    def partida(tablero: Matrix, vidas: Int): Unit = {
+
+
+    println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
+
+    if(args.length < 4+1){ //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
+        val filas = args(1).toInt
+        val columnas = args(2).toInt
+        val modoDeJuego = args(3).charAt(0)
+        val dificultad = args(4).toInt
+        if(dificultad == 2 || dificultad==1){
+          val tablero = new Matrix(filas,columnas,dificultad)
+          partida(tablero,5,modoDeJuego)
+        }else{
+          println("Se pondrá dificultad 2 por defecto")
+          val tablero = new Matrix(filas,columnas,2)
+          partida(tablero,5,modoDeJuego)
+        }
+
+    }else{ // Si no es por consola
+      println("Introduce cuantas filas quieres")
+      val filas = scala.io.StdIn.readInt()
+
+      println("Introduce cuantas columnas quieres")
+      val columnas = scala.io.StdIn.readInt()
+
+      println("Intruce el modo de juego(a o m): ")
+      val modoDeJuego = scala.io.StdIn.readChar()
+
+      println("Introduce la dificultad (1 o 2): ")
+      val dificultad = scala.io.StdIn.readInt()
+      if (dificultad == 2 || dificultad == 1) {
+        val tablero = new Matrix(filas, columnas, dificultad)
+        partida(tablero, 5, modoDeJuego)
+      } else {
+        println("Se pondrá dificultad 2 por defecto")
+        val tablero = new Matrix(filas, columnas, 2)
+        partida(tablero, 5, modoDeJuego)
+      }
+    }
+
+
+    def partida(tablero: Matrix, vidas: Int,modoDeJuego:Char): Unit = {
       if (vidas == 0) {
         println("Has perdido")
         return
       }
       println("Vidas: " + vidas)
       tablero.toString()
-      println("Introduce la fila")
-      val fila = scala.io.StdIn.readInt()
-      println("Introduce la columna")
-      val columna = scala.io.StdIn.readInt()
-      val exito = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
-      if (exito) {
-        partida(tablero, vidas)
+      if(modoDeJuego == 'm'){ //Es manual
+        println("Introduce la fila")
+        val fila = scala.io.StdIn.readInt()
+        println("Introduce la columna")
+        val columna = scala.io.StdIn.readInt()
+      }else{ //Es automático
+        val rand = new Random()
+        val fila = rand.nextInt(tablero.getNumFilas())
+        val columna = rand.nextInt(tablero.getNumColumnas())
+
+      }
+
+      //Ver como hacer solo una llamada
+      val cuantosEliminados = tablero.consulta(fila, columna, vidas)._2 //consulta es el eliminarPosicion
+      if (cuantosEliminados>2) {
+        partida(tablero, vidas,modoDeJuego)
       }else{
-        partida(tablero, vidas-1)
+        partida(tablero, vidas-1,modoDeJuego)
       }
     }
 
@@ -110,4 +158,12 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       case head :: tail => head :: concatenar(tail, y)
     }
   }
+
+  def longitud[T](l: List[T]): Int = {
+    l match {
+      case Nil => 0 //Si la lista está vacía la longitud es 0
+      case _ :: tail => 1 + longitud(tail) //Si no está vacía la longitud es 1 + la longitud de la cola
+    }
+  }
+
 }
