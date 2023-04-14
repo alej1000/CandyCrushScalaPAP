@@ -40,7 +40,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   }
 
   def imprimirBonito(l: List[Int]): Unit = {
-    if (l.length == 0) {
+    if (Matrix.longitud(l) == 0) {
       println()
       return
     }
@@ -132,6 +132,14 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
   }
 
+  private def reemplazarElemento(fila: Int, columna: Int, elemento: Int): List[Int] = {
+    val index: Int = fila * cols + columna
+    val listaDeElemento:List[Int] = elemento :: Nil
+    val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(toma(index,data),listaDeElemento) , deja(index,data))
+    //matriz es los primeros elementos, el elemento a intercambiar en la posición correspondiente, el resto de elementos
+    matriz
+  }
+
 
 }
 
@@ -185,31 +193,84 @@ object Matrix {
     }
   }
 
+
+  def estaEnLista[Int](elem: Int, lista: List[Int]): Boolean = {
+    lista match {
+      case Nil => false // Si la lista está vacía, el elemento no está
+      case head :: tail =>
+        if (head == elem) true // Si el primer elemento es igual al elemento buscado, se ha encontrado
+        else estaEnLista(elem, tail) // Si no, seguir buscando en la cola de la lista
+    }
+  }
+
+
   private def eliminarElemento(fila:Int,columna:Int,matriz:List[Int]):(List[Int],List[Int])={
     //con backtracking miramos arriba abajo izquierda y derecha
-    //si el elemento es igual al de la posicion de origen y en la lista "posiciones a eliminar" hay un 0, entonces en la lista "posiciones a eliminar" añadimos un 1 en dicha posición y hacemos recursión
-    //si el elemento es igual al de la posicion de origen y en la lista "posiciones a eliminar" hay un 1, entonces hacemos backtrack sin c
-    //si el elemento es distinto al de la posicion de origen, en la lista "posiciones a eliminar" añadimos un 2 en dicha posición y hacemos backtrack
-    val posicionesAEliminar = generarPila()
-    eliminarElementoAux(fila,columna,matriz,filaOrigen,columnaOrigen,posicionesAEliminar)
+    //si el elemento es igual al de la posicion de origen y en la lista "elementosVisitados" hay un 0, entonces en la lista "elementosVisitados" el indice actual y hacemos recursión
+    //si en la lista "elementosVisitados" hay un 1, entonces hacemos backtrack
+    //si el elemento es distinto al de la posicion de origen, entonces hacemos backtrack y añadimos el indice actual a la lista "elementosVisitados"
+    val posicionesAEliminar:List[Int] = Nil
+    eliminarElementoAux(fila,columna,matriz,fila,columna,posicionesAEliminar)
   }
 
-  private def eliminarElementoAux(fila:Int,columna:Int,matriz:List[Int],filaOrigen:Int,columnaOrigen:Int,posicionesAEliminar:List[Int]):(List[Int],List[Int])={
-    val elementoOrigen = getElem(filaOrigen,columnaOrigen)
-    val elemento = getElem(fila,columna)
-    val index:Int = fila*cols+columna
-    val valorEnPosicionAEliminar = getElem(posicionesAEliminar,index)
-    if (elemento==elementoOrigen && valorEnPosicionAEliminar==0){
-      reemplazarElemento(fila,columna,0)
-      posicionesAEliminar(index)=1
-      eliminarElementoAux(fila,columna-1,matriz,filaOrigen,columnaOrigen,posicionesAEliminar)
-      eliminarElementoAux(fila,columna+1,matriz,filaOrigen,columnaOrigen,posicionesAEliminar)
-      eliminarElementoAux(fila-1,columna,matriz,filaOrigen,columnaOrigen,posicionesAEliminar)
-      eliminarElementoAux(fila+1,columna,matriz,filaOrigen,columnaOrigen,posicionesAEliminar)
+  private def eliminarElementoAux(fila:Int,columna:Int,matriz:List[Int],filaOrigen:Int,columnaOrigen:Int,elementosVisitados:List[Int]):(List[Int],List[Int])= {
+    val elementoOrigen = getElem(filaOrigen, columnaOrigen)
+    val elemento = getElem(fila, columna)
+    val index: Int = fila * cols + columna
+    //con backtracking miramos arriba abajo izquierda y derecha
+    //si el elemento es igual al de la posicion de origen y en la lista "elementosVisitados" hay un 0, entonces en la lista "elementosVisitados" el indice actual y hacemos recursión
+    //si en la lista "elementosVisitados" hay está el indice, entonces hacemos backtrack
+    //si el elemento es distinto al de la posicion de origen, entonces hacemos backtrack y añadimos el indice actual a la lista "elementosVisitados"
+    if (fila < 0 || fila >= rows || columna < 0 || columna >= cols) (matriz, elementosVisitados)
+    if (!estaEnLista(index,elementosVisitados)) {
+      if (elemento == elementoOrigen) {
+        val matriz0: List[Int] = reemplazarElemento(fila, columna, 0)
+        val elementosVisitados0: List[Int] = index :: elementosVisitados
+        val (matriz1: List[Int], elementosVisitados1: List[Int]) = eliminarElementoAux(fila, columna - 1, matriz0, filaOrigen, columnaOrigen, elementosVisitados0)
+        val (matriz2: List[Int], elementosVisitados2: List[Int]) = eliminarElementoAux(fila, columna + 1, matriz1, filaOrigen, columnaOrigen, index :: elementosVisitados1)
+        val (matriz3: List[Int], elementosVisitados3: List[Int]) = eliminarElementoAux(fila - 1, columna, matriz2, filaOrigen, columnaOrigen, index :: elementosVisitados2)
+        val (matriz4: List[Int], elementosVisitados4: List[Int]) = eliminarElementoAux(fila + 1, columna, matriz3, filaOrigen, columnaOrigen, index :: elementosVisitados3)
+        return (matriz4, elementosVisitados4)
+      }
+      else {index::elementosVisitados}
+    }
+    (matriz,elementosVisitados)
   }
 
 
+}
 //UPS CUDA SE CUELA
+
+def eliminarFila(fila: Int, matriz: List[Int], cols: Int): List[Int] = {
+
+  // Encontramos el índice inicial y final de la fila
+  val inicio = fila * cols
+  val fin = inicio + cols - 1
+  val lista0:List[]
+
+  // Eliminamos los elementos de la fila
+  val listaSinFila = concatenar(toma(inicio),Aqui tengo que crear una lista de 0 deja(fin + 1))
+  listaSinFila
+
+}
+
+
+private def eliminarBomba(indiceOrigen:Int,fila:Int,columna:Int,eliminarFila:Int):List[Int]={
+  val indiceActual:Int = fila*cols+columna
+  if(eliminarFila==1){
+    //Elimino la fila
+    if(indiceActual==indiceOrigen){
+      reemplazarElemento(fila,columna,0)
+      eliminarBomba(indiceOrigen,fila-1,columna,eliminarFila)
+      eliminarBomba(indice)
+    }
+  }else{
+    //Elimino la columna
+
+  }
+}
+
+
 
   private def eliminarBomba(indiceOrigen:Int,fila:Int,columna:Int,eliminarFila:Int): Unit = { //Borra la linea o la columa aleatoriamente
     val index:Int = fila*cols+columna
@@ -218,24 +279,43 @@ object Matrix {
     if(eliminarFila==1){
       //Elimino la fila
       printf("Voy a eliminar fila\n")
-      if(index==indiceOrigen){ //Si es la posicion de origen llamo a eliminar a la izquierda y a la derecha
-        matriz(index)=0
-        eliminarBomba(indiceOrigen,fila,columna-1,eliminarFila)
-        eliminarBomba(indiceOrigen,fila,columna+1,eliminarFila)
-
-    }else{ //Sino
-      //Cambio esa posición por 0
-      if(columna==0 || columna==cols-1){ //Si es la primera o la última columna
+      if(index==indiceOrigen) { //Si es la posicion de origen llamo a eliminar a la izquierda y a la derecha
         reemplazarElemento(fila,columna,0)
-      }else{ //Si no es la primera o la última columna
-        if(matriz(index)==matriz(index-1) && matriz(index)==matriz(index+1)){ //Si el elemento de la izquierda y el de la derecha son iguales
+        eliminarBomba(indiceOrigen, fila, columna - 1, eliminarFila)
+        eliminarBomba(indiceOrigen, fila, columna + 1, eliminarFila)
+
+      }else{ //Sino
+        //Cambio esa posición por 0
+        if(columna==0 || columna==cols-1){ //Si es la primera o la última columna
           reemplazarElemento(fila,columna,0)
-          eliminarBomba(indiceOrigen,fila,columna-1,eliminarFila)
-          eliminarBomba(indiceOrigen,fila,columna+1,eliminarFila)
+        }else{ //Si no es la primera o la última columna
+          if(getElem(fila,columna)==getElem(fila-1,columna) && getElem(fila,columna)==getElem(fila+1,columna)){ //Si el elemento de la izquierda y el de la derecha son iguales
+            reemplazarElemento(fila,columna,0)
+            eliminarBomba(indiceOrigen,fila,columna-1,eliminarFila)
+            eliminarBomba(indiceOrigen,fila,columna+1,eliminarFila)
+          }
+        }
+      }
+    }else{
+      //Elimino la columna
+      printf("Voy a eliminar columna\n")
+      if(index==indiceOrigen) {
+        reemplazarElemento(fila,columna,0)
+        eliminarBomba(indiceOrigen,fila-1,columna,eliminarFila)
+        eliminarBomba(indiceOrigen,fila+1,columna,eliminarFila)
+      } else { //Sino
+        //Cambio esa posición por 0
+        if (columna == 0 || columna == cols - 1) { //Si es la primera o la última columna
+          reemplazarElemento(fila, columna, 0)
+        } else { //Si no es la primera o la última columna
+          if (getElem(fila,columna) == getElem(fila,columna - 1) && getElem(fila,columna) == getElem(fila,columna + 1)) { //Si el elemento de la izquierda y el de la derecha son iguales
+            reemplazarElemento(fila, columna, 0)
+            eliminarBomba(indiceOrigen, fila-1, columna, eliminarFila)
+            eliminarBomba(indiceOrigen, fila+1, columna, eliminarFila)
+          }
         }
       }
     }
-  }
 
 
 //  __device__ void eliminarBomba(int * pila, int * tablero, int indiceOrigen, int fila, int columna, int eliminaFila) { //Borra la linea o la columa aleatoriamente
