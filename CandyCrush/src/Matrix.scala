@@ -31,9 +31,9 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     val l = data
     if (Matrix.longitud(l) == 0) return
     if (Matrix.longitud(l) % num == 0) {
-      val chunk = toma(num, l)
+      val chunk = Matrix.toma(num, l)
       imprimirBonito(chunk)
-      imprimir(deja(num, l))
+      imprimir(Matrix.deja(num, l))
     } else {
       throw new Error("La lista no tiene una longitud de mútiplo "+cols+"*"+rows)
     }
@@ -48,17 +48,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     imprimirBonito(l.tail)
   }
 
-  def toma(n: Int, l: List[Int]): List[Int] = {
-    //Coge los n primeros elementos de la lista de manera recursiva
-    if (n == 0) Nil
-    else l.head :: toma(n - 1, l.tail)
-  }
 
-  def deja(n: Int, l: List[Int]): List[Int] = {
-    //Deja una lista sin los n primeros elementos de la lista de manera recursiva
-    if (n == 0) l
-    else deja(n - 1, l.tail)
-  }
 
   def getElem(index:Int):Int={
     getElem(data,index)
@@ -86,7 +76,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   def getFila(fila: Int): List[Int] = {
 
-    toma(cols, deja(fila * cols, data)) //Coge los 8 primeros elementos de la lista que queda de dejar todo menos los 8 primeros
+    Matrix.toma(cols, Matrix.deja(fila * cols, data)) //Coge los 8 primeros elementos de la lista que queda de dejar todo menos los 8 primeros
     //La matriz tiene 8 filas y 8 columnas
     //toma(numColumnas,deja(filaElegida * numColumnas,matriz))
   }
@@ -97,7 +87,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   def getColumna(l: List[Int], index: Int): List[Int] = {
     if (index >= cols || index < 0) throw new Error("El índice es mayor que el número de elementos de la lista")
     if (Matrix.longitud(l) == 0) Nil
-    else getElem(l, index) :: getColumna(deja(cols, l), index)
+    else getElem(l, index) :: getColumna(Matrix.deja(cols, l), index)
 
   }
 
@@ -135,9 +125,55 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   private def reemplazarElemento(fila: Int, columna: Int, elemento: Int): List[Int] = {
     val index: Int = fila * cols + columna
     val listaDeElemento:List[Int] = elemento :: Nil
-    val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(toma(index,data),listaDeElemento) , deja(index,data))
+    val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(Matrix.toma(index,data),listaDeElemento) , Matrix.deja(index,data))
     //matriz es los primeros elementos, el elemento a intercambiar en la posición correspondiente, el resto de elementos
     matriz
+  }
+
+
+  def eliminarFila(fila: Int, matriz: List[Int], cols: Int): List[Int] = {
+
+    // Encontramos el índice inicial y final de la fila
+    val inicio = fila * cols
+    val fin = inicio + cols - 1
+    val lista0: List[Int] = Matrix.generarPila(1, cols) //Genero una lista con 0 del tamaño de columnas que he eliminado
+
+    // Eliminamos los elementos de la fila
+    val listaSinFila = Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,data), lista0), Matrix.deja(fin + 1,data))
+    listaSinFila
+
+  }
+
+  def eliminarColumna(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
+    //TODO: Hay que hacer un isEmpty recursivo
+    if (isEmpty(matriz)) Nil
+    else {
+      val fila = index / columnas
+      val inicio = fila * columnas + index % columnas
+      val fin = inicio + columnas - 1
+      val lista0: List[Int] = Matrix.generarPila(fin - inicio, 1)
+      Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,data), lista0), eliminarColumna(index + 1, columnas, Matrix.deja(fin + 1,data)))
+    }
+  }
+
+
+  private def eliminarBomba(indiceOrigen: Int, fila: Int, columna: Int, eliminarFila: Int): List[Int] = {
+    if (eliminarFila == 1) {
+      //Elimino la fila
+      val matriz = new Matrix(rows,cols,data,dificultad)
+      val lista:List[Int]=matriz.eliminarFila(fila,data,cols)
+
+      new Matrix(rows,cols,lista,dificultad)
+      lista
+    } else {
+      //Elimino la columna
+      eliminarColumna(indiceOrigen, cols, data)
+    }
+  }
+
+  def isEmpty[Int](list: List[Int]): Boolean = list match {
+    case Nil => true
+    case _ :: _ => false
   }
 
 
@@ -173,8 +209,19 @@ object Matrix {
     else rand.nextInt(6) :: generarColumnas(n - 1) //Genero un número aleatorio
   }
 
+  def toma(n: Int, l: List[Int]): List[Int] = {
+    //Coge los n primeros elementos de la lista de manera recursiva
+    if (n == 0) Nil
+    else l.head :: toma(n - 1, l.tail)
+  }
 
-  private def generarPila(filas:Int,columnas:Int):List[Int]={
+  def deja(n: Int, l: List[Int]): List[Int] = {
+    //Deja una lista sin los n primeros elementos de la lista de manera recursiva
+    if (n == 0) l
+    else deja(n - 1, l.tail)
+  }
+
+  private def generarPila(filas:Int,columnas:Int):List[Int]={ //Inicializa una lista con ceros
     if(filas==0) Nil
     else concatenar(generarColumnasPila(columnas),generarPila(filas-1,columnas))
   }
@@ -204,16 +251,16 @@ object Matrix {
   }
 
 
-  private def eliminarElemento(fila:Int,columna:Int,matriz:List[Int]):(List[Int],List[Int])={
+  private def eliminarElemento(fila:Int,columna:Int,matriz:List[Int]):Matrix={
     //con backtracking miramos arriba abajo izquierda y derecha
     //si el elemento es igual al de la posicion de origen y en la lista "elementosVisitados" hay un 0, entonces en la lista "elementosVisitados" el indice actual y hacemos recursión
     //si en la lista "elementosVisitados" hay un 1, entonces hacemos backtrack
     //si el elemento es distinto al de la posicion de origen, entonces hacemos backtrack y añadimos el indice actual a la lista "elementosVisitados"
     val posicionesAEliminar:List[Int] = Nil
-    eliminarElementoAux(fila,columna,matriz,fila,columna,posicionesAEliminar)
+    new Matrix(rows,cols,eliminarElementoAux(fila,columna,matriz,fila,columna,posicionesAEliminar,0),dificultad)
   }
 
-  private def eliminarElementoAux(fila:Int,columna:Int,matriz:List[Int],filaOrigen:Int,columnaOrigen:Int,elementosVisitados:List[Int]):(List[Int],List[Int])= {
+  private def eliminarElementoAux(fila:Int,columna:Int,matriz:List[Int],filaOrigen:Int,columnaOrigen:Int,elementosVisitados:List[Int],contador:Int):(List[Int],List[Int],Int)= {
     val elementoOrigen = getElem(filaOrigen, columnaOrigen)
     val elemento = getElem(fila, columna)
     val index: Int = fila * cols + columna
@@ -226,49 +273,23 @@ object Matrix {
       if (elemento == elementoOrigen) {
         val matriz0: List[Int] = reemplazarElemento(fila, columna, 0)
         val elementosVisitados0: List[Int] = index :: elementosVisitados
-        val (matriz1: List[Int], elementosVisitados1: List[Int]) = eliminarElementoAux(fila, columna - 1, matriz0, filaOrigen, columnaOrigen, elementosVisitados0)
-        val (matriz2: List[Int], elementosVisitados2: List[Int]) = eliminarElementoAux(fila, columna + 1, matriz1, filaOrigen, columnaOrigen, index :: elementosVisitados1)
-        val (matriz3: List[Int], elementosVisitados3: List[Int]) = eliminarElementoAux(fila - 1, columna, matriz2, filaOrigen, columnaOrigen, index :: elementosVisitados2)
-        val (matriz4: List[Int], elementosVisitados4: List[Int]) = eliminarElementoAux(fila + 1, columna, matriz3, filaOrigen, columnaOrigen, index :: elementosVisitados3)
-        return (matriz4, elementosVisitados4)
+        val contador0: Int = contador + 1
+        val (matriz1: List[Int], elementosVisitados1: List[Int],contador1:Int) = eliminarElementoAux(fila, columna - 1, matriz0, filaOrigen, columnaOrigen, elementosVisitados0,contador0)
+        val (matriz2: List[Int], elementosVisitados2: List[Int],contador2:Int) = eliminarElementoAux(fila, columna + 1, matriz1, filaOrigen, columnaOrigen, elementosVisitados1,contador1)
+        val (matriz3: List[Int], elementosVisitados3: List[Int],contador3:Int) = eliminarElementoAux(fila - 1, columna, matriz2, filaOrigen, columnaOrigen, elementosVisitados2,contador2)
+        val (matriz4: List[Int], elementosVisitados4: List[Int],contador4:Int) = eliminarElementoAux(fila + 1, columna, matriz3, filaOrigen, columnaOrigen, elementosVisitados3,contador3)
+        return (matriz4, elementosVisitados4,contador4)
       }
-      else {index::elementosVisitados}
+      else {val elementosVisitadosRet:List[Int] = index::elementosVisitados
+      return (matriz,elementosVisitadosRet,contador)}
     }
-    (matriz,elementosVisitados)
+    (matriz,elementosVisitados,contador)
   }
 
 
 }
 //UPS CUDA SE CUELA
 
-def eliminarFila(fila: Int, matriz: List[Int], cols: Int): List[Int] = {
-
-  // Encontramos el índice inicial y final de la fila
-  val inicio = fila * cols
-  val fin = inicio + cols - 1
-  val lista0:List[]
-
-  // Eliminamos los elementos de la fila
-  val listaSinFila = concatenar(toma(inicio),Aqui tengo que crear una lista de 0 deja(fin + 1))
-  listaSinFila
-
-}
-
-
-private def eliminarBomba(indiceOrigen:Int,fila:Int,columna:Int,eliminarFila:Int):List[Int]={
-  val indiceActual:Int = fila*cols+columna
-  if(eliminarFila==1){
-    //Elimino la fila
-    if(indiceActual==indiceOrigen){
-      reemplazarElemento(fila,columna,0)
-      eliminarBomba(indiceOrigen,fila-1,columna,eliminarFila)
-      eliminarBomba(indice)
-    }
-  }else{
-    //Elimino la columna
-
-  }
-}
 
 
 
