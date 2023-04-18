@@ -12,8 +12,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
 
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
-
-    if(args.length < 4+1){ //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
+    if(args.length > 4+1){ //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
         val filas = args(1).toInt
         val columnas = args(2).toInt
         val modoDeJuego = args(3).charAt(0)
@@ -62,19 +61,19 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val fila = scala.io.StdIn.readInt()
         println("Introduce la columna")
         val columna = scala.io.StdIn.readInt()
+        //Ver como hacer solo una llamada
+        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+        partida(tableroNew, vidasNew, modoDeJuego)
       }else{ //Es automático
         val rand = new Random()
         val fila = rand.nextInt(tablero.getNumFilas())
         val columna = rand.nextInt(tablero.getNumColumnas())
-
+        //Ver como hacer solo una llamada
+        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+        partida(tableroNew, vidasNew, modoDeJuego)
       }
 
-      //Ver como hacer solo una llamada
-      val cuantosEliminados = tablero.consulta(fila, columna, vidas)._2 //consulta es el eliminarPosicion
-      if (cuantosEliminados>2) {
-        partida(tablero, vidas,modoDeJuego)
-      }else{
-        partida(tablero, vidas-1,modoDeJuego)
+
       }
     }
 
@@ -137,33 +136,33 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
   //   contador
   // }
 
-
-  def generarMatriz(filas: Int, columnas: Int): List[Int] = {
-    if (filas == 0) Nil
-    else {
-      concatenar(generarColumnas(columnas), generarMatriz(filas - 1, columnas))
-    }
-  }
-
-  // Method to generate a list of random integers with given length
-  def generarColumnas(n: Int): List[Int] = {
-    val rand = new scala.util.Random()
-    if (n == 0) Nil
-    else rand.nextInt(100) :: generarColumnas(n - 1) //Genero un número aleatorio entre 0 y 99
-  }
-
-  def concatenar(x: List[Int], y: List[Int]): List[Int] = {
-    x match {
-      case Nil => y
-      case head :: tail => head :: concatenar(tail, y)
-    }
-  }
-
-  def longitud[T](l: List[T]): Int = {
-    l match {
-      case Nil => 0 //Si la lista está vacía la longitud es 0
-      case _ :: tail => 1 + longitud(tail) //Si no está vacía la longitud es 1 + la longitud de la cola
-    }
-  }
-
-}
+//
+//  def generarMatriz(filas: Int, columnas: Int): List[Int] = {
+//    if (filas == 0) Nil
+//    else {
+//      concatenar(generarColumnas(columnas), generarMatriz(filas - 1, columnas))
+//    }
+//  }
+//
+//  // Method to generate a list of random integers with given length
+//  def generarColumnas(n: Int): List[Int] = {
+//    val rand = new scala.util.Random()
+//    if (n == 0) Nil
+//    else rand.nextInt(100) :: generarColumnas(n - 1) //Genero un número aleatorio entre 0 y 99
+//  }
+//
+//  def concatenar(x: List[Int], y: List[Int]): List[Int] = {
+//    x match {
+//      case Nil => y
+//      case head :: tail => head :: concatenar(tail, y)
+//    }
+//  }
+//
+//  def longitud[T](l: List[T]): Int = {
+//    l match {
+//      case Nil => 0 //Si la lista está vacía la longitud es 0
+//      case _ :: tail => 1 + longitud(tail) //Si no está vacía la longitud es 1 + la longitud de la cola
+//    }
+//  }
+//
+//}

@@ -119,7 +119,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
       }
       case default => {
         val (matriz:Matrix,contador:Int) = eliminarElemento(fila,columna,data)
-        if (contador == 1){
+        if (contador <= 1){
           println("No se ha eliminado ningún elemento")
           (this,vidas-1)
         }
@@ -213,13 +213,13 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
      */
 
     val elementoOrigen = getElem(filaOrigen, columnaOrigen)
+    if (fila < 0 || fila >= rows || columna < 0 || columna >= cols){ return(matriz, elementosVisitados, contador)}
     val elemento = getElem(fila, columna)
     val index: Int = fila * cols + columna
     //con backtracking miramos arriba abajo izquierda y derecha
     //si el elemento es igual al de la posicion de origen y en la lista "elementosVisitados" hay un 0, entonces en la lista "elementosVisitados" el indice actual y hacemos recursión
     //si en la lista "elementosVisitados" hay está el indice, entonces hacemos backtrack
     //si el elemento es distinto al de la posicion de origen, entonces hacemos backtrack y añadimos el indice actual a la lista "elementosVisitados"
-    if (fila < 0 || fila >= rows || columna < 0 || columna >= cols) (matriz, elementosVisitados)
     if (!Matrix.estaEnLista(index, elementosVisitados)) {
       if (elemento == elementoOrigen) {
         val matriz0: List[Int] = reemplazarElemento(fila, columna, 0)
@@ -269,7 +269,7 @@ object Matrix {
     val rand = new scala.util.Random()
     if (n == 0) Nil
     //Tendré que hacer que mire el nivel de dificultad y genere entre 4 y 6 
-    else rand.nextInt(6) :: generarColumnas(n - 1) //Genero un número aleatorio
+    else (rand.nextInt(5)+1) :: generarColumnas(n - 1) //Genero un número aleatorio
   }
 
   def toma(n: Int, l: List[Int]): List[Int] = {
