@@ -29,13 +29,13 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   def getNumFilas():Int = rows
 
   def imprimir(data:List[Int]): Unit = {
-    val num = cols
-    val l = data
-    if (Matrix.longitud(l) == 0) return
-    if (Matrix.longitud(l) % num == 0) {
-      val chunk = Matrix.toma(num, l)
+    //val num = cols
+    //val l = data
+    if (Matrix.longitud(data) == 0) return
+    if (Matrix.longitud(data) % cols == 0) {
+      val chunk = Matrix.toma(cols, data)
       imprimirBonito(chunk)
-      imprimir(Matrix.deja(num, l))
+      imprimir(Matrix.deja(cols, data))
     } else {
       throw new Error("La lista no tiene una longitud de mútiplo "+cols+"*"+rows)
     }
@@ -135,7 +135,16 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   private def reemplazarElemento(fila: Int, columna: Int, elemento: Int): List[Int] = {
     val index: Int = fila * cols + columna
     val listaDeElemento:List[Int] = elemento :: Nil
-    val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(Matrix.toma(index,data),listaDeElemento) , Matrix.deja(index,data))
+    //val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(Matrix.toma(index,data),listaDeElemento) , Matrix.deja(index,data))
+    val matriz: List[Int] = Matrix.concatenar(Matrix.toma(index,data), elemento::Matrix.deja(index+1,data))
+    //matriz es los primeros elementos, el elemento a intercambiar en la posición correspondiente, el resto de elementos
+    matriz
+  }
+  private def reemplazarElemento(fila: Int, columna: Int, elemento: Int, datos:List[Int]): List[Int] = {
+    val index: Int = fila * cols + columna
+    val listaDeElemento:List[Int] = elemento :: Nil
+    //val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(Matrix.toma(index,data),listaDeElemento) , Matrix.deja(index,data))
+    val matriz: List[Int] = Matrix.concatenar(Matrix.toma(index,datos), elemento::Matrix.deja(index+1,datos))
     //matriz es los primeros elementos, el elemento a intercambiar en la posición correspondiente, el resto de elementos
     matriz
   }
@@ -222,7 +231,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     //si el elemento es distinto al de la posicion de origen, entonces hacemos backtrack y añadimos el indice actual a la lista "elementosVisitados"
     if (!Matrix.estaEnLista(index, elementosVisitados)) {
       if (elemento == elementoOrigen) {
-        val matriz0: List[Int] = reemplazarElemento(fila, columna, 0)
+        val matriz0: List[Int] = reemplazarElemento(fila, columna, 0,matriz)
         val elementosVisitados0: List[Int] = index :: elementosVisitados
         val contador0: Int = contador + 1
         val (matriz1: List[Int], elementosVisitados1: List[Int], contador1: Int) = eliminarElementoAux(fila, columna - 1, matriz0, filaOrigen, columnaOrigen, elementosVisitados0, contador0)
