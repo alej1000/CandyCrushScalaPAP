@@ -55,6 +55,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         return
       }
       //println("Vidas: " + vidas)
+      print("Vidas restantes: ")
       mostrarVidas(vidas)
       println()
       tablero.toString()
@@ -80,7 +81,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     def mostrarVidas(vidas:Int): Unit = {
       if(vidas>0) {
         mostrarVidas(vidas-1)
-        print("❤")
+        print("❤️")
       }
     }
 

@@ -1,7 +1,9 @@
+import Matrix.concatenar
+
 //En la clase se guardan las funciones que se pueden usar al instanciar la clase en el main (si son publicas)
 class Matrix (private val rows: Int,private val cols: Int,private val data: List[Int],private val dificultad:Int) {
-  def this(rows: Int, cols: Int,dificultad:Int) = {
-    this(rows, cols, Matrix.generarMatriz(rows, cols,dificultad),dificultad)
+  def this(rows: Int, cols: Int, dificultad: Int) = {
+    this(rows, cols, Matrix.generarMatriz(rows, cols, dificultad), dificultad)
   }
 
   //  def imprimir(): Unit = {
@@ -25,10 +27,11 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     "Success"
   }
 
-  def getNumColumnas():Int = cols
-  def getNumFilas():Int = rows
+  def getNumColumnas(): Int = cols
 
-  def imprimir(data:List[Int]): Unit = {
+  def getNumFilas(): Int = rows
+
+  def imprimir(data: List[Int]): Unit = {
     //val num = cols
     //val l = data
     if (Matrix.longitud(data) == 0) return
@@ -37,7 +40,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
       imprimirBonito(chunk)
       imprimir(Matrix.deja(cols, data))
     } else {
-      throw new Error("La lista no tiene una longitud de mútiplo "+cols+"*"+rows)
+      throw new Error("La lista no tiene una longitud de mútiplo " + cols + "*" + rows)
     }
   }
 
@@ -51,9 +54,8 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   }
 
 
-
-  def getElem(index:Int):Int={
-    getElem(data,index)
+  def getElem(index: Int): Int = {
+    getElem(data, index)
   }
 
   def getElem(matriz: List[Int], index: Int): Int = { //Prefiero crearla con fila:Int y columna:Int, antes que pasarle el indice directamente
@@ -66,11 +68,17 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
   }
 
-  def getElem(fila:Int,columna:Int):Int = {
-    if (fila == null || columna == null){ throw new Exception("La posición seleccionada no existe")}
-    if (fila < 0 || columna < 0){throw new Exception("La posición seleccionada no existe")}
-    if (fila > rows || columna > cols){throw new Exception("La posición seleccionada no existe")}
-    val index:Int = fila*cols+columna
+  def getElem(fila: Int, columna: Int): Int = {
+    if (fila == null || columna == null) {
+      throw new Exception("La posición seleccionada no existe")
+    }
+    if (fila < 0 || columna < 0) {
+      throw new Exception("La posición seleccionada no existe")
+    }
+    if (fila > rows || columna > cols) {
+      throw new Exception("La posición seleccionada no existe")
+    }
+    val index: Int = fila * cols + columna
     getElem(index)
 
   }
@@ -86,6 +94,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   def getColumna(columna: Int): List[Int] = {
     getColumna(data, columna)
   }
+
   def getColumna(l: List[Int], index: Int): List[Int] = {
     if (index >= cols || index < 0) throw new Error("El índice es mayor que el número de elementos de la lista")
     if (Matrix.longitud(l) == 0) Nil
@@ -93,39 +102,51 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   }
 
-  def test():Matrix={
-    val matriz = new Matrix(8,8,1)
+  def reemplazarColumna(col:Int,nuevaColumna:List[Int]):Matrix={
+    reemplazarColumnaAux(col,nuevaColumna,data,0)
+  }
+
+  def reemplazarColumnaAux(indiceCol:Int,nuevaColumna:List[Int],matriz:List[Int],fila:Int) : Matrix = {
+    if (indiceCol >= cols || indiceCol < 0) throw new Error("El índice es mayor que el número de elementos de la lista")
+    if(fila>rows) new Matrix(rows, cols, matriz,dificultad)
+    val cambioElemento:List[Int]= reemplazarElemento(fila,indiceCol,getElem(matriz,fila*cols+indiceCol),data)
+    reemplazarColumnaAux(indiceCol, nuevaColumna, cambioElemento, fila+1)
+  }
+
+  def test(): Matrix = {
+    val matriz = new Matrix(8, 8, 1)
     matriz
   }
 
-  def consulta(fila:Int,columna:Int, vidas:Int):(Matrix,Int)={ //7: Bomba 8: TNT 9: Rompecabezas
-    val elemento = getElem(fila,columna)
+  def consulta(fila: Int, columna: Int, vidas: Int): (Matrix, Int) = { //7: Bomba 8: TNT 9: Rompecabezas
+    val elemento = getElem(fila, columna)
     elemento match {
       case 7 => {
-        (eliminarBomba(fila,columna,vidas),vidas)
+        (eliminarBomba(fila, columna, vidas), vidas)
 
       }
       case 8 => {
         println("Has encontrado una bomba")
         println("Has perdido")
-        (eliminarBomba(fila,columna,vidas),vidas)
+        (eliminarBomba(fila, columna, vidas), vidas)
 
       }
       case 9 => {
         println("Has encontrado una bomba")
         println("Has perdido")
-        (eliminarBomba(fila,columna,vidas),vidas)
+        (eliminarBomba(fila, columna, vidas), vidas)
 
       }
       case default => {
-        val (matriz:Matrix,contador:Int) = eliminarElemento(fila,columna,data)
-        if (contador <= 1){
+        val (matriz: Matrix, contador: Int) = eliminarElemento(fila, columna, data)
+        if (contador <= 1) {
           println("No se ha eliminado ningún elemento")
-          (this,vidas-1)
+          (this, vidas - 1)
         }
-        else{
-          println("Se han eliminado "+contador+" elementos")
-          (matriz,vidas)
+        else {
+          println("Se han eliminado " + contador + " elementos")
+          val matrizGrav:Matrix = matriz.activarGravedad()
+          (matrizGrav, vidas)
         }
 
       }
@@ -134,17 +155,18 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   private def reemplazarElemento(fila: Int, columna: Int, elemento: Int): List[Int] = {
     val index: Int = fila * cols + columna
-    val listaDeElemento:List[Int] = elemento :: Nil
+    val listaDeElemento: List[Int] = elemento :: Nil
     //val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(Matrix.toma(index,data),listaDeElemento) , Matrix.deja(index,data))
-    val matriz: List[Int] = Matrix.concatenar(Matrix.toma(index,data), elemento::Matrix.deja(index+1,data))
+    val matriz: List[Int] = Matrix.concatenar(Matrix.toma(index, data), elemento :: Matrix.deja(index + 1, data))
     //matriz es los primeros elementos, el elemento a intercambiar en la posición correspondiente, el resto de elementos
     matriz
   }
-  private def reemplazarElemento(fila: Int, columna: Int, elemento: Int, datos:List[Int]): List[Int] = {
+
+  private def reemplazarElemento(fila: Int, columna: Int, elemento: Int, datos: List[Int]): List[Int] = {
     val index: Int = fila * cols + columna
-    val listaDeElemento:List[Int] = elemento :: Nil
+    val listaDeElemento: List[Int] = elemento :: Nil
     //val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(Matrix.toma(index,data),listaDeElemento) , Matrix.deja(index,data))
-    val matriz: List[Int] = Matrix.concatenar(Matrix.toma(index,datos), elemento::Matrix.deja(index+1,datos))
+    val matriz: List[Int] = Matrix.concatenar(Matrix.toma(index, datos), elemento :: Matrix.deja(index + 1, datos))
     //matriz es los primeros elementos, el elemento a intercambiar en la posición correspondiente, el resto de elementos
     matriz
   }
@@ -158,33 +180,35 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     val lista0: List[Int] = Matrix.generarPila(1, cols) //Genero una lista con 0 del tamaño de columnas que he eliminado
 
     // Eliminamos los elementos de la fila
-    val listaSinFila = Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,matriz), lista0), Matrix.deja(fin + 1,matriz))
+    val listaSinFila = Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio, matriz), lista0), Matrix.deja(fin + 1, matriz))
     listaSinFila
 
   }
+
   //Esta mal seguro, está sumando 1 al indice y eso sería avanzar columnas no filas-> indice + columnas podría ser
-//  def eliminarColumna(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
-//    if (isEmpty(matriz)) Nil
-//    else {
-//      val fila = index / columnas
-//      val inicio = fila * columnas + index % columnas //fila * columna + columna -> indice que quiero eliminar
-//      val fin = inicio + columnas - 1
-//      val lista0: List[Int] = Matrix.generarPila(fin - inicio, 1)
-//      Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,matriz), lista0), eliminarColumna(index + 1, columnas, Matrix.deja(fin + 1,matriz)))
-//    }
-//  }
-  def eliminarColumna(col:Int,columnas:Int,matriz:List[Int]):List[Int]={
+  //  def eliminarColumna(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
+  //    if (isEmpty(matriz)) Nil
+  //    else {
+  //      val fila = index / columnas
+  //      val inicio = fila * columnas + index % columnas //fila * columna + columna -> indice que quiero eliminar
+  //      val fin = inicio + columnas - 1
+  //      val lista0: List[Int] = Matrix.generarPila(fin - inicio, 1)
+  //      Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,matriz), lista0), eliminarColumna(index + 1, columnas, Matrix.deja(fin + 1,matriz)))
+  //    }
+  //  }
+  def eliminarColumna(col: Int, columnas: Int, matriz: List[Int]): List[Int] = {
     if (isEmpty(matriz)) Nil
-    else{
-      eliminarColumnaAux(col,columnas,matriz) //col sería el primer indice de la columna a eliminar
+    else {
+      eliminarColumnaAux(col, columnas, matriz) //col sería el primer indice de la columna a eliminar
     }
   }
-  def eliminarColumnaAux(index: Int, columnas: Int, matriz: List[Int]):List[Int]={
-    if(index>=columnas) matriz
-    else{
+
+  def eliminarColumnaAux(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
+    if (index >= columnas) matriz
+    else {
       val fila = index / columnas
       val col = index % columnas
-      eliminarColumnaAux(fila,col,reemplazarElemento(fila,col,0,matriz))
+      eliminarColumnaAux(fila, col, reemplazarElemento(fila, col, 0, matriz))
     }
   }
 
@@ -194,50 +218,78 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     if (eliminarFila == 1) {
       //Elimino la fila
       //val matriz = new Matrix(rows,cols,data,dificultad)
-      val lista:List[Int]=this.eliminarFila(fila,data,cols)
-      new Matrix(rows,cols,lista,dificultad)
+      val lista: List[Int] = this.eliminarFila(fila, data, cols)
+      new Matrix(rows, cols, lista, dificultad)
     } else {
       //Elimino la columna
-      val indiceOrigen:Int=fila*cols+columna
-      val lista:List[Int]= eliminarColumna(indiceOrigen,cols,data)
-      new Matrix(rows,cols,lista,dificultad)
+      val indiceOrigen: Int = fila * cols + columna
+      val lista: List[Int] = eliminarColumna(indiceOrigen, cols, data)
+      new Matrix(rows, cols, lista, dificultad)
     }
   }
+
+  private def eliminarRompecabezas(fila: Int, columna: Int, matriz: List[Int], elemento: Int): List[Int] = {
+    //Recorre la matriz y si encuentra un elemento igual al de la posición de origen, lo cambia por un 0
+    if (isEmpty(matriz)) Nil
+    else {
+      val elementoActual: Int = matriz.head
+      if (elementoActual == elemento % 10) {
+        //reemplazarElemento(fila, columna, 0, matriz) :: eliminarRompecabezas(fila,columna,matriz.tail,elemento)
+        0 :: eliminarRompecabezas(fila, columna, matriz.tail, elemento)
+      }
+      else {
+        elementoActual :: eliminarRompecabezas(fila, columna, matriz.tail, elemento)
+      }
+    }
+  }
+
+  private def eliminarTNT(fila:Int,columna:Int,matriz:List[Int]): List[Int] = {
+    val inicio:Int= (fila-4) * cols + (columna-4) //Primera esquina a comprobar
+    val fin:Int= (fila+4) * cols + (columna + 4) //Ultima esquina a comprobar
+    matriz
+  }
+  private def eliminarTNTAux(inicio:Int,fin:Int,actual:Int):List[Int]={
+    data
+  }
+
 
   def isEmpty[Int](list: List[Int]): Boolean = list match {
     case Nil => true
     case _ :: _ => false
   }
 
-  private def eliminarElemento(fila: Int, columna: Int, matriz: List[Int]): (Matrix,Int) = {
+  private def eliminarElemento(fila: Int, columna: Int, matriz: List[Int]): (Matrix, Int) = {
     //con backtracking miramos arriba abajo izquierda y derecha
     //si el elemento es igual al de la posicion de origen y en la lista "elementosVisitados" hay un 0, entonces en la lista "elementosVisitados" el indice actual y hacemos recursión
     //si en la lista "elementosVisitados" hay un 1, entonces hacemos backtrack
     //si el elemento es distinto al de la posicion de origen, entonces hacemos backtrack y añadimos el indice actual a la lista "elementosVisitados"
     val posicionesAEliminar: List[Int] = Nil
-    val (lista:List[Int],_,contador:Int) = eliminarElementoAux(fila, columna, matriz, fila, columna, posicionesAEliminar, 0) //Lista con los elementos ya eliminados y contador de elementos eliminados
+    val (lista: List[Int], _, contador: Int) = eliminarElementoAux(fila, columna, matriz, fila, columna, posicionesAEliminar, 0) //Lista con los elementos ya eliminados y contador de elementos eliminados
     if (contador == 1) {
-      (this,0)
+      (this, 0)
     } else {
       println("Se han eliminado " + contador + " elementos")
-      (new Matrix(rows, cols, lista, dificultad),contador)
+      (new Matrix(rows, cols, lista, dificultad), contador)
     }
   }
+
   private def eliminarElementoAux(fila: Int, columna: Int, matriz: List[Int], filaOrigen: Int, columnaOrigen: Int, elementosVisitados: List[Int], contador: Int): (List[Int], List[Int], Int) = {
     /**
-     * @param fila: Fila actual
-     * @param columna: Columna actual
-     * @param matriz: Matriz
-     * @param filaOrigen: Fila de origen
-     * @param columnaOrigen: Columna de origen
-     * @param elementosVisitados: Lista con los elementos visitados
-     * @param contador: Contador de elementos eliminados
+     * @param fila               : Fila actual
+     * @param columna            : Columna actual
+     * @param matriz             : Matriz
+     * @param filaOrigen         : Fila de origen
+     * @param columnaOrigen      : Columna de origen
+     * @param elementosVisitados : Lista con los elementos visitados
+     * @param contador           : Contador de elementos eliminados
      * @return: Lista con los elementos eliminados, lista con los elementos visitados y contador de elementos eliminados
      *
      */
 
     val elementoOrigen = getElem(filaOrigen, columnaOrigen)
-    if (fila < 0 || fila >= rows || columna < 0 || columna >= cols){ return(matriz, elementosVisitados, contador)}
+    if (fila < 0 || fila >= rows || columna < 0 || columna >= cols) {
+      return (matriz, elementosVisitados, contador)
+    }
     val elemento = getElem(fila, columna)
     val index: Int = fila * cols + columna
     //con backtracking miramos arriba abajo izquierda y derecha
@@ -246,7 +298,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     //si el elemento es distinto al de la posicion de origen, entonces hacemos backtrack y añadimos el indice actual a la lista "elementosVisitados"
     if (!Matrix.estaEnLista(index, elementosVisitados)) {
       if (elemento == elementoOrigen) {
-        val matriz0: List[Int] = reemplazarElemento(fila, columna, 0,matriz)
+        val matriz0: List[Int] = reemplazarElemento(fila, columna, 0, matriz)
         val elementosVisitados0: List[Int] = index :: elementosVisitados
         val contador0: Int = contador + 1
         val (matriz1: List[Int], elementosVisitados1: List[Int], contador1: Int) = eliminarElementoAux(fila, columna - 1, matriz0, filaOrigen, columnaOrigen, elementosVisitados0, contador0)
@@ -264,8 +316,88 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   }
 
 
-}
+  def activarGravedad(indiceColumna:Int): Matrix = {
+    if (indiceColumna < 0 || indiceColumna >= cols) {
+      this
+    }
+    else {
+      val columna: List[Int] = getColumna(indiceColumna)
+      val columna0: List[Int] = activarGravedadAux(columna,cols-1,0)
+      val matriz0: List[Int] = reemplazarColumna(indiceColumna, columna0)
+      new Matrix(rows, cols, matriz0, dificultad)
+    }
 
+  }
+
+  def activarGravedadAux(columna:List[Int],indice:Int,contador:Int): Unit = {
+    if (indice < 0) {
+      columna
+    }
+    else {
+      val elemento = getElem(columna,indice)
+      if (elemento == 0) {
+        activarGravedadAux(columna,indice-1,contador)
+      }
+      else {
+        val columna0: List[Int] = concatenar(Matrix.toma(indice-contador,columna),elemento::Matrix.deja(indice-contador+1,columna)) //Reemplaza el elemento de la columna por el elemento de la columna que se encuentra a "contador" posiciones por encima
+        activarGravedadAux(columna0,indice-1,contador+1)
+      }
+    }
+
+  }
+
+  def randomizarCerosdeColumna(columna[Int],indice:Int): Unit = {
+    if (indice < 0) {
+      columna
+    }
+    else {
+      val elemento = getElem(columna,indice)
+      if (elemento == 0) {
+        val columna0: List[Int] = reemplazarElemento(columna,indice,Random.nextInt(6)+1)
+        randomizarCerosdeColumna(columna0,indice-1)
+      }
+      else {
+        randomizarCerosdeColumna(columna,indice-1)
+      }
+    }
+  }
+  def activarGravedad2(): Matrix = {
+    //Algoritmo que permite añadir gravedad al tablero haciendo que cualquier posición vacía (0) desaparezca para que el usuario pueda continuar su partida.
+    //Por cada columna, declara un contador.
+    // Recursivamente se recorre la columna de abajo a arriba comprobando si la posición actual es o no una posición vacía (0).
+    // En ese caso de ser no vacía, se copiará este elemento en la posición de la columna (de abajo a arriba) que indique el contador,y este se incrementará en 1.
+    // En caso de encontrar un valor nulo, se pasará a la siguiente posición de la columna sin incrementar el contador (lo que asegurará que, si más adelante hay un valor no nulo, esta posición será sustituida por el valor apropiado).
+    // Esto hará que se depositen en orden todos los elementos que había en la columna, dejando los valores "libres" en las partes altas de la columna, los cuales se eliminarán generando números aleatorios.
+    // Gracias al contador, se puede averiguar en qué posiciones se deben generar estos valores aleatorios.
+
+    def moveDown(matriz: List[Int], fila: Int, columna: Int): List[Int] = {
+      if (fila == 0 && columna == 0) matriz // si llegamos al principio, regresamos la matriz actual
+      else if (fila == 0) moveDown(matriz, rows - 1, columna - 1) // si llegamos al principio de una fila, avanzamos a la fila anterior y la última columna
+      else if (matriz(fila * cols + columna) == 0) {
+        // si encontramos un cero, buscamos el primer elemento no cero por encima de él
+        val firstNonZeroIndex = (0 until fila).reverse.find(i => matriz(i * cols + columna) != 0)
+        firstNonZeroIndex match {
+          case Some(i) => {
+            // intercambiamos el cero con el primer elemento no cero encontrado
+            val currentIndex = i * cols + columna
+            val nonZeroIndex = fila * cols + columna
+            val newMatriz = matriz.updated(nonZeroIndex, matriz(currentIndex)).updated(currentIndex, 0)
+            moveDown(newMatriz, i, columna) // hacemos recursión con la posición original del elemento no cero
+          }
+          case None => moveDown(matriz, fila - 1, columna) // si no encontramos ningún elemento no cero por encima, avanzamos a la posición superior
+        }
+      }
+      else moveDown(matriz, fila - 1, columna) // si el elemento actual no es cero, avanzamos a la posición superior
+    }
+
+    val newMatriz = moveDown(data, rows - 1, cols - 1)
+    new Matrix(rows, cols, newMatriz, dificultad)
+  }
+
+
+
+
+}
 
 
 
