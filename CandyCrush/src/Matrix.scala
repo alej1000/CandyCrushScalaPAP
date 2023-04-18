@@ -1,7 +1,7 @@
 //En la clase se guardan las funciones que se pueden usar al instanciar la clase en el main (si son publicas)
 class Matrix (private val rows: Int,private val cols: Int,private val data: List[Int],private val dificultad:Int) {
   def this(rows: Int, cols: Int,dificultad:Int) = {
-    this(rows, cols, Matrix.generarMatriz(rows, cols),dificultad)
+    this(rows, cols, Matrix.generarMatriz(rows, cols,dificultad),dificultad)
   }
 
   //  def imprimir(): Unit = {
@@ -153,28 +153,43 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   def eliminarFila(fila: Int, matriz: List[Int], cols: Int): List[Int] = {
 
     // Encontramos el índice inicial y final de la fila
-    val inicio = fila * cols
+    val inicio = fila * cols //Inicio de la fila a eliminar
     val fin = inicio + cols - 1
     val lista0: List[Int] = Matrix.generarPila(1, cols) //Genero una lista con 0 del tamaño de columnas que he eliminado
 
     // Eliminamos los elementos de la fila
-    val listaSinFila = Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,data), lista0), Matrix.deja(fin + 1,data))
+    val listaSinFila = Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,matriz), lista0), Matrix.deja(fin + 1,matriz))
     listaSinFila
 
   }
-
-  def eliminarColumna(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
+  //Esta mal seguro, está sumando 1 al indice y eso sería avanzar columnas no filas-> indice + columnas podría ser
+//  def eliminarColumna(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
+//    if (isEmpty(matriz)) Nil
+//    else {
+//      val fila = index / columnas
+//      val inicio = fila * columnas + index % columnas //fila * columna + columna -> indice que quiero eliminar
+//      val fin = inicio + columnas - 1
+//      val lista0: List[Int] = Matrix.generarPila(fin - inicio, 1)
+//      Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,matriz), lista0), eliminarColumna(index + 1, columnas, Matrix.deja(fin + 1,matriz)))
+//    }
+//  }
+  def eliminarColumna(col:Int,columnas:Int,matriz:List[Int]):List[Int]={
     if (isEmpty(matriz)) Nil
-    else {
+    else{
+      eliminarColumnaAux(col,columnas,matriz) //col sería el primer indice de la columna a eliminar
+    }
+  }
+  def eliminarColumnaAux(index: Int, columnas: Int, matriz: List[Int]):List[Int]={
+    if(index>=columnas) matriz
+    else{
       val fila = index / columnas
-      val inicio = fila * columnas + index % columnas
-      val fin = inicio + columnas - 1
-      val lista0: List[Int] = Matrix.generarPila(fin - inicio, 1)
-      Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,data), lista0), eliminarColumna(index + 1, columnas, Matrix.deja(fin + 1,data)))
+      val col = index % columnas
+      eliminarColumnaAux(fila,col,reemplazarElemento(fila,col,0,matriz))
     }
   }
 
 
+  //Supongo que habrá que pasarle la matriz a eliminar, de momento coge los datos de la clase Matrix
   private def eliminarBomba(fila: Int, columna: Int, eliminarFila: Int): Matrix = {
     if (eliminarFila == 1) {
       //Elimino la fila
@@ -265,20 +280,24 @@ object Matrix {
       case _ :: tail => 1 + longitud(tail) //Si no está vacía la longitud es 1 + la longitud de la cola
     }
   }
-  private def generarMatriz(filas: Int, columnas: Int): List[Int] = {
+  private def generarMatriz(filas: Int, columnas: Int,dificultad:Int): List[Int] = {
     if (filas == 0) Nil
     else {
-      concatenar(generarColumnas(columnas), generarMatriz(filas - 1, columnas))
+      concatenar(generarColumnas(columnas,dificultad), generarMatriz(filas - 1, columnas,dificultad))
     }
   }
 
 
   // Method to generate a list of random integers with given length
-  private def generarColumnas(n: Int): List[Int] = {
+  private def generarColumnas(n: Int,dificultad:Int): List[Int] = {
     val rand = new scala.util.Random()
     if (n == 0) Nil
     //Tendré que hacer que mire el nivel de dificultad y genere entre 4 y 6 
-    else (rand.nextInt(5)+1) :: generarColumnas(n - 1) //Genero un número aleatorio
+    else {
+      //(rand.nextInt(5) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio
+      if (dificultad == 1) (rand.nextInt(3) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 4
+      else (rand.nextInt(5) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 6
+    }
   }
 
   def toma(n: Int, l: List[Int]): List[Int] = {

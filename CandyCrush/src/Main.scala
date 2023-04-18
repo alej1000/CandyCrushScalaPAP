@@ -12,11 +12,11 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
 
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
-    if(args.length > 4+1){ //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
-        val filas = args(1).toInt
-        val columnas = args(2).toInt
-        val modoDeJuego = args(3).charAt(0)
-        val dificultad = args(4).toInt
+    if(args.length > 4){ //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
+        val filas = args(0).toInt
+        val columnas = args(1).toInt
+        val modoDeJuego = args(2).charAt(0)
+        val dificultad = args(3).toInt
         if(dificultad == 2 || dificultad==1){
           val tablero = new Matrix(filas,columnas,dificultad)
           partida(tablero,5,modoDeJuego)
@@ -54,7 +54,9 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         println("Has perdido")
         return
       }
-      println("Vidas: " + vidas)
+      //println("Vidas: " + vidas)
+      mostrarVidas(vidas)
+      println()
       tablero.toString()
       if(modoDeJuego == 'm'){ //Es manual
         println("Introduce la fila")
@@ -74,7 +76,14 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
 
 
+    }
+    def mostrarVidas(vidas:Int): Unit = {
+      if(vidas>0) {
+        mostrarVidas(vidas-1)
+        print("❤")
       }
+    }
+
     }
 
 
