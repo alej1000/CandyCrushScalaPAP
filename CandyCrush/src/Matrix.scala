@@ -32,14 +32,72 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   def getNumColumnas(): Int = cols
 
   def getNumFilas(): Int = rows
-
-  def imprimir(data: List[Int], cols: Int): Unit = {
-    val rows = data.length / cols
-    if (rows * cols != data.length) {
-      throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
-    }
-    imprimirRec(data, cols, rows, 0, 0)
+// Este es el primer imprimir bonito pero usa bucles
+//  def imprimir(data: List[Int], cols: Int): Unit = {
+//    val rows = data.length / cols
+//    if (rows * cols != data.length) {
+//      throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
+//    }
+//    imprimirRec(data, cols, rows, 0, 0)
+//  }
+//
+//  def imprimirRec(data: List[Int], cols: Int, rows: Int, rowIndex: Int, colIndex: Int): Unit = {
+//    if (rowIndex >= rows) {
+//      return
+//    }
+//    if (colIndex == 0) {
+//      // imprimir números de columna solo en la primera fila
+//      if (rowIndex == 0) {
+//        printf("%4s", "")
+//        for (i <- 0 until cols) {
+//          printf("%4d", i)
+//        }
+//        println()
+//      }
+//
+//      // imprimir línea separadora superior solo en la primera fila
+//      if (rowIndex == 0) {
+//        printf("%s", " " * 4)
+//        for (i <- 0 until cols) {
+//          printf("%s", "-" * 4)
+//        }
+//        println()
+//      }
+//    }
+//    if (colIndex == 0) {
+//      // imprimir número de fila
+//      printf("%4d", rowIndex)
+//    }
+//    // imprimir celda
+//    printf("%4d", data(rowIndex * cols + colIndex))
+//
+//    // imprimir línea separadora lateral
+//    if (colIndex == cols - 1) {
+//      printf("%s", "|")
+//      println()
+//    } else {
+//      printf("%s", "|")
+//    }
+//
+//    // imprimir línea separadora entre filas
+//    if (colIndex == cols - 1) {
+//      printf("%s", " " * 4)
+//      for (i <- 0 until cols) {
+//        printf("%s", "-" * 4)
+//      }
+//      println()
+//    }
+//
+//    imprimirRec(data, cols, rows, rowIndex + (colIndex + 1) / cols, (colIndex + 1) % cols)
+//  }
+//
+def imprimir(data: List[Int], cols: Int): Unit = {
+  val rows = data.length / cols
+  if (rows * cols != data.length) {
+    throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
   }
+  imprimirRec(data, cols, rows, 0, 0)
+}
 
   def imprimirRec(data: List[Int], cols: Int, rows: Int, rowIndex: Int, colIndex: Int): Unit = {
     if (rowIndex >= rows) {
@@ -49,18 +107,14 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
       // imprimir números de columna solo en la primera fila
       if (rowIndex == 0) {
         printf("%4s", "")
-        for (i <- 0 until cols) {
-          printf("%4d", i)
-        }
+        imprimirNumerosDeColumna(cols, 0)
         println()
       }
 
       // imprimir línea separadora superior solo en la primera fila
       if (rowIndex == 0) {
         printf("%s", " " * 4)
-        for (i <- 0 until cols) {
-          printf("%s", "-" * 4)
-        }
+        imprimirLineaSeparadora(cols)
         println()
       }
     }
@@ -82,15 +136,28 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     // imprimir línea separadora entre filas
     if (colIndex == cols - 1) {
       printf("%s", " " * 4)
-      for (i <- 0 until cols) {
-        printf("%s", "-" * 4)
-      }
+      imprimirLineaSeparadora(cols)
       println()
     }
 
     imprimirRec(data, cols, rows, rowIndex + (colIndex + 1) / cols, (colIndex + 1) % cols)
   }
 
+  def imprimirNumerosDeColumna(cols: Int, index: Int): Unit = {
+    if (index >= cols) {
+      return
+    }
+    printf("%4d", index)
+    imprimirNumerosDeColumna(cols, index + 1)
+  }
+
+  def imprimirLineaSeparadora(cols: Int): Unit = {
+    if (cols == 0) {
+      return
+    }
+    printf("%s", "-" * 4)
+    imprimirLineaSeparadora(cols - 1)
+  }
 
 
 
