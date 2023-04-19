@@ -130,16 +130,16 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
         (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
 
       }
-//      case 8 => {
-//        println("Has encontrado una bomba")
-//        println("Has perdido")
-//        val matriz:Matrix =eliminarTNT(fila, columna, data)
-//        val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
-//        (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
-//
-//      }
-      case 9 => {
+      case 8 => {
         println("Has encontrado una bomba")
+        println("Has perdido")
+        val matriz:Matrix =eliminarTNT(fila, columna, data)
+        val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
+        (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
+
+      }
+      case 9 => {
+        println("Has encontrado un rompecabezas")
         println("Has perdido")
         val matriz:Matrix =eliminarRompecabezas(fila, columna, data)
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
@@ -164,6 +164,12 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
             //añadimos una TNT (8) a la matriz en la posición que se introdujo
             val matrizTNT:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,8,data),dificultad))
             val matrizGrav: List[Int] = matrizTNT.activarGravedad(0, data)
+            return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
+          }
+          if(contador>=7){
+            //Añadimos Rompecabezas (11,12,13,14,15,16) en la posición que se introdujo
+            val matrizRompecabezas:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,rand.nextInt(6)+11,data),dificultad))
+            val matrizGrav: List[Int] = matrizRompecabezas.activarGravedad(0, data)
             return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
           }
           val matrizGrav:List[Int] = matriz.activarGravedad(0,data)
@@ -270,13 +276,14 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   }
 
 
-//  private def eliminarTNT(fila:Int,columna:Int,matriz:List[Int]): Matrix = {
-//    //val inicio:Int= (fila-4) * cols + (columna-4) //Primera esquina a comprobar
-//    //val fin:Int= (fila+4) * cols + (columna + 4) //Ultima esquina a comprobar
-//    //val lista:List[Int]=eliminarTNTAux(inicio,fin,fila*cols+columna,fila-4,columna-4,matriz)
-//    val lista:List[Int] = eliminarTNTAux(fila-4,fila+4,columna-4,columna+4,fila-4,columna-4,fila,columna,matriz)
-//    new Matrix(rows,cols,lista,dificultad)
-//  }
+  private def eliminarTNT(fila:Int,columna:Int,matriz:List[Int]): Matrix = {
+    //val inicio:Int= (fila-4) * cols + (columna-4) //Primera esquina a comprobar
+    //val fin:Int= (fila+4) * cols + (columna + 4) //Ultima esquina a comprobar
+    //val lista:List[Int]=eliminarTNTAux(inicio,fin,fila*cols+columna,fila-4,columna-4,matriz)
+    //val lista:List[Int] = eliminarTNTAux(fila-4,fila+4,columna-4,columna+4,fila-4,columna-4,fila,columna,matriz)
+    val lista:List[Int] = eliminarTNTAux(-4,-4,fila,columna,matriz)
+    new Matrix(rows,cols,lista,dificultad)
+  }
 //  private def eliminarTNTAux(filaInicio:Int,filaFin:Int,columnaInicio:Int,columnaFin:Int,filaActual:Int,columnaActual:Int,filaSeleccionada:Int,columnaSeleccionada:Int,matriz:List[Int]):List[Int]={
 //    if(filaActual>=filaActual && filaActual<filaFin && filaActual<rows && filaActual>=0){ //Estoy en la fila correcta
 //      if((filaActual*filaActual,columnaActual*columnaActual) <= 16){//Pitagoras para ver si estoy en el rango correcto
@@ -290,21 +297,20 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 //    }
 //  }
 
-  /*private def eliminarTNTAux(filaRelativa:Int,columnaRelativa:Int,filaOrignal:Int,columnaOriginal:Int):List[Int]={
-    val filaActual = filaRelativa+filaOriginal
-    val columnaActual = columnaRelativa+columnaOriginal
-    if(columnaRelativa>4){ //Si estoy en el final de la fila
-      eliminarTNTAux(filaRelativa+1,-4,filaOriginal,columnaOriginal)
+  private def eliminarTNTAux(filaRelativa:Int,columnaRelativa:Int,filaOriginal:Int,columnaOriginal:Int,matriz:List[Int]):List[Int]={
+    val filaActual:Int = filaRelativa+filaOriginal
+    val columnaActual:Int = columnaRelativa+columnaOriginal
+    if(columnaRelativa>4){ //Si estoy en el final de la fila me voy a la siguiente
+      eliminarTNTAux(filaRelativa+1,-4,filaOriginal,columnaOriginal,matriz)
     }else if(filaRelativa>4 && columnaRelativa>4){ //Si estoy en la ultima esquina (he acabado)
       matriz
     }else{
-      reemplazarElemento(filaActual,columnaActual,
-      eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal)
+      val matriz0:List[Int]=reemplazarElemento(filaActual,columnaActual,0,matriz)
+      eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz0)
     }
-
   }
 
-  */
+
   def isEmpty[Int](list: List[Int]): Boolean = list match {
     case Nil => true
     case _ :: _ => false
@@ -474,8 +480,8 @@ object Matrix {
     //Tendré que hacer que mire el nivel de dificultad y genere entre 4 y 6 
     else {
       //(rand.nextInt(5) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio
-      if (dificultad == 1) (rand.nextInt(3) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 4
-      else (rand.nextInt(5) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 6
+      if (dificultad == 1) (rand.nextInt(4) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 4
+      else (rand.nextInt(6) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 6
     }
   }
 
