@@ -25,7 +25,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   //  }
 
   override def toString(): String = {
-    imprimir(data)
+    imprimir(data, cols)
     "Success"
   }
 
@@ -33,27 +33,88 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   def getNumFilas(): Int = rows
 
-  def imprimir(data: List[Int]): Unit = {
-    //val num = cols
-    //val l = data
-    if (Matrix.longitud(data) == 0) return
-    if (Matrix.longitud(data) % cols == 0) {
-      val chunk = Matrix.toma(cols, data)
-      imprimirBonito(chunk)
-      imprimir(Matrix.deja(cols, data))
-    } else {
-      throw new Error("La lista no tiene una longitud de mútiplo " + cols + "*" + rows)
+  def imprimir(data: List[Int], cols: Int): Unit = {
+    val rows = data.length / cols
+    if (rows * cols != data.length) {
+      throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
     }
+    imprimirRec(data, cols, rows, 0, 0)
   }
 
-  def imprimirBonito(l: List[Int]): Unit = {
-    if (Matrix.longitud(l) == 0) {
-      println()
+  def imprimirRec(data: List[Int], cols: Int, rows: Int, rowIndex: Int, colIndex: Int): Unit = {
+    if (rowIndex >= rows) {
       return
     }
-    printf("|%3s |", l.head)
-    imprimirBonito(l.tail)
+    if (colIndex == 0) {
+      // imprimir números de columna solo en la primera fila
+      if (rowIndex == 0) {
+        printf("%4s", "")
+        for (i <- 0 until cols) {
+          printf("%4d", i)
+        }
+        println()
+      }
+
+      // imprimir línea separadora superior solo en la primera fila
+      if (rowIndex == 0) {
+        printf("%s", " " * 4)
+        for (i <- 0 until cols) {
+          printf("%s", "-" * 4)
+        }
+        println()
+      }
+    }
+    if (colIndex == 0) {
+      // imprimir número de fila
+      printf("%4d", rowIndex)
+    }
+    // imprimir celda
+    printf("%4d", data(rowIndex * cols + colIndex))
+
+    // imprimir línea separadora lateral
+    if (colIndex == cols - 1) {
+      printf("%s", "|")
+      println()
+    } else {
+      printf("%s", "|")
+    }
+
+    // imprimir línea separadora entre filas
+    if (colIndex == cols - 1) {
+      printf("%s", " " * 4)
+      for (i <- 0 until cols) {
+        printf("%s", "-" * 4)
+      }
+      println()
+    }
+
+    imprimirRec(data, cols, rows, rowIndex + (colIndex + 1) / cols, (colIndex + 1) % cols)
   }
+
+
+
+
+  //  def imprimir(data: List[Int]): Unit = {
+//    //val num = cols
+//    //val l = data
+//    if (Matrix.longitud(data) == 0) return
+//    if (Matrix.longitud(data) % cols == 0) {
+//      val chunk = Matrix.toma(cols, data)
+//      imprimirBonito(chunk)
+//      imprimir(Matrix.deja(cols, data))
+//    } else {
+//      throw new Error("La lista no tiene una longitud de mútiplo " + cols + "*" + rows)
+//    }
+//  }
+//
+//  def imprimirBonito(l: List[Int]): Unit = {
+//    if (Matrix.longitud(l) == 0) {
+//      println()
+//      return
+//    }
+//    printf("|%3s |", l.head)
+//    imprimirBonito(l.tail)
+//  }
 
 
   def getElem(index: Int): Int = {
