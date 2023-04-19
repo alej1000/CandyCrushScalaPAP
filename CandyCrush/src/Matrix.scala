@@ -154,6 +154,18 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
         }
         else {
           println("Se han eliminado " + contador + " elementos")
+          if (contador==5){
+            //añadimos una bomba (7) a la matriz en la posición que se introdujo
+            val matrizBomba:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,7,data),dificultad))
+            val matrizGrav: List[Int] = matrizBomba.activarGravedad(0, data)
+            return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
+          }
+          if (contador==6){
+            //añadimos una TNT (8) a la matriz en la posición que se introdujo
+            val matrizTNT:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,8,data),dificultad))
+            val matrizGrav: List[Int] = matrizTNT.activarGravedad(0, data)
+            return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
+          }
           val matrizGrav:List[Int] = matriz.activarGravedad(0,data)
           (new Matrix(rows, cols, matrizGrav,dificultad), vidas)
         }
