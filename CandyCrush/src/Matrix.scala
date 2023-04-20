@@ -155,7 +155,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     if (cols == 0) {
       return
     }
-    printf("%s", "-" * 4)
+    printf("%s", "-" * 5)
     imprimirLineaSeparadora(cols - 1)
   }
 
@@ -255,6 +255,9 @@ def imprimir(data: List[Int], cols: Int): Unit = {
       case 7 => {
         println("Has encontrado una bomba")
         val matriz:Matrix =eliminarBomba(fila, columna, rand.nextInt(1))
+        println("Matriz después de eliminar la bomba")
+        matriz.toString()
+        println("Matriz después de activar la gravedad")
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
         (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
 
@@ -263,19 +266,35 @@ def imprimir(data: List[Int], cols: Int): Unit = {
         println("Has encontrado un TNT")
         println("Has perdido")
         val matriz:Matrix =eliminarTNT(fila, columna, data)
+        println("Matriz después de eliminar el TNT")
+        matriz.toString()
+        println("Matriz después de activar la gravedad")
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
         (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
 
       }
-      case 9 => {
-        println("Has encontrado un rompecabezas")
-        println("Has perdido")
-        val matriz:Matrix =eliminarRompecabezas(fila, columna, data)
-        val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
-        (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
-
-      }
+//      case 9 => {
+//        println("Has encontrado un rompecabezas")
+//        println("Has perdido")
+//        val matriz:Matrix =eliminarRompecabezas(fila, columna, data)
+//        println("Matriz después de eliminar el rompecabezas")
+//        matriz.toString()
+//        println("Matriz después de activar la gravedad")
+//        val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
+//        (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
+//
+//      }
       case default => {
+        if(elemento>=11 && elemento<=16){ //Es rompecabezas
+          println("Has encontrado un rompecabezas")
+          println("Has perdido")
+          val matriz: Matrix = eliminarRompecabezas(fila, columna, data)
+          println("Matriz después de eliminar el rompecabezas")
+          matriz.toString()
+          println("Matriz después de activar la gravedad")
+          val matrizGrav: List[Int] = matriz.activarGravedad(0, matriz.data)
+          return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
+        }
         val (matriz: Matrix, contador: Int) = eliminarElemento(fila, columna, data)
         if (contador <= 1) {
           println("No se ha eliminado ningún elemento")
@@ -285,23 +304,24 @@ def imprimir(data: List[Int], cols: Int): Unit = {
           println("Se han eliminado " + contador + " elementos")
           if (contador==5){
             //añadimos una bomba (7) a la matriz en la posición que se introdujo
-            val matrizBomba:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,7,data),dificultad))
-            val matrizGrav: List[Int] = matrizBomba.activarGravedad(0, data)
+            //Se pone matriz.data porque se añade la bomba a la matriz que se ha modificado en la función eliminarElemento
+            val matrizBomba:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,7,matriz.data),dificultad))
+            val matrizGrav: List[Int] = matrizBomba.activarGravedad(0, matriz.data)
             return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
           }
           if (contador==6){
             //añadimos una TNT (8) a la matriz en la posición que se introdujo
-            val matrizTNT:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,8,data),dificultad))
-            val matrizGrav: List[Int] = matrizTNT.activarGravedad(0, data)
+            val matrizTNT:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,8,matriz.data),dificultad))
+            val matrizGrav: List[Int] = matrizTNT.activarGravedad(0, matriz.data)
             return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
           }
           if(contador>=7){
             //Añadimos Rompecabezas (11,12,13,14,15,16) en la posición que se introdujo
-            val matrizRompecabezas:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,rand.nextInt(6)+11,data),dificultad))
-            val matrizGrav: List[Int] = matrizRompecabezas.activarGravedad(0, data)
+            val matrizRompecabezas:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,rand.nextInt(6)+11,matriz.data),dificultad))
+            val matrizGrav: List[Int] = matrizRompecabezas.activarGravedad(0, matriz.data)
             return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
           }
-          val matrizGrav:List[Int] = matriz.activarGravedad(0,data)
+          val matrizGrav:List[Int] = matriz.activarGravedad(0,matriz.data)
           (new Matrix(rows, cols, matrizGrav,dificultad), vidas)
         }
 
@@ -364,7 +384,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     else {
       val fila = index / columnas
       val col = index % columnas
-      eliminarColumnaAux(fila, col, reemplazarElemento(fila, col, 0, matriz))
+      eliminarColumnaAux(col, cols, reemplazarElemento(fila, col, 0, matriz))
     }
   }
 
@@ -374,10 +394,12 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     if (eliminoFila == 1) {
       //Elimino la fila
       //val matriz = new Matrix(rows,cols,data,dificultad)
+      println("Elimino fila")
       val lista: List[Int] = eliminarFila(fila, data, cols)
       new Matrix(rows, cols, lista, dificultad)
     } else {
       //Elimino la columna
+      println("Elimino columna")
       val indiceOrigen: Int = fila * cols + columna
       val lista: List[Int] = eliminarColumna(indiceOrigen, cols)
       new Matrix(rows, cols, lista, dificultad)
@@ -387,7 +409,8 @@ def imprimir(data: List[Int], cols: Int): Unit = {
   private def eliminarRompecabezas(fila: Int, columna: Int, matriz: List[Int]): Matrix = {
     //Recorre la matriz y si encuentra un elemento igual al de la posición de origen, lo cambia por un 0
     val lista:List[Int]= eliminarRompecabezasAux(fila,columna,matriz,getElem(matriz,fila*cols+columna))
-    new Matrix(rows,cols,lista,dificultad)
+    val rompecabezasEliminado:List[Int] = eliminarElemento(fila,columna, lista)._1.data //Devuelve la matriz sin el rompecabezas porque ya ha eliminado todos los elementos iguales
+    new Matrix(rows,cols,rompecabezasEliminado,dificultad)
 
   }
   private def eliminarRompecabezasAux(fila: Int, columna: Int, matriz: List[Int], elemento: Int):List[Int] = {
