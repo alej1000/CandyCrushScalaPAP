@@ -456,13 +456,16 @@ def imprimir(data: List[Int], cols: Int): Unit = {
       if (filaActual < 0) return eliminarTNTAux(filaRelativa + 1, columnaRelativa, filaOriginal, columnaOriginal, matriz)
       else if (columnaActual < 0) return eliminarTNTAux(filaRelativa, columnaRelativa + 1, filaOriginal, columnaOriginal, matriz)
       else if (filaActual >= rows) return matriz
+      else if (columnaActual>=cols) return eliminarTNTAux(filaRelativa+1, -4, filaOriginal, columnaOriginal, matriz)
       else return eliminarTNTAux(filaRelativa + 1, -4, filaOriginal, columnaOriginal, matriz)
     }
-    if(filaRelativa<4 && columnaRelativa>4){ //Si estoy en el final de la fila me voy a la siguiente
+    if(filaRelativa>4 && columnaRelativa>4){ //Si estoy en el final de la fila me voy a la siguiente
       return matriz
-    }else if(filaRelativa>4){ //Si estoy en la ultima esquina (he acabado)
+    }else if(columnaRelativa>4){ //Si estoy en la ultima esquina (he acabado)
       return eliminarTNTAux(filaRelativa+1,-4,filaOriginal,columnaOriginal,matriz)
-    }else{
+    }else if(filaRelativa>4) return matriz
+    else{
+      if(filaRelativa*filaRelativa+columnaRelativa*columnaRelativa>16) return eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz) //No reemplazo
       val matriz0:List[Int]=reemplazarElemento(filaActual,columnaActual,0,matriz)
       return eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz0)
     }
