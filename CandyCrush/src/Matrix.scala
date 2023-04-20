@@ -147,7 +147,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     if (index >= cols) {
       return
     }
-    printf("%4d", index)
+    printf("%4d ", index)
     imprimirNumerosDeColumna(cols, index + 1)
   }
 
@@ -253,13 +253,14 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     val rand = new Random()
     elemento match {
       case 7 => {
+        println("Has encontrado una bomba")
         val matriz:Matrix =eliminarBomba(fila, columna, rand.nextInt(1))
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
         (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
 
       }
       case 8 => {
-        println("Has encontrado una bomba")
+        println("Has encontrado un TNT")
         println("Has perdido")
         val matriz:Matrix =eliminarTNT(fila, columna, data)
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
@@ -369,11 +370,11 @@ def imprimir(data: List[Int], cols: Int): Unit = {
 
 
   //Supongo que habrá que pasarle la matriz a eliminar, de momento coge los datos de la clase Matrix
-  private def eliminarBomba(fila: Int, columna: Int, eliminarFila: Int): Matrix = {
-    if (eliminarFila == 1) {
+  private def eliminarBomba(fila: Int, columna: Int, eliminoFila: Int): Matrix = {
+    if (eliminoFila == 1) {
       //Elimino la fila
       //val matriz = new Matrix(rows,cols,data,dificultad)
-      val lista: List[Int] = this.eliminarFila(fila, data, cols)
+      val lista: List[Int] = eliminarFila(fila, data, cols)
       new Matrix(rows, cols, lista, dificultad)
     } else {
       //Elimino la columna
@@ -428,13 +429,19 @@ def imprimir(data: List[Int], cols: Int): Unit = {
   private def eliminarTNTAux(filaRelativa:Int,columnaRelativa:Int,filaOriginal:Int,columnaOriginal:Int,matriz:List[Int]):List[Int]={
     val filaActual:Int = filaRelativa+filaOriginal
     val columnaActual:Int = columnaRelativa+columnaOriginal
-    if(columnaRelativa>4){ //Si estoy en el final de la fila me voy a la siguiente
-      eliminarTNTAux(filaRelativa+1,-4,filaOriginal,columnaOriginal,matriz)
-    }else if(filaRelativa>4 && columnaRelativa>4){ //Si estoy en la ultima esquina (he acabado)
-      matriz
+    if(filaActual<0 || filaActual>=rows || columnaActual<0 || columnaActual>=cols) { //Si estoy fuera de la matriz
+      if (filaActual < 0) return eliminarTNTAux(filaRelativa + 1, columnaRelativa, filaOriginal, columnaOriginal, matriz)
+      else if (columnaActual < 0) return eliminarTNTAux(filaRelativa, columnaRelativa + 1, filaOriginal, columnaOriginal, matriz)
+      else if (filaActual >= rows) return matriz
+      else return eliminarTNTAux(filaRelativa + 1, -4, filaOriginal, columnaOriginal, matriz)
+    }
+    if(filaRelativa<4 && columnaRelativa>4){ //Si estoy en el final de la fila me voy a la siguiente
+      return matriz
+    }else if(filaRelativa>4){ //Si estoy en la ultima esquina (he acabado)
+      return eliminarTNTAux(filaRelativa+1,-4,filaOriginal,columnaOriginal,matriz)
     }else{
       val matriz0:List[Int]=reemplazarElemento(filaActual,columnaActual,0,matriz)
-      eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz0)
+      return eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz0)
     }
   }
 
