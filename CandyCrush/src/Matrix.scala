@@ -126,7 +126,10 @@ def imprimir(data: List[Int], cols: Int): Unit = {
       printf("%4d", rowIndex)
     }
     // imprimir celda
-    printf("%4d", data(rowIndex * cols + colIndex))
+    if(data(rowIndex * cols + colIndex) == 7) printf("%4s", "B")
+    else if(data(rowIndex * cols + colIndex) == 8) printf("%4s", "TNT")
+    else if(data(rowIndex * cols + colIndex)>=11 && data(rowIndex * cols + colIndex)<=16) printf("%4s","R"+ data(rowIndex * cols + colIndex)%10)
+    else printf("%4d", data(rowIndex * cols + colIndex))
 
     // imprimir línea separadora lateral
     if (colIndex == cols - 1) {
