@@ -254,7 +254,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     elemento match {
       case 7 => {
         println("Has encontrado una bomba")
-        val matriz:Matrix =eliminarBomba(fila, columna, rand.nextInt(1)+1)
+        val matriz:Matrix =eliminarBomba(fila, columna, rand.nextInt(1))
         println("Matriz después de eliminar la bomba")
         matriz.toString()
         println("Matriz después de activar la gravedad")
