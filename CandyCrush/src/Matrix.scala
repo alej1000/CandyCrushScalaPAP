@@ -254,7 +254,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     elemento match {
       case 7 => {
         println("Has encontrado una bomba")
-        val matriz:Matrix =eliminarBomba(fila, columna, rand.nextInt(1))
+        val matriz:Matrix =eliminarBomba(fila, columna, rand.nextInt(1)+1)
         println("Matriz después de eliminar la bomba")
         matriz.toString()
         println("Matriz después de activar la gravedad")
@@ -372,19 +372,27 @@ def imprimir(data: List[Int], cols: Int): Unit = {
   //      Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,matriz), lista0), eliminarColumna(index + 1, columnas, Matrix.deja(fin + 1,matriz)))
   //    }
   //  }
-  def eliminarColumna(col: Int, columnas: Int): List[Int] = {
+  def eliminarColumna(indice: Int, columnas: Int): List[Int] = {
     if (isEmpty(data)) Nil
     else {
-      eliminarColumnaAux(col, columnas, data) //col sería el primer indice de la columna a eliminar
+      //eliminarColumnaAux(indice, columnas, data) //col sería el primer indice de la columna a eliminar
+      val columna:Int = indice % columnas
+      eliminarColumnaAux(columna,0,data)
     }
   }
 
-  def eliminarColumnaAux(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
-    if (index >= columnas) matriz
+//  def eliminarColumnaAux(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
+//    if (index >= columnas) matriz
+//    else {
+//      val fila = index / columnas
+//      val col = index % columnas
+//      eliminarColumnaAux(col, cols, reemplazarElemento(fila, col, 0, matriz))
+//    }
+//  }
+  def eliminarColumnaAux(col:Int,fila:Int,matriz:List[Int]):List[Int]={
+    if (fila >= rows) matriz
     else {
-      val fila = index / columnas
-      val col = index % columnas
-      eliminarColumnaAux(col, cols, reemplazarElemento(fila, col, 0, matriz))
+      eliminarColumnaAux(col, fila + 1, reemplazarElemento(fila, col, 0, matriz))
     }
   }
 
