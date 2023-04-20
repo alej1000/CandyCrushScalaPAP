@@ -409,7 +409,10 @@ def imprimir(data: List[Int], cols: Int): Unit = {
   private def eliminarRompecabezas(fila: Int, columna: Int, matriz: List[Int]): Matrix = {
     //Recorre la matriz y si encuentra un elemento igual al de la posición de origen, lo cambia por un 0
     val lista:List[Int]= eliminarRompecabezasAux(fila,columna,matriz,getElem(matriz,fila*cols+columna))
-    val rompecabezasEliminado:List[Int] = eliminarElemento(fila,columna, lista)._1.data //Devuelve la matriz sin el rompecabezas porque ya ha eliminado todos los elementos iguales
+    //val rompecabezasEliminado:List[Int] = eliminarElemento(fila,columna, lista)._1.data //Devuelve la matriz sin el rompecabezas porque ya ha eliminado todos los elementos iguales
+    //new Matrix(rows,cols,rompecabezasEliminado,dificultad)
+
+    val rompecabezasEliminado:List[Int]=reemplazarElemento(fila, columna, 0, lista)
     new Matrix(rows,cols,rompecabezasEliminado,dificultad)
 
   }
