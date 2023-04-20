@@ -32,6 +32,9 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   def getNumColumnas(): Int = cols
 
   def getNumFilas(): Int = rows
+
+  def getData(): List[Int] = data
+
 // Este es el primer imprimir bonito pero usa bucles
 //  def imprimir(data: List[Int], cols: Int): Unit = {
 //    val rows = data.length / cols
@@ -488,7 +491,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     case _ :: _ => false
   }
 
-  private def eliminarElemento(fila: Int, columna: Int, matriz: List[Int]): (Matrix, Int) = {
+  def eliminarElemento(fila: Int, columna: Int, matriz: List[Int]): (Matrix, Int) = {
     //con backtracking miramos arriba abajo izquierda y derecha
     //si el elemento es igual al de la posicion de origen y en la lista "elementosVisitados" hay un 0, entonces en la lista "elementosVisitados" el indice actual y hacemos recursión
     //si en la lista "elementosVisitados" hay un 1, entonces hacemos backtrack

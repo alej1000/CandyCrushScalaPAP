@@ -68,16 +68,42 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
         partida(tableroNew, vidasNew, modoDeJuego)
       }else{ //Es automático
-        val rand = new Random()
-        val fila = rand.nextInt(tablero.getNumFilas())
-        val columna = rand.nextInt(tablero.getNumColumnas())
-        //Ver como hacer solo una llamada
-        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
-        partida(tableroNew, vidasNew, modoDeJuego)
+//        val rand = new Random()
+//        val fila = rand.nextInt(tablero.getNumFilas())
+//        val columna = rand.nextInt(tablero.getNumColumnas())
+//        //Ver como hacer solo una llamada
+//        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+//        partida(tableroNew, vidasNew, modoDeJuego)
+        modoAutomatico(tablero,vidas)
       }
-
-
     }
+
+    def modoAutomatico(tablero:Matrix, vidas:Int): Unit = {
+      val (fila:Int,columna:Int) = consultarMejorOpcion(tablero)
+      println("La mejor opción es la fila: " + fila + " y la columna: " + columna + "")
+      val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas)
+
+      partida(tableroNew, vidasNew, 'a')
+    }
+
+    def consultarMejorOpcion(tablero:Matrix): (Int,Int) = {
+      val (fila:Int,columna:Int,_) = consultarMejorOpcionAux(tablero,0,0,0,0,0)
+      (fila,columna)
+    }
+    def consultarMejorOpcionAux(tablero:Matrix,fila:Int,columna:Int,mejorContador:Int,mejorFila:Int,mejorColumna:Int): (Int,Int,Int) ={
+      val contadorActual = tablero.eliminarElemento(fila,columna,tablero.getData)._2
+      if(fila == tablero.getNumFilas()-1 && columna == tablero.getNumColumnas()-1){ //Si llego al final del tablero el contador es el que tengo
+        return (mejorFila,mejorColumna,mejorContador)
+      }else if(columna>=tablero.getNumColumnas()){ //Si llego al final de la fila
+        if(mejorContador < contadorActual) return consultarMejorOpcionAux(tablero,fila+1,0,contadorActual,fila,columna)
+         return consultarMejorOpcionAux(tablero,fila+1,0,mejorContador,mejorFila,mejorColumna)
+      }else{  //Si no llego al final de la fila
+        if(mejorContador < contadorActual) return consultarMejorOpcionAux(tablero,fila,columna+1,contadorActual,fila,columna)
+        return consultarMejorOpcionAux(tablero,fila,columna+1,mejorContador,mejorFila,mejorColumna)
+      }
+    }
+
+
     def mostrarVidas(vidas:Int): Unit = {
       if(vidas>0) {
         mostrarVidas(vidas-1)
