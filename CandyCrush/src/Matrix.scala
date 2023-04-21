@@ -260,28 +260,20 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     elemento match {
       case 7 => {
         println("Has encontrado una bomba")
-        val matriz:Matrix =eliminarBomba(fila, columna, rand.nextInt(1))
-        println("Matriz después de eliminar la bomba")
-        matriz.toString()
-        println("Matriz después de activar la gravedad")
+        val (matriz:Matrix,contador:Int) =eliminarBomba(fila, columna, rand.nextInt(1))
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
         (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
 
       }
       case 8 => {
         println("Has encontrado un TNT")
-        println("Has perdido")
-        val matriz:Matrix =eliminarTNT(fila, columna, data)
-        println("Matriz después de eliminar el TNT")
-        matriz.toString()
-        println("Matriz después de activar la gravedad")
+        val (matriz:Matrix,contador:Int) =eliminarTNT(fila, columna, data)
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
         (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
 
       }
 //      case 9 => {
 //        println("Has encontrado un rompecabezas")
-//        println("Has perdido")
 //        val matriz:Matrix =eliminarRompecabezas(fila, columna, data)
 //        println("Matriz después de eliminar el rompecabezas")
 //        matriz.toString()
@@ -293,11 +285,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
       case default => {
         if(elemento>=11 && elemento<=16){ //Es rompecabezas
           println("Has encontrado un rompecabezas")
-          println("Has perdido")
-          val matriz: Matrix = eliminarRompecabezas(fila, columna, data)
-          println("Matriz después de eliminar el rompecabezas")
-          matriz.toString()
-          println("Matriz después de activar la gravedad")
+          val (matriz: Matrix,contador:Int) = eliminarRompecabezas(fila, columna, data)
           val matrizGrav: List[Int] = matriz.activarGravedad(0, matriz.data)
           return (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
         }
@@ -404,54 +392,54 @@ def imprimir(data: List[Int], cols: Int): Unit = {
 
 
   //Supongo que habrá que pasarle la matriz a eliminar, de momento coge los datos de la clase Matrix
-  private def eliminarBomba(fila: Int, columna: Int, eliminoFila: Int): Matrix = {
+  private def eliminarBomba(fila: Int, columna: Int, eliminoFila: Int): (Matrix,Int) = {
     if (eliminoFila == 1) {
       //Elimino la fila
       //val matriz = new Matrix(rows,cols,data,dificultad)
       println("Elimino fila")
       val lista: List[Int] = eliminarFila(fila, data, cols)
-      new Matrix(rows, cols, lista, dificultad)
+      (new Matrix(rows, cols, lista, dificultad),cols) //Devuelvo la matriz sin la fila y el número de columnas eliminadas
     } else {
       //Elimino la columna
       println("Elimino columna")
       val indiceOrigen: Int = fila * cols + columna
       val lista: List[Int] = eliminarColumna(indiceOrigen, cols)
-      new Matrix(rows, cols, lista, dificultad)
+      (new Matrix(rows, cols, lista, dificultad),rows) //Devuelvo la matriz sin la columna y el número de filas eliminadas
     }
   }
 
-  private def eliminarRompecabezas(fila: Int, columna: Int, matriz: List[Int]): Matrix = {
+  private def eliminarRompecabezas(fila: Int, columna: Int, matriz: List[Int]): (Matrix,Int) = {
     //Recorre la matriz y si encuentra un elemento igual al de la posición de origen, lo cambia por un 0
-    val lista:List[Int]= eliminarRompecabezasAux(fila,columna,matriz,getElem(matriz,fila*cols+columna))
+    val (lista:List[Int],contador:Int)= eliminarRompecabezasAux(fila,columna,matriz,getElem(matriz,fila*cols+columna),1)
     //val rompecabezasEliminado:List[Int] = eliminarElemento(fila,columna, lista)._1.data //Devuelve la matriz sin el rompecabezas porque ya ha eliminado todos los elementos iguales
     //new Matrix(rows,cols,rompecabezasEliminado,dificultad)
 
     val rompecabezasEliminado:List[Int]=reemplazarElemento(fila, columna, 0, lista)
-    new Matrix(rows,cols,rompecabezasEliminado,dificultad)
+    (new Matrix(rows,cols,rompecabezasEliminado,dificultad),contador)
 
   }
-  private def eliminarRompecabezasAux(fila: Int, columna: Int, matriz: List[Int], elemento: Int):List[Int] = {
-    if (isEmpty(matriz)) Nil
+  private def eliminarRompecabezasAux(fila: Int, columna: Int, matriz: List[Int], elemento: Int,contador:Int):(List[Int],Int) = {
+    if (isEmpty(matriz)) (Nil,contador)
     else {
       val elementoActual: Int = matriz.head
       if (elementoActual == elemento % 10) {
         //reemplazarElemento(fila, columna, 0, matriz) :: eliminarRompecabezas(fila,columna,matriz.tail,elemento)
-        0 :: eliminarRompecabezasAux(fila, columna, matriz.tail, elemento)
+        (0 :: eliminarRompecabezasAux(fila, columna, matriz.tail, elemento,contador+1)._1,contador+1) //Si elimino el elemento sumo 1 al contador
       }
       else {
-        elementoActual :: eliminarRompecabezasAux(fila, columna, matriz.tail, elemento)
+        (elementoActual :: eliminarRompecabezasAux(fila, columna, matriz.tail, elemento,contador)._1,contador) //Si no elimino el elemento el contador no cambia
       }
     }
   }
 
 
-  private def eliminarTNT(fila:Int,columna:Int,matriz:List[Int]): Matrix = {
+  private def eliminarTNT(fila:Int,columna:Int,matriz:List[Int]): (Matrix,Int) = {
     //val inicio:Int= (fila-4) * cols + (columna-4) //Primera esquina a comprobar
     //val fin:Int= (fila+4) * cols + (columna + 4) //Ultima esquina a comprobar
     //val lista:List[Int]=eliminarTNTAux(inicio,fin,fila*cols+columna,fila-4,columna-4,matriz)
     //val lista:List[Int] = eliminarTNTAux(fila-4,fila+4,columna-4,columna+4,fila-4,columna-4,fila,columna,matriz)
-    val lista:List[Int] = eliminarTNTAux(-4,-4,fila,columna,matriz)
-    new Matrix(rows,cols,lista,dificultad)
+    val (lista:List[Int],contador:Int) = eliminarTNTAux(-4,-4,fila,columna,matriz,0)
+    (new Matrix(rows,cols,lista,dificultad),contador)
   }
 //  private def eliminarTNTAux(filaInicio:Int,filaFin:Int,columnaInicio:Int,columnaFin:Int,filaActual:Int,columnaActual:Int,filaSeleccionada:Int,columnaSeleccionada:Int,matriz:List[Int]):List[Int]={
 //    if(filaActual>=filaActual && filaActual<filaFin && filaActual<rows && filaActual>=0){ //Estoy en la fila correcta
@@ -466,25 +454,25 @@ def imprimir(data: List[Int], cols: Int): Unit = {
 //    }
 //  }
 
-  private def eliminarTNTAux(filaRelativa:Int,columnaRelativa:Int,filaOriginal:Int,columnaOriginal:Int,matriz:List[Int]):List[Int]={
+  private def eliminarTNTAux(filaRelativa:Int,columnaRelativa:Int,filaOriginal:Int,columnaOriginal:Int,matriz:List[Int],contador:Int):(List[Int],Int)={
     val filaActual:Int = filaRelativa+filaOriginal
     val columnaActual:Int = columnaRelativa+columnaOriginal
     if(filaActual<0 || filaActual>=rows || columnaActual<0 || columnaActual>=cols) { //Si estoy fuera de la matriz
-      if (filaActual < 0) return eliminarTNTAux(filaRelativa + 1, columnaRelativa, filaOriginal, columnaOriginal, matriz)
-      else if (columnaActual < 0) return eliminarTNTAux(filaRelativa, columnaRelativa + 1, filaOriginal, columnaOriginal, matriz)
-      else if (filaActual >= rows) return matriz
-      else if (columnaActual>=cols) return eliminarTNTAux(filaRelativa+1, -4, filaOriginal, columnaOriginal, matriz)
-      else return eliminarTNTAux(filaRelativa + 1, -4, filaOriginal, columnaOriginal, matriz)
+      if (filaActual < 0) return eliminarTNTAux(filaRelativa + 1, columnaRelativa, filaOriginal, columnaOriginal, matriz,contador)
+      else if (columnaActual < 0) return eliminarTNTAux(filaRelativa, columnaRelativa + 1, filaOriginal, columnaOriginal, matriz,contador)
+      else if (filaActual >= rows) return (matriz,contador)
+      else if (columnaActual>=cols) return eliminarTNTAux(filaRelativa+1, -4, filaOriginal, columnaOriginal, matriz,contador)
+      else return eliminarTNTAux(filaRelativa + 1, -4, filaOriginal, columnaOriginal, matriz,contador)
     }
     if(filaRelativa>4 && columnaRelativa>4){ //Si estoy en el final de la fila me voy a la siguiente
-      return matriz
+      return (matriz,contador)
     }else if(columnaRelativa>4){ //Si estoy en la ultima esquina (he acabado)
-      return eliminarTNTAux(filaRelativa+1,-4,filaOriginal,columnaOriginal,matriz)
-    }else if(filaRelativa>4) return matriz
+      return eliminarTNTAux(filaRelativa+1,-4,filaOriginal,columnaOriginal,matriz,contador)
+    }else if(filaRelativa>4) return (matriz,contador)
     else{
-      if(filaRelativa*filaRelativa+columnaRelativa*columnaRelativa>16) return eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz) //No reemplazo
+      if(filaRelativa*filaRelativa+columnaRelativa*columnaRelativa>16) return eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz,contador) //No reemplazo
       val matriz0:List[Int]=reemplazarElemento(filaActual,columnaActual,0,matriz)
-      return eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz0)
+      return eliminarTNTAux(filaRelativa,columnaRelativa+1,filaOriginal,columnaOriginal,matriz0,contador+1)
     }
   }
 
@@ -494,7 +482,18 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     case _ :: _ => false
   }
 
-  def eliminarElemento(fila: Int, columna: Int, matriz: List[Int]): (Matrix, Int) = {
+  def detectorEliminacion(fila:Int,columna:Int): (Matrix,Int) ={
+    if(getElem(fila,columna)==7){
+      val media:Int = (rows+cols)/2
+      (this,media)
+    }
+    else if(getElem(fila,columna)==8) eliminarTNT(fila,columna,data)
+    else if(getElem(fila,columna)>=11 && getElem(fila, columna)<=16) eliminarRompecabezas(fila,columna,data)
+    else
+    eliminarElemento(fila,columna,data)
+  }
+
+  private def eliminarElemento(fila: Int, columna: Int, matriz: List[Int]): (Matrix, Int) = {
     //con backtracking miramos arriba abajo izquierda y derecha
     //si el elemento es igual al de la posicion de origen y en la lista "elementosVisitados" hay un 0, entonces en la lista "elementosVisitados" el indice actual y hacemos recursión
     //si en la lista "elementosVisitados" hay un 1, entonces hacemos backtrack

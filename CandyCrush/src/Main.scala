@@ -82,7 +82,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val (fila:Int,columna:Int) = consultarMejorOpcion(tablero)
       println("La mejor opción es la fila: " + fila + " y la columna: " + columna + "")
       val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas)
-
+      scala.io.StdIn.readLine()//Para que pare y se pueda ver
       partida(tableroNew, vidasNew, 'a')
     }
 
@@ -91,7 +91,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       (fila,columna)
     }
     def consultarMejorOpcionAux(tablero:Matrix,fila:Int,columna:Int,mejorContador:Int,mejorFila:Int,mejorColumna:Int): (Int,Int,Int) ={
-      val contadorActual = tablero.eliminarElemento(fila,columna,tablero.getData)._2
+      val contadorActual = tablero.detectorEliminacion(fila, columna)._2
       if(fila == tablero.getNumFilas()-1 && columna == tablero.getNumColumnas()-1){ //Si llego al final del tablero el contador es el que tengo
         return (mejorFila,mejorColumna,mejorContador)
       }else if(columna>=tablero.getNumColumnas()){ //Si llego al final de la fila
