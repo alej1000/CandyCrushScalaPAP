@@ -12,6 +12,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
 
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
+    val puntosIniciales:Int = 0
     if(args.length > 4){ //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
         val filas = args(0).toInt
         val columnas = args(1).toInt
@@ -19,11 +20,11 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val dificultad = args(3).toInt
         if(dificultad == 2 || dificultad==1){
           val tablero = new Matrix(filas,columnas,dificultad)
-          partida(tablero,5,modoDeJuego)
+          partida(tablero,5,modoDeJuego,puntosIniciales)
         }else{
           println("Se pondrá dificultad 2 por defecto")
           val tablero = new Matrix(filas,columnas,2)
-          partida(tablero,5,modoDeJuego)
+          partida(tablero,5,modoDeJuego,puntosIniciales)
         }
 
     }else{ // Si no es por consola
@@ -40,16 +41,16 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val dificultad = scala.io.StdIn.readInt()
       if (dificultad == 2 || dificultad == 1) {
         val tablero = new Matrix(filas, columnas, dificultad)
-        partida(tablero, 5, modoDeJuego)
+        partida(tablero, 5, modoDeJuego,puntosIniciales)
       } else {
         println("Se pondrá dificultad 2 por defecto")
         val tablero = new Matrix(filas, columnas, 2)
-        partida(tablero, 5, modoDeJuego)
+        partida(tablero, 5, modoDeJuego,puntosIniciales)
       }
     }
 
 
-    def partida(tablero: Matrix, vidas: Int,modoDeJuego:Char): Unit = {
+    def partida(tablero: Matrix, vidas: Int,modoDeJuego:Char,puntosTotales:Int): Unit = {
       if (vidas == 0) {
         println("Has perdido")
         return
@@ -58,6 +59,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       print("Vidas restantes: ")
       mostrarVidas(vidas)
       println()
+      println("Puntos: "+puntosTotales)
       tablero.toString()
       if(modoDeJuego == 'm'){ //Es manual
         println("Introduce la fila")
@@ -65,8 +67,11 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         println("Introduce la columna")
         val columna = scala.io.StdIn.readInt()
         //Ver como hacer solo una llamada
-        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
-        partida(tableroNew, vidasNew, modoDeJuego)
+        val (tableroNew: Matrix, vidasNew: Int,contadorEliminados:Int,elementoEliminado:Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+        val puntosSumados:Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado)
+
+
+        partida(tableroNew, vidasNew, modoDeJuego,puntosSumados)
       }else{ //Es automático
 //        val rand = new Random()
 //        val fila = rand.nextInt(tablero.getNumFilas())
@@ -74,16 +79,17 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 //        //Ver como hacer solo una llamada
 //        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
 //        partida(tableroNew, vidasNew, modoDeJuego)
-        modoAutomatico(tablero,vidas)
+        modoAutomatico(tablero,vidas,puntosTotales)
       }
     }
 
-    def modoAutomatico(tablero:Matrix, vidas:Int): Unit = {
+    def modoAutomatico(tablero:Matrix, vidas:Int,puntosTotales:Int): Unit = {
       val (fila:Int,columna:Int) = consultarMejorOpcion(tablero)
       println("La mejor opción es la fila: " + fila + " y la columna: " + columna + "")
-      val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas)
+      val (tableroNew: Matrix, vidasNew: Int,contadorEliminados:Int,elementoEliminado:Int) = tablero.consulta(fila, columna, vidas)
       scala.io.StdIn.readLine()//Para que pare y se pueda ver
-      partida(tableroNew, vidasNew, 'a')
+      val puntosSumados:Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado)
+      partida(tableroNew, vidasNew, 'a',puntosSumados)
     }
 
     def consultarMejorOpcion(tablero:Matrix): (Int,Int) = {
@@ -108,6 +114,30 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       if(vidas>0) {
         mostrarVidas(vidas-1)
         print("❤️")
+      }
+    }
+
+    def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int): Int = {
+      println("ContadorEliminados: "+contadorEliminados)
+      if (contadorEliminados > 0) {
+        if(contadorEliminados>=10){ //Sumo un punto por cada 10 eliminados más los 10 eliminados
+          return 11 + sumarPuntos(puntos,contadorEliminados-10,elementoEliminado)
+        } else { //Sumo un punto por cada bloque eliminado
+          return contadorEliminados + sumarPuntos(puntos, 0, elementoEliminado)
+        }
+      } else {
+        println("ElementoEliminado: "+elementoEliminado)
+
+        if (elementoEliminado == 7) { //Eliminé bomba
+          return 5 + sumarPuntos(puntos, 0, 0)
+        }
+        if (elementoEliminado == 8) { //Eliminé TNT
+          return 10 + sumarPuntos(puntos, 0, 0)
+        }
+        if (elementoEliminado >= 11 && elementoEliminado <= 16) { //Eliminé rompecabezas
+          return 15 + sumarPuntos(puntos, 0, 0)
+        }
+        puntos
       }
     }
 
