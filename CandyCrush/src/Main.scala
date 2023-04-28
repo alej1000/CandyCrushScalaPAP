@@ -31,17 +31,15 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         }
 
     }else{ // Si no es por consola
-      println("Introduce cuantas filas quieres")
-      val filas = scala.io.StdIn.readInt()
+      val filas = introducirInt("Introduce cuantas filas quieres")
 
-      println("Introduce cuantas columnas quieres")
-      val columnas = scala.io.StdIn.readInt()
+      val columnas = introducirInt("Introduce cuantas columnas quieres")
 
       println("Intruce el modo de juego(a o m): ")
       val modoDeJuego = scala.io.StdIn.readChar()
 
       println("Introduce la dificultad (1 o 2): ")
-      val dificultad = scala.io.StdIn.readInt()
+      val dificultad = introducirInt("Introduce la dificultad (1 o 2):")
       if (dificultad == 2 || dificultad == 1) {
         val tablero = new Matrix(filas, columnas, dificultad)
         partida(tablero, 5, modoDeJuego,puntosIniciales,dificultad)
@@ -66,10 +64,10 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       println("Puntos: "+puntosTotales)
       tablero.toString()
       if(modoDeJuego == 'm'){ //Es manual
-        println("Introduce la fila")
-        val fila = scala.io.StdIn.readInt()
-        println("Introduce la columna")
-        val columna = scala.io.StdIn.readInt()
+//        println("Introduce la fila")
+        val fila = introducirInt("Introduce la fila")
+//        println("Introduce la columna")
+        val columna = introducirInt("Introduce la columna")
         //Ver como hacer solo una llamada
         val (tableroNew: Matrix, vidasNew: Int,contadorEliminados:Int,elementoEliminado:Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
         val puntosSumados:Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado)
@@ -86,6 +84,19 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 //        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
 //        partida(tableroNew, vidasNew, modoDeJuego)
         modoAutomatico(tablero,vidas,puntosTotales,dificultad:Int)
+      }
+    }
+
+    def introducirInt(cadena:String): Int = {
+      println(cadena+"\n")
+      val num = scala.io.StdIn.readLine()
+      try {
+        num.toInt
+      } catch {
+        case e: Exception => {
+          println("Introduce un número")
+          introducirInt(cadena)
+        }
       }
     }
 
