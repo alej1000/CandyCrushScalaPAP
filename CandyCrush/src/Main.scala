@@ -1,4 +1,7 @@
 import scala.util.Random
+import scala.io._
+import java.io._
+
 object Main { //Object, instancia unica que se utiliza en todo el programa
   def main(args: Array[String]): Unit = {
 
@@ -20,11 +23,11 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val dificultad = args(3).toInt
         if(dificultad == 2 || dificultad==1){
           val tablero = new Matrix(filas,columnas,dificultad)
-          partida(tablero,5,modoDeJuego,puntosIniciales)
+          partida(tablero,5,modoDeJuego,puntosIniciales,dificultad)
         }else{
           println("Se pondrá dificultad 2 por defecto")
           val tablero = new Matrix(filas,columnas,2)
-          partida(tablero,5,modoDeJuego,puntosIniciales)
+          partida(tablero,5,modoDeJuego,puntosIniciales,2)
         }
 
     }else{ // Si no es por consola
@@ -41,18 +44,19 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val dificultad = scala.io.StdIn.readInt()
       if (dificultad == 2 || dificultad == 1) {
         val tablero = new Matrix(filas, columnas, dificultad)
-        partida(tablero, 5, modoDeJuego,puntosIniciales)
+        partida(tablero, 5, modoDeJuego,puntosIniciales,dificultad)
       } else {
         println("Se pondrá dificultad 2 por defecto")
         val tablero = new Matrix(filas, columnas, 2)
-        partida(tablero, 5, modoDeJuego,puntosIniciales)
+        partida(tablero, 5, modoDeJuego,puntosIniciales,2)
       }
     }
 
 
-    def partida(tablero: Matrix, vidas: Int,modoDeJuego:Char,puntosTotales:Int): Unit = {
+    def partida(tablero: Matrix, vidas: Int,modoDeJuego:Char,puntosTotales:Int,dificultad:Int): Unit = {
       if (vidas == 0) {
         println("Has perdido")
+        controlFinal("Records.txt",puntosTotales)
         return
       }
       //println("Vidas: " + vidas)
@@ -70,8 +74,10 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val (tableroNew: Matrix, vidasNew: Int,contadorEliminados:Int,elementoEliminado:Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
         val puntosSumados:Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado)
 
+        if(dificultad==1) partida(tableroNew, vidasNew, modoDeJuego,puntosSumados,dificultad)
+        else partida(tableroNew, vidasNew, modoDeJuego,puntosSumados * 2,dificultad)
 
-        partida(tableroNew, vidasNew, modoDeJuego,puntosSumados)
+        //partida(tableroNew, vidasNew, modoDeJuego,puntosSumados)
       }else{ //Es automático
 //        val rand = new Random()
 //        val fila = rand.nextInt(tablero.getNumFilas())
@@ -79,17 +85,20 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 //        //Ver como hacer solo una llamada
 //        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
 //        partida(tableroNew, vidasNew, modoDeJuego)
-        modoAutomatico(tablero,vidas,puntosTotales)
+        modoAutomatico(tablero,vidas,puntosTotales,dificultad:Int)
       }
     }
 
-    def modoAutomatico(tablero:Matrix, vidas:Int,puntosTotales:Int): Unit = {
+    def modoAutomatico(tablero:Matrix, vidas:Int,puntosTotales:Int,dificultad:Int): Unit = {
       val (fila:Int,columna:Int) = consultarMejorOpcion(tablero)
       println("La mejor opción es la fila: " + fila + " y la columna: " + columna + "")
       val (tableroNew: Matrix, vidasNew: Int,contadorEliminados:Int,elementoEliminado:Int) = tablero.consulta(fila, columna, vidas)
       scala.io.StdIn.readLine()//Para que pare y se pueda ver
       val puntosSumados:Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado)
-      partida(tableroNew, vidasNew, 'a',puntosSumados)
+
+      if(dificultad==1) partida(tableroNew, vidasNew, 'a',puntosSumados,dificultad)
+      else partida(tableroNew, vidasNew, 'a',puntosSumados * 2,dificultad)
+      //partida(tableroNew, vidasNew, 'a',puntosSumados)
     }
 
     def consultarMejorOpcion(tablero:Matrix): (Int,Int) = {
@@ -116,6 +125,55 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         print("❤️")
       }
     }
+
+    def controlFinal(filename:String,puntuacionFinal:Int): Unit ={
+      val puntuaciones:List[String] = cargarPuntuaciones(filename)
+      mostrarPuntuaciones(puntuaciones)
+      println("Introduce tu nombre para que figure en los records")
+      val nombre:String = scala.io.StdIn.readLine()
+      guardarPuntuaciones(filename,nombre,puntuacionFinal)
+      val nuevasPuntuaciones:List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
+      mostrarPuntuaciones(nuevasPuntuaciones)
+
+    }
+
+    def guardarPuntuaciones(filename:String,nombre:String,puntuacion:Int): Unit ={
+      val file = new File(filename) //Si no existe lo crea
+      if (!file.exists()) {
+        file.createNewFile()
+      }
+      val writer = new FileWriter(new File(filename),true) //True para que no borre lo que ya hay -> Append
+      writer.write("Records\n")
+      writer.write(nombre + ": " + puntuacion+"\n")
+      writer.close()
+    }
+    //TODO: Quitar las funciones de listas -> empty, isEmpty
+    def cargarPuntuaciones(filename: String): List[String] = {
+      val file = new File(filename)
+      if (!file.exists()) {
+        println("No hay puntuaciones guardadas")
+        return List()
+      }else {
+        val source = Source.fromFile(filename)
+        try {
+          val lines: List[String] = source.getLines.toList
+          return lines
+        } finally {
+          source.close()
+        }
+      }
+    }
+
+
+
+    //TODO: Quitar las funciones de listas -> isEmpty
+    def mostrarPuntuaciones(puntuaciones:List[String]): Unit ={
+      if(!puntuaciones.isEmpty){
+        println(puntuaciones.head)
+        mostrarPuntuaciones(puntuaciones.tail)
+      }
+    }
+
 
     def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int): Int = {
       println("ContadorEliminados: "+contadorEliminados)

@@ -314,9 +314,15 @@ def imprimir(data: List[Int], cols: Int): Unit = {
           }
           if(contador>=7){
             //Añadimos Rompecabezas (11,12,13,14,15,16) en la posición que se introdujo
-            val matrizRompecabezas:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,rand.nextInt(6)+11,matriz.data),dificultad))
-            val matrizGrav: List[Int] = matrizRompecabezas.activarGravedad(0, matriz.data)
-            return (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,elementoEliminado)
+            if(dificultad==1){
+              val matrizRompecabezas: Matrix = (new Matrix(rows, cols, reemplazarElemento(fila, columna, rand.nextInt(6) + 11, matriz.data), dificultad))
+              val matrizGrav: List[Int] = matrizRompecabezas.activarGravedad(0, matriz.data)
+              return (new Matrix(rows, cols, matrizGrav, dificultad), vidas, contador, elementoEliminado)
+            }else{
+              val matrizRompecabezas: Matrix = (new Matrix(rows, cols, reemplazarElemento(fila, columna, rand.nextInt(4) + 11, matriz.data), dificultad))
+              val matrizGrav: List[Int] = matrizRompecabezas.activarGravedad(0, matriz.data)
+              return (new Matrix(rows, cols, matrizGrav, dificultad), vidas, contador, elementoEliminado)
+            }
           }
           val matrizGrav:List[Int] = matriz.activarGravedad(0,matriz.data)
           (new Matrix(rows, cols, matrizGrav,dificultad), vidas,contador,elementoEliminado)
