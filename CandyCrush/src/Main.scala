@@ -159,7 +159,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         file.createNewFile()
       }
       val lastRecords:List[String] = cargarPuntuaciones(filename)
-      val puntuacionesActualizadas:String = guardarPuntuacionesPruebaAux(filename,lastRecords,nombre,puntuacion,"")
+      val puntuacionesActualizadas:String = guardarPuntuacionesAux(filename,lastRecords,nombre,puntuacion,"")
       val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
       writer.write(puntuacionesActualizadas)
       writer.close()
@@ -176,10 +176,10 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val (first: String, score: Int) = buscarClaveValor(lastRecords.head)
       if(score > puntuacion){
         val cadena:String = puntuacionesAcum + (first + ":" + score + "\n")
-        guardarPuntuacionesPruebaAux(filename,lastRecords.tail,nombre,puntuacion,cadena)
+        guardarPuntuacionesAux(filename,lastRecords.tail,nombre,puntuacion,cadena)
       }else{
         val cadena:String = puntuacionesAcum + (nombre+ ":" + puntuacion + "\n")
-        guardarPuntuacionesPruebaAux(filename,lastRecords,"-1",-1,cadena)
+        guardarPuntuacionesAux(filename,lastRecords,"-1",-1,cadena)
       }
     }
 
