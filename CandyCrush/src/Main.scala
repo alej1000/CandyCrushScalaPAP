@@ -125,7 +125,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-
     def mostrarVidas(vidas: Int): Unit = {
       if (vidas > 0) {
         mostrarVidas(vidas - 1)
@@ -136,43 +135,70 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     def controlFinal(filename: String, puntuacionFinal: Int,modoDeJuego:Char): Unit = {
       if(modoDeJuego == 'm'){
         val puntuaciones: List[String] = cargarPuntuaciones(filename)
+        println("Ultimos records: ")
         mostrarPuntuaciones(puntuaciones)
+        println("Tú puntuacion:" + puntuacionFinal)
         println("Introduce tu nombre para que figure en los records")
         val nombre: String = scala.io.StdIn.readLine()
-        guardarPuntuaciones(filename, nombre, puntuacionFinal)
+        guardarPuntuaciones(filename,nombre,puntuacionFinal)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //TODO:Cuando sea la mas alta salta un mensaje de nuevo Record
+        println("Records:")
         mostrarPuntuaciones(nuevasPuntuaciones)
       }else{ // Es automatico
         val nombre: String = "AutoGod"
-        guardarPuntuaciones(filename, nombre, puntuacionFinal)
+        guardarPuntuaciones(filename,nombre,puntuacionFinal)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
         mostrarPuntuaciones(nuevasPuntuaciones)
       }
     }
 
-    def guardarPuntuaciones(filename: String, nombre: String, puntuacion: Int): Unit = {
-      val file = new File(filename) //Si no existe lo crea
-      if (!file.exists()) {
+
+    def guardarPuntuaciones(filename:String,nombre:String,puntuacion:Int):Unit ={
+      val file = new File(filename)
+      if(!file.exists()){
         file.createNewFile()
-        val writer = new FileWriter(new File(filename), true) //True para que no borre lo que ya hay -> Append
-        writer.write("Records\n")
       }
-      val writer = new FileWriter(new File(filename), true) //True para que no borre lo que ya hay -> Append
-      writer.write(nombre + ": " + puntuacion + "\n")
+      val lastRecords:List[String] = cargarPuntuaciones(filename)
+      val puntuacionesActualizadas:String = guardarPuntuacionesPruebaAux(filename,lastRecords,nombre,puntuacion,"")
+      val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
+      writer.write(puntuacionesActualizadas)
       writer.close()
     }
-    /*def guardarPuntuacionesAux(filename:String, puntuaciones:List[String],nombre:String, ultimaPuntuacion:Int):Unit={
-      val writer = new FileWriter(new File(filename),true) //True para que no borre lo que ya hay -> Append
-      if(puntuaciones.isEmpty){
-        writer.write(nombre + ": " + ultimaPuntuacion+"\n")
-      }else{
-        if()
+
+    def guardarPuntuacionesAux(filename:String,lastRecords:List[String],nombre:String,puntuacion:Int,puntuacionesAcum:String):String ={
+      if(lastRecords.isEmpty) { //Si he acabado
+        if(puntuacion == -1){ //Si puse mi ultima puntuacion acabo
+          return puntuacionesAcum
+        }else{ //Si no he puesto mi ultima puntuacion
+          return puntuacionesAcum + (nombre + ":" + puntuacion + "\n")
+        }
       }
+      val (first: String, score: Int) = buscarClaveValor(lastRecords.head)
+      if(score > puntuacion){
+        val cadena:String = puntuacionesAcum + (first + ":" + score + "\n")
+        guardarPuntuacionesPruebaAux(filename,lastRecords.tail,nombre,puntuacion,cadena)
+      }else{
+        val cadena:String = puntuacionesAcum + (nombre+ ":" + puntuacion + "\n")
+        guardarPuntuacionesPruebaAux(filename,lastRecords,"-1",-1,cadena)
+      }
+    }
 
-    }*/
+    def buscarClaveValor(str: String): (String, Int) = {
+      def buscarClaveValorRec(str: String, i: Int): (String, Int) = {
+        if (i >= str.length) {
+          throw new IllegalArgumentException("No se encontró el carácter ':' en el String.")
+        } else if (str.charAt(i) == ':') {
+          val key = str.substring(0, i).trim
+          val value = str.substring(i + 1).trim.toInt
+          (key, value)
+        } else {
+          buscarClaveValorRec(str, i + 1)
+        }
+      }
+      buscarClaveValorRec(str, 0)
+    }
 
 
-    //TODO: Quitar las funciones de listas -> empty, isEmpty
     def cargarPuntuaciones(filename: String): List[String] = {
       val file = new File(filename)
       if (!file.exists()) {
@@ -182,13 +208,13 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val source = Source.fromFile(filename)
         try {
           val lines: List[String] = source.getLines.toList
+          println("Las puntuaciones que devuelve cargarPuntuaciones son: "+lines)
           return lines
         } finally {
           source.close()
         }
       }
     }
-
 
     //TODO: Quitar las funciones de listas -> isEmpty
     def mostrarPuntuaciones(puntuaciones: List[String]): Unit = {
@@ -198,31 +224,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-
-    /*def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int): Int = {
-      println("ContadorEliminados: " + contadorEliminados)
-      if (contadorEliminados > 0) {
-        if (contadorEliminados >= 10) { //Sumo un punto por cada 10 eliminados más los 10 eliminados
-          return 11 + sumarPuntos(puntos, contadorEliminados - 10, elementoEliminado)
-        } else { //Sumo un punto por cada bloque eliminado
-          return contadorEliminados + sumarPuntos(puntos, 0, elementoEliminado)
-        }
-      } else {
-        println("ElementoEliminado: " + elementoEliminado)
-
-        if (elementoEliminado == 7) { //Eliminé bomba
-          return 5 + sumarPuntos(puntos, 0, 0)
-        }
-        if (elementoEliminado == 8) { //Eliminé TNT
-          return 10 + sumarPuntos(puntos, 0, 0)
-        }
-        if (elementoEliminado >= 11 && elementoEliminado <= 16) { //Eliminé rompecabezas
-          return 15 + sumarPuntos(puntos, 0, 0)
-        }
-        puntos
-      }
-    }*/
-
     def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int,dificultad:Int): Int = {
       elementoEliminado match {
         case 7 => puntos + (5 + contadorEliminados + contadorEliminados / 10) * dificultad //Sumo 5 por bomba + 1 por cada elemento eliminado + 1 por cada 10 elementos eliminados
@@ -231,9 +232,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         case _ => puntos + (contadorEliminados + contadorEliminados / 10) * dificultad //Sumo 1 por cada elemento eliminado + 1 por cada 10 elementos eliminados
       }
     }
-
   }
-
 }
 
 
