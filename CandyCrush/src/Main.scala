@@ -1,6 +1,7 @@
 import scala.util.Random
 import scala.io._
 import java.io._
+import pruebaJava.PruebaJava
 
 object Main { //Object, instancia unica que se utiliza en todo el programa
   def main(args: Array[String]): Unit = {
@@ -10,6 +11,13 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     //    val miMat = generarMatriz(6,10)
     //    val miPrueba = new Prueba(6,10,miMat)
     //    miPrueba.imprimir()
+
+
+
+    //Para comnectarse a las funciones java
+      val miInstancia = new PruebaJava()
+      miInstancia.miFuncion("Hola desde Scala")
+
 
 
 
