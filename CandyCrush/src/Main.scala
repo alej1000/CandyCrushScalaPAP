@@ -7,61 +7,60 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     //val miMatriz = new Matrix(6,10)
     //miMatriz.toString()
-//    val miMat = generarMatriz(6,10)
-//    val miPrueba = new Prueba(6,10,miMat)
-//    miPrueba.imprimir()
+    //    val miMat = generarMatriz(6,10)
+    //    val miPrueba = new Prueba(6,10,miMat)
+    //    miPrueba.imprimir()
 
 
 
 
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
-    val puntosIniciales:Int = 0
-    if(args.length > 4){ //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
-        val filas = args(0).toInt
-        val columnas = args(1).toInt
-        val modoDeJuego = args(2).charAt(0)
-        val dificultad = args(3).toInt
-        if(dificultad == 2 || dificultad==1){
-          val tablero = new Matrix(filas,columnas,dificultad)
-          partida(tablero,5,modoDeJuego,puntosIniciales,dificultad)
-        }else{
-          println("Se pondrá dificultad 2 por defecto")
-          val tablero = new Matrix(filas,columnas,2)
-          partida(tablero,5,modoDeJuego,puntosIniciales,2)
-        }
+    val puntosIniciales: Int = 0
+    if (args.length > 4) { //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
+      val filas = args(0).toInt
+      val columnas = args(1).toInt
+      val modoDeJuego = args(2).charAt(0)
+      val dificultad = args(3).toInt
+      if (dificultad == 2 || dificultad == 1) {
+        val tablero = new Matrix(filas, columnas, dificultad)
+        partida(tablero, 5, modoDeJuego, puntosIniciales, dificultad)
+      } else {
+        println("Se pondrá dificultad 2 por defecto")
+        val tablero = new Matrix(filas, columnas, 2)
+        partida(tablero, 5, modoDeJuego, puntosIniciales, 2)
+      }
+
 
     }else{ // Si no es por consola
       val filas = introducirInt("Introduce cuantas filas quieres")
-
       val columnas = introducirInt("Introduce cuantas columnas quieres")
 
       println("Intruce el modo de juego(a o m): ")
       val modoDeJuego = scala.io.StdIn.readChar()
 
-      println("Introduce la dificultad (1 o 2): ")
       val dificultad = introducirInt("Introduce la dificultad (1 o 2):")
       if (dificultad == 2 || dificultad == 1) {
         val tablero = new Matrix(filas, columnas, dificultad)
-        partida(tablero, 5, modoDeJuego,puntosIniciales,dificultad)
+        partida(tablero, 5, modoDeJuego, puntosIniciales, dificultad)
       } else {
         println("Se pondrá dificultad 2 por defecto")
         val tablero = new Matrix(filas, columnas, 2)
-        partida(tablero, 5, modoDeJuego,puntosIniciales,2)
+        partida(tablero, 5, modoDeJuego, puntosIniciales, 2)
       }
     }
 
 
-    def partida(tablero: Matrix, vidas: Int,modoDeJuego:Char,puntosTotales:Int,dificultad:Int): Unit = {
+    def partida(tablero: Matrix, vidas: Int, modoDeJuego: Char, puntosTotales: Int, dificultad: Int): Unit = {
       if (vidas == 0) {
         println("Has perdido")
-        controlFinal("Records.txt",puntosTotales)
+        controlFinal("Records.txt", puntosTotales,modoDeJuego)
         return
       }
       //println("Vidas: " + vidas)
       print("Vidas restantes: ")
       mostrarVidas(vidas)
       println()
-      println("Puntos: "+puntosTotales)
+      println("Puntos: " + puntosTotales)
       tablero.toString()
       if(modoDeJuego == 'm'){ //Es manual
 //        println("Introduce la fila")
@@ -69,21 +68,20 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 //        println("Introduce la columna")
         val columna = introducirInt("Introduce la columna")
         //Ver como hacer solo una llamada
-        val (tableroNew: Matrix, vidasNew: Int,contadorEliminados:Int,elementoEliminado:Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
-        val puntosSumados:Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado)
-
-        if(dificultad==1) partida(tableroNew, vidasNew, modoDeJuego,puntosSumados,dificultad)
-        else partida(tableroNew, vidasNew, modoDeJuego,puntosSumados * 2,dificultad)
+        val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+        val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado,dificultad)
+        partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
 
         //partida(tableroNew, vidasNew, modoDeJuego,puntosSumados)
-      }else{ //Es automático
-//        val rand = new Random()
-//        val fila = rand.nextInt(tablero.getNumFilas())
-//        val columna = rand.nextInt(tablero.getNumColumnas())
-//        //Ver como hacer solo una llamada
-//        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
-//        partida(tableroNew, vidasNew, modoDeJuego)
-        modoAutomatico(tablero,vidas,puntosTotales,dificultad:Int)
+      } else { //Es automático
+        //        val rand = new Random()
+        //        val fila = rand.nextInt(tablero.getNumFilas())
+        //        val columna = rand.nextInt(tablero.getNumColumnas())
+        //        //Ver como hacer solo una llamada
+        //        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+        //        partida(tableroNew, vidasNew, modoDeJuego)
+        val (tableroNew: Matrix, vidasNew: Int, puntosSumados: Int) = modoAutomatico(tablero, vidas, puntosTotales, dificultad: Int)
+        partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
       }
     }
 
@@ -100,71 +98,87 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    def modoAutomatico(tablero:Matrix, vidas:Int,puntosTotales:Int,dificultad:Int): Unit = {
-      val (fila:Int,columna:Int) = consultarMejorOpcion(tablero)
+    def modoAutomatico(tablero: Matrix, vidas: Int, puntosTotales: Int, dificultad: Int): (Matrix, Int, Int) = {
+      val (fila: Int, columna: Int) = consultarMejorOpcion(tablero)
       println("La mejor opción es la fila: " + fila + " y la columna: " + columna + "")
-      val (tableroNew: Matrix, vidasNew: Int,contadorEliminados:Int,elementoEliminado:Int) = tablero.consulta(fila, columna, vidas)
-      scala.io.StdIn.readLine()//Para que pare y se pueda ver
-      val puntosSumados:Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado)
-
-      if(dificultad==1) partida(tableroNew, vidasNew, 'a',puntosSumados,dificultad)
-      else partida(tableroNew, vidasNew, 'a',puntosSumados * 2,dificultad)
-      //partida(tableroNew, vidasNew, 'a',puntosSumados)
+      val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int) = tablero.consulta(fila, columna, vidas)
+      scala.io.StdIn.readLine() //Para que pare y se pueda ver
+      val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado,dificultad)
+      (tableroNew, vidasNew, puntosSumados)
     }
 
-    def consultarMejorOpcion(tablero:Matrix): (Int,Int) = {
-      val (fila:Int,columna:Int,_) = consultarMejorOpcionAux(tablero,0,0,0,0,0)
-      (fila,columna)
+    def consultarMejorOpcion(tablero: Matrix): (Int, Int) = {
+      val (fila: Int, columna: Int, _) = consultarMejorOpcionAux(tablero, 0, 0, 0, 0, 0)
+      (fila, columna)
     }
-    def consultarMejorOpcionAux(tablero:Matrix,fila:Int,columna:Int,mejorContador:Int,mejorFila:Int,mejorColumna:Int): (Int,Int,Int) ={
+
+    def consultarMejorOpcionAux(tablero: Matrix, fila: Int, columna: Int, mejorContador: Int, mejorFila: Int, mejorColumna: Int): (Int, Int, Int) = {
       val contadorActual = tablero.detectorEliminacion(fila, columna)._2
-      if(fila == tablero.getNumFilas()-1 && columna == tablero.getNumColumnas()-1){ //Si llego al final del tablero el contador es el que tengo
-        return (mejorFila,mejorColumna,mejorContador)
-      }else if(columna>=tablero.getNumColumnas()){ //Si llego al final de la fila
-        if(mejorContador < contadorActual) return consultarMejorOpcionAux(tablero,fila+1,0,contadorActual,fila,columna)
-         return consultarMejorOpcionAux(tablero,fila+1,0,mejorContador,mejorFila,mejorColumna)
-      }else{  //Si no llego al final de la fila
-        if(mejorContador < contadorActual) return consultarMejorOpcionAux(tablero,fila,columna+1,contadorActual,fila,columna)
-        return consultarMejorOpcionAux(tablero,fila,columna+1,mejorContador,mejorFila,mejorColumna)
+      if (fila == tablero.getNumFilas() - 1 && columna == tablero.getNumColumnas() - 1) { //Si llego al final del tablero el contador es el que tengo
+        return (mejorFila, mejorColumna, mejorContador)
+      } else if (columna >= tablero.getNumColumnas()) { //Si llego al final de la fila
+        if (mejorContador < contadorActual) return consultarMejorOpcionAux(tablero, fila + 1, 0, contadorActual, fila, columna)
+        return consultarMejorOpcionAux(tablero, fila + 1, 0, mejorContador, mejorFila, mejorColumna)
+      } else { //Si no llego al final de la fila
+        if (mejorContador < contadorActual) return consultarMejorOpcionAux(tablero, fila, columna + 1, contadorActual, fila, columna)
+        return consultarMejorOpcionAux(tablero, fila, columna + 1, mejorContador, mejorFila, mejorColumna)
       }
     }
 
 
-    def mostrarVidas(vidas:Int): Unit = {
-      if(vidas>0) {
-        mostrarVidas(vidas-1)
+    def mostrarVidas(vidas: Int): Unit = {
+      if (vidas > 0) {
+        mostrarVidas(vidas - 1)
         print("❤️")
       }
     }
 
-    def controlFinal(filename:String,puntuacionFinal:Int): Unit ={
-      val puntuaciones:List[String] = cargarPuntuaciones(filename)
-      mostrarPuntuaciones(puntuaciones)
-      println("Introduce tu nombre para que figure en los records")
-      val nombre:String = scala.io.StdIn.readLine()
-      guardarPuntuaciones(filename,nombre,puntuacionFinal)
-      val nuevasPuntuaciones:List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
-      mostrarPuntuaciones(nuevasPuntuaciones)
-
+    def controlFinal(filename: String, puntuacionFinal: Int,modoDeJuego:Char): Unit = {
+      if(modoDeJuego == 'm'){
+        val puntuaciones: List[String] = cargarPuntuaciones(filename)
+        mostrarPuntuaciones(puntuaciones)
+        println("Introduce tu nombre para que figure en los records")
+        val nombre: String = scala.io.StdIn.readLine()
+        guardarPuntuaciones(filename, nombre, puntuacionFinal)
+        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //TODO:Cuando sea la mas alta salta un mensaje de nuevo Record
+        mostrarPuntuaciones(nuevasPuntuaciones)
+      }else{ // Es automatico
+        val nombre: String = "AutoGod"
+        guardarPuntuaciones(filename, nombre, puntuacionFinal)
+        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
+        mostrarPuntuaciones(nuevasPuntuaciones)
+      }
     }
 
-    def guardarPuntuaciones(filename:String,nombre:String,puntuacion:Int): Unit ={
+    def guardarPuntuaciones(filename: String, nombre: String, puntuacion: Int): Unit = {
       val file = new File(filename) //Si no existe lo crea
       if (!file.exists()) {
         file.createNewFile()
+        val writer = new FileWriter(new File(filename), true) //True para que no borre lo que ya hay -> Append
+        writer.write("Records\n")
       }
-      val writer = new FileWriter(new File(filename),true) //True para que no borre lo que ya hay -> Append
-      writer.write("Records\n")
-      writer.write(nombre + ": " + puntuacion+"\n")
+      val writer = new FileWriter(new File(filename), true) //True para que no borre lo que ya hay -> Append
+      writer.write(nombre + ": " + puntuacion + "\n")
       writer.close()
     }
+    /*def guardarPuntuacionesAux(filename:String, puntuaciones:List[String],nombre:String, ultimaPuntuacion:Int):Unit={
+      val writer = new FileWriter(new File(filename),true) //True para que no borre lo que ya hay -> Append
+      if(puntuaciones.isEmpty){
+        writer.write(nombre + ": " + ultimaPuntuacion+"\n")
+      }else{
+        if()
+      }
+
+    }*/
+
+
     //TODO: Quitar las funciones de listas -> empty, isEmpty
     def cargarPuntuaciones(filename: String): List[String] = {
       val file = new File(filename)
       if (!file.exists()) {
         println("No hay puntuaciones guardadas")
         return List()
-      }else {
+      } else {
         val source = Source.fromFile(filename)
         try {
           val lines: List[String] = source.getLines.toList
@@ -176,26 +190,25 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     }
 
 
-
     //TODO: Quitar las funciones de listas -> isEmpty
-    def mostrarPuntuaciones(puntuaciones:List[String]): Unit ={
-      if(!puntuaciones.isEmpty){
+    def mostrarPuntuaciones(puntuaciones: List[String]): Unit = {
+      if (!puntuaciones.isEmpty) {
         println(puntuaciones.head)
         mostrarPuntuaciones(puntuaciones.tail)
       }
     }
 
 
-    def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int): Int = {
-      println("ContadorEliminados: "+contadorEliminados)
+    /*def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int): Int = {
+      println("ContadorEliminados: " + contadorEliminados)
       if (contadorEliminados > 0) {
-        if(contadorEliminados>=10){ //Sumo un punto por cada 10 eliminados más los 10 eliminados
-          return 11 + sumarPuntos(puntos,contadorEliminados-10,elementoEliminado)
+        if (contadorEliminados >= 10) { //Sumo un punto por cada 10 eliminados más los 10 eliminados
+          return 11 + sumarPuntos(puntos, contadorEliminados - 10, elementoEliminado)
         } else { //Sumo un punto por cada bloque eliminado
           return contadorEliminados + sumarPuntos(puntos, 0, elementoEliminado)
         }
       } else {
-        println("ElementoEliminado: "+elementoEliminado)
+        println("ElementoEliminado: " + elementoEliminado)
 
         if (elementoEliminado == 7) { //Eliminé bomba
           return 5 + sumarPuntos(puntos, 0, 0)
@@ -208,11 +221,20 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         }
         puntos
       }
+    }*/
+
+    def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int,dificultad:Int): Int = {
+      elementoEliminado match {
+        case 7 => puntos + (5 + contadorEliminados + contadorEliminados / 10) * dificultad //Sumo 5 por bomba + 1 por cada elemento eliminado + 1 por cada 10 elementos eliminados
+        case 8 => puntos + (10 + contadorEliminados + contadorEliminados / 10) * dificultad //Sumo 10 por TNT + 1 por cada elemento eliminado + 1 por cada 10 elementos eliminados
+        case rompeCabezas if (rompeCabezas >= 11 && rompeCabezas <= 16) => puntos + (15 + contadorEliminados + contadorEliminados / 10) * dificultad //Sumo 15 por rompecabezas + 1 por cada elemento eliminado + 1 por cada 10 elementos eliminados
+        case _ => puntos + (contadorEliminados + contadorEliminados / 10) * dificultad //Sumo 1 por cada elemento eliminado + 1 por cada 10 elementos eliminados
+      }
     }
 
-    }
+  }
 
-
+}
 
 
 
@@ -238,7 +260,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
       //Llamo a la funcion principal que empieza el juego -> Si es con bucle se llamaría aqui sino, es la funcion recursiva
 
-  }
+
 
 
 
