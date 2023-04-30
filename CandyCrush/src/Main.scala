@@ -63,41 +63,29 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     def partida(tablero: Matrix, vidas: Int, modoDeJuego: Char, puntosTotales: Int, dificultad: Int): Unit = {
       if (vidas == 0) {
-        println("Has perdido")
+        println("Has perdido 😭")
         controlFinal("Records.txt", puntosTotales,modoDeJuego)
         return
       }
-      //println("Vidas: " + vidas)
       print("Vidas restantes: ")
       mostrarVidas(vidas)
       println()
       println("Puntos: " + puntosTotales)
       tablero.toString()
       if(modoDeJuego == 'm'){ //Es manual
-//        println("Introduce la fila")
         val fila = introducirInt("Introduce la fila")
-//        println("Introduce la columna")
         val columna = introducirInt("Introduce la columna")
-        //Ver como hacer solo una llamada
         val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
         val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado,dificultad)
         partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
-
-        //partida(tableroNew, vidasNew, modoDeJuego,puntosSumados)
       } else { //Es automático
-        //        val rand = new Random()
-        //        val fila = rand.nextInt(tablero.getNumFilas())
-        //        val columna = rand.nextInt(tablero.getNumColumnas())
-        //        //Ver como hacer solo una llamada
-        //        val (tableroNew: Matrix, vidasNew: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
-        //        partida(tableroNew, vidasNew, modoDeJuego)
         val (tableroNew: Matrix, vidasNew: Int, puntosSumados: Int) = modoAutomatico(tablero, vidas, puntosTotales, dificultad: Int)
         partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
       }
     }
 
     def introducirInt(cadena:String): Int = {
-      println(cadena+"\n")
+      println(cadena)
       val num = scala.io.StdIn.readLine()
       try {
         num.toInt
@@ -106,6 +94,14 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
           println("Introduce un número")
           introducirInt(cadena)
         }
+      }
+    }
+
+    def strLength(str: String): Int = {
+      if (str == "") {
+        0
+      } else {
+        1 + strLength(str.tail)
       }
     }
 
@@ -147,10 +143,11 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val (horaFin:String,duracionPartida:Long) = obtenerTiempos()
       if(modoDeJuego == 'm'){
         val puntuaciones: List[String] = cargarPuntuaciones(filename)
-        println("Ultimos records: ")
-        mostrarPuntuaciones(puntuaciones)
-        println("Tú puntuacion:" + puntuacionFinal)
+//        println("Ultimos records: ")
+//        mostrarPuntuaciones(puntuaciones)
+        println("Tú puntuacion: " + puntuacionFinal)
         println("Has durado: " + duracionPartida + " segundos jugando")
+        println("Fin de la partida: " + horaFin )
         println("Introduce tu nombre para que figure en los records")
         val nombre: String = scala.io.StdIn.readLine()
         guardarPuntuaciones(filename,nombre,puntuacionFinal,horaFin)
@@ -167,7 +164,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-
     def guardarPuntuaciones(filename:String,nombre:String,puntuacion:Int,duracion:String):Unit ={
       val file = new File(filename)
       if(!file.exists()){
@@ -175,11 +171,10 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
       val lastRecords:List[String] = cargarPuntuaciones(filename)
       def getBestScore(lastRecords:List[String]):Int ={
-        if(lastRecords.isEmpty || lastRecords.head =="") return -1
+        if(Matrix.isEmpty(lastRecords) || lastRecords.head =="") return -1
         val (_,mejorPuntuacion: Int,_) = buscarClaveValor(lastRecords.head)
         mejorPuntuacion
       }
-      //val (_,mejorPuntuacion: Int,_) = buscarClaveValor(lastRecords.head)
       val mejorPuntuacion = getBestScore(lastRecords)
       val puntuacionesActualizadas:String = guardarPuntuacionesAux(filename,lastRecords,nombre,puntuacion,duracion,"",mejorPuntuacion)
       val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
@@ -188,7 +183,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     }
 
     def guardarPuntuacionesAux(filename:String,lastRecords:List[String],nombre:String,puntuacion:Int,duracion:String,puntuacionesAcum:String,mejorPuntuacion:Int):String ={
-      if(lastRecords.isEmpty || lastRecords.head =="") { //Si he acabado
+      if(Matrix.isEmpty(lastRecords) || lastRecords.head =="") { //Si he acabado
         if(puntuacion == -1){ //Si puse mi ultima puntuacion acabo
           return puntuacionesAcum
         }else{ //Si no he puesto mi ultima puntuacion
@@ -210,15 +205,15 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     def buscarClaveValor(str: String): (String, Int,String) = { //Devuelve (nombre, puntuacion,tiempo)
       //El formato de guardado tendrá que ser nombre:puntuacion@tiempo
-      if(str.isEmpty) return (str,-1,str)
-      def buscarClaveValorRec(str: String, i: Int): (String, Int,String) = {
-        if (i >= str.length) {
+      if(str == "") return (str,-1,str)
+      def buscarClaveValorRec(str: String, i: Int): (String, Int,String) = { //Busca nombre:resto -> resto = puntuacion@tiempo
+        if (i >= strLength(str)) {
           throw new IllegalArgumentException("No se encontró el carácter ':' en el String.")
         } else if (str.charAt(i) == ':') {
           val key = str.substring(0, i).trim
           val value = str.substring(i + 1).trim
-          def buscarClaveValorRecAux(str:String,i:Int):(Int,String) ={
-            if(i>=str.length){
+          def buscarClaveValorRecAux(str:String,i:Int):(Int,String) ={ //Busca puntuacion@tiempo
+            if(i>=strLength(str)){
               throw new IllegalArgumentException("No se encontró el carácter '@' en el String.")
             }else if(str.charAt(i) == '@'){
               val scoreValue = str.substring(0,i).trim.toInt
@@ -237,7 +232,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       buscarClaveValorRec(str, 0)
     }
 
-
     def cargarPuntuaciones(filename: String): List[String] = {
       val file = new File(filename)
       if (!file.exists()) {
@@ -254,9 +248,8 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    //TODO: Quitar las funciones de listas -> isEmpty
     def mostrarPuntuaciones(puntuaciones: List[String]): Unit = {
-      if (!puntuaciones.isEmpty) {
+      if (!Matrix.isEmpty(puntuaciones)) {
         println(puntuaciones.head)
         mostrarPuntuaciones(puntuaciones.tail)
       }
@@ -271,20 +264,18 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    //Fin de la ejecucion (Fin del main)
-    //Miro cuanto ha durado el programa y la fecha y hora de finalización
-
     def obtenerTiempos(): (String,Long) = {
+      //Miro cuanto ha durado el programa y la fecha y hora de finalización
       val endTime = System.nanoTime()
       val duracion = (endTime - startTime).nanos
-      val endDateTime = Calendar.getInstance().getTime()
+      val endDateTime = Calendar.getInstance().getTime
       val formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-      println("Duración de la partida: " + duracion.toSeconds + " segundos")
-      println("Fin de la partida: " + formatter.format(endDateTime))
+//      println("Duración de la partida: " + duracion.toSeconds + " segundos")
+//      println("Fin de la partida: " + formatter.format(endDateTime))
       (formatter.format(endDateTime),duracion.toSeconds)
     }
 
-
+    //Fin de la ejecucion (Fin del main)
   }
 
 }

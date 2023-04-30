@@ -376,7 +376,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
   //    }
   //  }
   def eliminarColumna(indice: Int, columnas: Int): List[Int] = {
-    if (isEmpty(data)) Nil
+    if (Matrix.isEmpty(data)) Nil
     else {
       //eliminarColumnaAux(indice, columnas, data) //col sería el primer indice de la columna a eliminar
       val columna:Int = indice % columnas
@@ -428,7 +428,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
 
   }
   private def eliminarRompecabezasAux(fila: Int, columna: Int, matriz: List[Int], elemento: Int,contador:Int):(List[Int],Int) = {
-    if (isEmpty(matriz)) (Nil,contador)
+    if (Matrix.isEmpty(matriz)) (Nil,contador)
     else {
       val elementoActual: Int = matriz.head
       if (elementoActual == elemento % 10) {
@@ -494,10 +494,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
   }
 
 
-  def isEmpty[Int](list: List[Int]): Boolean = list match {
-    case Nil => true
-    case _ :: _ => false
-  }
+
 
   def detectorEliminacion(fila:Int,columna:Int): (Matrix,Int) ={
     if(getElem(fila,columna)==7){
@@ -659,6 +656,12 @@ object Matrix {
       case _ :: tail => 1 + longitud(tail) //Si no está vacía la longitud es 1 + la longitud de la cola
     }
   }
+
+  def isEmpty[Int](list: List[Int]): Boolean = list match {
+    case Nil => true
+    case _ :: _ => false
+  }
+
   private def generarMatriz(filas: Int, columnas: Int,dificultad:Int): List[Int] = {
     if (filas == 0) Nil
     else {
