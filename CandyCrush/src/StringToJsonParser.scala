@@ -1,3 +1,7 @@
+//Archivo Borrable, no se usa
+//Al final no usamos el Json sino un archivo .txt para guardar los datos
+//Podríamos dejar esto por si acaso el .txt funciona mal con cloud
+
 object StringToJsonParser {
   def parse(jsonString: String): List[(String, String)] = {
     if (jsonString.startsWith("[") && jsonString.endsWith("]")) {

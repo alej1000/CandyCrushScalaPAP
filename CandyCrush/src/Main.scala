@@ -13,7 +13,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     //    val miPrueba = new Prueba(6,10,miMat)
     //    miPrueba.imprimir()
 
-    
+
     val startTime = System.nanoTime()
 
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
@@ -132,8 +132,8 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     def controlFinal(filename: String, puntuacionFinal: Int,modoDeJuego:Char): Unit = {
       val (horaFin:String,duracionPartida:Long) = obtenerTiempos()
-      if(modoDeJuego == 'm'){
-        val puntuaciones: List[String] = cargarPuntuaciones(filename)
+      if(modoDeJuego == 'm'){ //Es manual
+//        val puntuaciones: List[String] = cargarPuntuaciones(filename)
 //        println("Ultimos records: ")
 //        mostrarPuntuaciones(puntuaciones)
         println("Tú puntuacion: " + puntuacionFinal)
@@ -197,7 +197,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     def buscarClaveValor(str: String): (String, Int,String,Long) = { //Devuelve (nombre, puntuacion,tiempo,duracion)
       //El formato de guardado tendrá que ser nombre:puntuacion@tiempo&duracion
-      if(str == "") return (str,-1,str,-1)
+      if(str == "") return (str,-1,str,-1) //Si no hay nada
       def buscarClaveValorRec(str: String, i: Int): (String, Int,String,Long) = { //Busca nombre:resto -> resto = puntuacion@tiempo&duracion
 
         if (i >= strLength(str)) {

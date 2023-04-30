@@ -1,3 +1,5 @@
+//Archivo Borrable, no se usa
+//Tiene funciones utiles ya implementadas en otras clases (Matrix.scala)
 class Prueba(val rows: Int,val cols: Int,val data: List[Int]){
 
 

@@ -1,3 +1,6 @@
+//Archivo Borrable, no se usa
+//Tiene funciones utiles ya implementadas en otras clases (Matrix.scala)
+
 import scala.util.Random
 class MatrixOld(private val rows: Int, private val cols: Int, private val data: List[Int]) {
 
