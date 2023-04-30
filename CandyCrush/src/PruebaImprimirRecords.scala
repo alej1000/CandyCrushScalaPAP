@@ -89,14 +89,14 @@ object PruebaImprimirRecords {
     s * n
   }
 
-  def printPilaLlamadas(pilaLlamadas: List[String]): Unit = {
+  def printPilaLlamadas(pilaLlamadas: List[String]): Unit = { //TODO: Quitar bucles for y usar recursividad
     //Función que imprime la pila de llamadas de manera magistral
     val name: String = "Nombre"
     val score: String = "Puntuación"
     val date: String = "Fecha"
     val duration: String = "Duración"
 
-    var maxLength: Int = 0
+//    var maxLength: Int = 0
 
     // Busca el máximo valor de cada campo
     var maxValues: (Int, Int, Int, Int) = (name.length, score.length, date.length, duration.length)
@@ -131,7 +131,8 @@ object PruebaImprimirRecords {
     printf("┣%s┫\n", repeat("━", totalRowSize))
 
     // Imprime cada fila
-    for (i <- pilaLlamadas.size - 1 to 0 by -1) {
+    //for (i <- pilaLlamadas.size - 1 to 0 by -1) { //Imprime de abajo a arriba (formato pila)
+    for(i <- 0 until pilaLlamadas.size) { //TODO: usar pilaLlamadas.indices -> ???
       val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(pilaLlamadas(i))
 
       // Formatea cada columna para que tenga el tamaño correcto
@@ -143,7 +144,8 @@ object PruebaImprimirRecords {
       // Imprime una línea con la fila centrada dentro de ella
       printf("┃ %s │ %s │ %s │ %s   ┃\n", nombreFormatted, puntuacionFormatted, fechaFormatted, duracionFormatted)
 
-      if (i > 0) {
+//      if (i > 0) { //Cuando era de abajo a arriba
+      if(i<pilaLlamadas.size-1) {
         // Imprime una línea horizontal entre filas
         printf("┣%s┫\n", repeat("━", totalRowSize))
       }
