@@ -118,15 +118,17 @@ object PruebaImprimirRecords {
     println()
     //printf(" %s%s%s \n", repeat(" ", ((totalRowSize - (name.length + score.length + date.length + duration.length - 3)) / 2)), s"$name $score $date $duration", repeat(" ", ((totalRowSize - (name.length + score.length + date.length + duration.length - 3)) / 2)))
 
+    printf("┏%s┓\n", repeat("━", totalRowSize))
+
     val nameFormatted = name + repeat(" ", maxValues._1 - name.length)
     val scoreFormatted = score + repeat(" ", maxValues._2 - score.length)
     val dateFormatted = date + repeat(" ", maxValues._3 - date.length)
     val durationFormatted = duration + repeat(" ", maxValues._4 - duration.length)
 
     // Imprime una línea con la fila centrada dentro de ella
-    printf("┃ %s │ %s │ %s │ %s ┃\n", nameFormatted, scoreFormatted, dateFormatted, durationFormatted)
+    printf("┃ %s │ %s │ %s │ %s   ┃\n", nameFormatted, scoreFormatted, dateFormatted, durationFormatted)
 
-    printf("┏%s┓\n", repeat("━", totalRowSize))
+    printf("┣%s┫\n", repeat("━", totalRowSize))
 
     // Imprime cada fila
     for (i <- pilaLlamadas.size - 1 to 0 by -1) {
@@ -139,7 +141,7 @@ object PruebaImprimirRecords {
       val duracionFormatted = duracion.toString + repeat(" ", maxValues._4 - duracion.toString.length)
 
       // Imprime una línea con la fila centrada dentro de ella
-      printf("┃ %s │ %s │ %s │ %s ┃\n", nombreFormatted, puntuacionFormatted, fechaFormatted, duracionFormatted)
+      printf("┃ %s │ %s │ %s │ %s   ┃\n", nombreFormatted, puntuacionFormatted, fechaFormatted, duracionFormatted)
 
       if (i > 0) {
         // Imprime una línea horizontal entre filas
