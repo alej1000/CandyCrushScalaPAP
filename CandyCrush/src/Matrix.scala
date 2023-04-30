@@ -607,7 +607,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     }
       concatenar(generarMatriz(1,valoresARandomizar,dificultad),Matrix.deja(valoresARandomizar,columna))
     }
-
+  /*
   def activarGravedad2(): Matrix = {
     //Algoritmo que permite añadir gravedad al tablero haciendo que cualquier posición vacía (0) desaparezca para que el usuario pueda continuar su partida.
     //Por cada columna, declara un contador.
@@ -640,7 +640,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     val newMatriz = moveDown(data, rows - 1, cols - 1)
     new Matrix(rows, cols, newMatriz, dificultad)
   }
-
+*/
 
 
 

@@ -144,21 +144,24 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     }
 
     def controlFinal(filename: String, puntuacionFinal: Int,modoDeJuego:Char): Unit = {
-      val duracionPartida:String = obtenerDuracion()
+      val (horaFin:String,duracionPartida:Long) = obtenerTiempos()
       if(modoDeJuego == 'm'){
         val puntuaciones: List[String] = cargarPuntuaciones(filename)
         println("Ultimos records: ")
         mostrarPuntuaciones(puntuaciones)
         println("Tú puntuacion:" + puntuacionFinal)
+        println("Has durado: " + duracionPartida + " segundos jugando")
         println("Introduce tu nombre para que figure en los records")
         val nombre: String = scala.io.StdIn.readLine()
-        guardarPuntuaciones(filename,nombre,puntuacionFinal,duracionPartida)
-        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //TODO:Cuando sea la mas alta salta un mensaje de nuevo Record
+        guardarPuntuaciones(filename,nombre,puntuacionFinal,horaFin)
+        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
         println("Records:")
         mostrarPuntuaciones(nuevasPuntuaciones)
       }else{ // Es automatico
+        println("La puntuacion final es: " + puntuacionFinal)
+        println("El Robotito duró: " + duracionPartida + " segundos jugando")
         val nombre: String = "AutoGod"
-        guardarPuntuaciones(filename,nombre,puntuacionFinal,duracionPartida)
+        guardarPuntuaciones(filename,nombre,puntuacionFinal,horaFin)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
         mostrarPuntuaciones(nuevasPuntuaciones)
       }
@@ -171,8 +174,13 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         file.createNewFile()
       }
       val lastRecords:List[String] = cargarPuntuaciones(filename)
-      //TODO: Comprobar si el archivo está vacio
-      val (_,mejorPuntuacion: Int,_) = buscarClaveValor(lastRecords.head)
+      def getBestScore(lastRecords:List[String]):Int ={
+        if(lastRecords.isEmpty || lastRecords.head =="") return -1
+        val (_,mejorPuntuacion: Int,_) = buscarClaveValor(lastRecords.head)
+        mejorPuntuacion
+      }
+      //val (_,mejorPuntuacion: Int,_) = buscarClaveValor(lastRecords.head)
+      val mejorPuntuacion = getBestScore(lastRecords)
       val puntuacionesActualizadas:String = guardarPuntuacionesAux(filename,lastRecords,nombre,puntuacion,duracion,"",mejorPuntuacion)
       val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
       writer.write(puntuacionesActualizadas)
@@ -180,27 +188,28 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     }
 
     def guardarPuntuacionesAux(filename:String,lastRecords:List[String],nombre:String,puntuacion:Int,duracion:String,puntuacionesAcum:String,mejorPuntuacion:Int):String ={
-      if(lastRecords.isEmpty) { //Si he acabado
+      if(lastRecords.isEmpty || lastRecords.head =="") { //Si he acabado
         if(puntuacion == -1){ //Si puse mi ultima puntuacion acabo
           return puntuacionesAcum
         }else{ //Si no he puesto mi ultima puntuacion
-          return puntuacionesAcum + (nombre + ":" + puntuacion + "@" + duracion + "\n")
+          return puntuacionesAcum + (nombre + ": " + puntuacion + " @" + duracion + "\n")
         }
       }
       val (first: String, score: Int,time:String) = buscarClaveValor(lastRecords.head)
       if(score > puntuacion){
-        val cadena:String = puntuacionesAcum + (first + ":" + score + "@" + time + "\n")
+        val cadena:String = puntuacionesAcum + (first + ": " + score + " @" + time + "\n")
         guardarPuntuacionesAux(filename,lastRecords.tail,nombre,puntuacion,duracion,cadena,mejorPuntuacion)
       }else{ //Superé la puntuación
-        if(puntuacion > mejorPuntuacion){ //Si haces nuevo record
+        if(puntuacion > mejorPuntuacion && mejorPuntuacion != -1){ //Si haces nuevo record
           println("Nuevo Record!!🏆")
         }
-        val cadena:String = puntuacionesAcum + (nombre+ ":" + puntuacion + "@" + duracion + "\n")
+        val cadena:String = puntuacionesAcum + (nombre+ ": " + puntuacion + " @" + duracion + "\n")
         guardarPuntuacionesAux(filename,lastRecords,"-1",-1,duracion,cadena,mejorPuntuacion)
       }
     }
 
-    def buscarClaveValor(str: String): (String, Int,String) = {
+    def buscarClaveValor(str: String): (String, Int,String) = { //Devuelve (nombre, puntuacion,tiempo)
+      //El formato de guardado tendrá que ser nombre:puntuacion@tiempo
       if(str.isEmpty) return (str,-1,str)
       def buscarClaveValorRec(str: String, i: Int): (String, Int,String) = {
         if (i >= str.length) {
@@ -265,14 +274,14 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     //Fin de la ejecucion (Fin del main)
     //Miro cuanto ha durado el programa y la fecha y hora de finalización
 
-    def obtenerDuracion(): String = {
+    def obtenerTiempos(): (String,Long) = {
       val endTime = System.nanoTime()
       val duracion = (endTime - startTime).nanos
       val endDateTime = Calendar.getInstance().getTime()
       val formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
       println("Duración de la partida: " + duracion.toSeconds + " segundos")
       println("Fin de la partida: " + formatter.format(endDateTime))
-      formatter.format(endDateTime)
+      (formatter.format(endDateTime),duracion.toSeconds)
     }
 
 
