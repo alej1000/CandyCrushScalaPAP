@@ -32,6 +32,7 @@ package interfaz;
 //    }
 //}
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,7 +64,15 @@ public class MiPanel extends JPanel implements ActionListener {
         for (int i = 0; i < botonesX; i++) {
             for (int j = 0; j < botonesY; j++) {
                 int indice = i * botonesY + j; // calcula el índice correspondiente en la lista
-                botones[i][j] = new JButton();
+                JButton boton = new JButton();
+                boton.setBorderPainted(false);
+                boton.setContentAreaFilled(false);
+                boton.setFocusPainted(false);
+                boton.setOpaque(false);
+//                boton.setFont(new Font("Arial", Font.PLAIN, size / 2));
+//                boton.setBounds(x * size, y * size, size, size);
+                
+                botones[i][j] = boton;
                 botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setText(Integer.toString(lista[indice])); // establece el número correspondiente en el botón
@@ -143,35 +152,35 @@ public class MiPanel extends JPanel implements ActionListener {
         gravedad();
     }
     
-private void gravedad() {
-    // Recorrer toda la lista y averiguar para cada botón, cuántas filas (n) debe descender según los ceros que tenga debajo suya en su columna).
-    int[][] matriz = new int[botonesX][botonesY];
-    for (int i = 0; i < botonesX; i++) {
-        for (int j = 0; j < botonesY; j++) {
-            matriz[i][j] = lista[i * botonesY + j];
-        }
-    }
-    int[] cerosDebajo = new int[botonesX];
-    for (int i = 0; i < botonesX; i++) {
-        cerosDebajo[i] = 0;
-        for (int j = botonesY - 1; j >= 0; j--) {
-            if (matriz[i][j] == 0) {
-                cerosDebajo[i]++;
+private void gravedad(){
+    // Recorremos toda la lista para averiguar cuántas filas debe caer cada botón
+    int[][] desplazamientos = new int[botonesX][botonesY];
+    for (int i = 0; i < botonesX; i++) {    //dentro de cada fila
+        for (int j = 0; j < botonesY; j++) {   //para cada elemento de la columna
+            int indice = i * botonesY + j;      //indice en la lista original
+            if (lista[indice] > 0) {
+                int n = 0;
+                for (int k = 1+j;k < botonesY; k++){
+                    int indiceLocal = i * botonesY + k;
+                    if (lista[indiceLocal]==0){
+                        n++;
+                    }
+                }
+                desplazamientos[i][j] = n;
             } else {
-                break;
+                desplazamientos[i][j] = -1;
             }
         }
     }
-    // Una vez averiguado, crear tantos hilos como botones se han de mover y llamar simultáneamente con cada boton a moverBoton(boton, n)
+
+    // Creamos un hilo para cada botón que deba moverse
     for (int i = 0; i < botonesX; i++) {
-        int filas = cerosDebajo[i];
-        if (filas > 0) {
-            for (int j = botonesY - 1; j >= 0; j--) {
+        for (int j = botonesY - 1; j >= 0; j--) {
+            int n = desplazamientos[i][j];
+            if (n > 0) {
                 int indice = i * botonesY + j;
-                if (lista[indice] != 0) {
-                    JButton boton = botones[i][j];
-                    moverBoton(boton, filas);
-                }
+                moverBoton(botones[i][j], n);
+//                new Thread(() -> moverBoton(boton, n)).start();
             }
         }
     }
