@@ -1,8 +1,8 @@
-package pruebaJava;
+package conexionDeJava;
 
-import pruebaScala.PruebaScala$;
+import conexionDeScala.ConexionScala$;
 
-public class PruebaJava {
+public class ConexionJava {
 
     public void miFuncion(String mensaje) {
         System.out.println("Ejecutando funciones de Java");
@@ -10,7 +10,7 @@ public class PruebaJava {
     }
     public static void main(String args[]){
         //Module es la raiz de todos los objetos
-        PruebaScala$ instanciaScala = PruebaScala$.MODULE$; //Metodo Module$ de la clase objeto
+        ConexionScala$ instanciaScala = ConexionScala$.MODULE$; //Metodo Module$ de la clase objeto
         //MODULE$ en java apunta a la unica instancia del objeto singleton
         instanciaScala.miFuncion("Hola desde Java");
     }

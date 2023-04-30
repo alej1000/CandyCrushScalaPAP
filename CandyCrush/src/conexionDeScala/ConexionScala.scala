@@ -1,14 +1,13 @@
-package pruebaScala
-import pruebaJava.PruebaJava
+package conexionDeScala
 
-class PruebaScala{
+import conexionDeJava.ConexionJava
+
+object ConexionScala {
   def main(args: Array[String]): Unit = {
-    val miInstancia = new PruebaJava()
+    val miInstancia = new ConexionJava()
     miInstancia.miFuncion("Hola desde Scala")
   }
-}
 
-object PruebaScala {
   def miFuncion(mensaje: String): Unit = {
     println("Ejecutando funciones de Scala")
     println("Mensaje recibido desde Java con la función Scala " + mensaje)

@@ -1,7 +1,5 @@
-import scala.util.Random
 import scala.io._
 import java.io._
-import pruebaJava.PruebaJava
 import scala.concurrent.duration._
 import java.util.Calendar
 import java.text.SimpleDateFormat
@@ -15,15 +13,8 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     //    val miPrueba = new Prueba(6,10,miMat)
     //    miPrueba.imprimir()
 
-
-
-    //Para comnectarse a las funciones java
-    val miInstancia = new PruebaJava()
-    miInstancia.miFuncion("Hola desde Scala")
-
-
+    
     val startTime = System.nanoTime()
-
 
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
     val puntosIniciales: Int = 0
@@ -153,6 +144,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         guardarPuntuaciones(filename,nombre,puntuacionFinal,horaFin,duracionPartida)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
         println("Records:")
+        println("Nombre\t\tPuntuacion\t\tDuracion\t\tFecha")
         mostrarPuntuaciones(nuevasPuntuaciones)
       }else{ // Es automatico
         println("La puntuacion final es: " + puntuacionFinal)
@@ -270,7 +262,12 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     def mostrarPuntuaciones(puntuaciones: List[String]): Unit = {
       if (!Matrix.isEmpty(puntuaciones)) {
-        println(puntuaciones.head)
+        //println(puntuaciones.head)
+        def mostrarPuntuacionesFormato(puntuacion:String): Unit ={
+          val (nombre:String,puntos:Int,fecha:String,duracion:Long) = buscarClaveValor(puntuacion)
+          println(nombre + "\t\t" + puntos + "\t\t" + duracion + "\t\t" + fecha)
+        }
+        mostrarPuntuacionesFormato(puntuaciones.head)
         mostrarPuntuaciones(puntuaciones.tail)
       }
     }
