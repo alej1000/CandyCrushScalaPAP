@@ -31,13 +31,13 @@ package interfaz;
 //        }
 //    }
 //}
+
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.concurrent.CountDownLatch;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -46,14 +46,19 @@ public class MiPanel extends JPanel implements ActionListener {
     private JButton[][] botones;
     private int botonesX, botonesY;
     private int[] lista;
+    private int dimX, dimY;
+    private boolean animacionTerminada = false;
+    private int contador;
 
-    public MiPanel(int botonesX, int botonesY,int[] lista) {
+    //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
+    public MiPanel(int botonesX, int botonesY, int dimX, int dimY, int[] lista) {
         this.botonesX = botonesX;
         this.botonesY = botonesY;
         this.lista = lista;
+        this.dimX = dimX;   //tamaño del panel horizontalmente
+        this.dimY = dimY;   //tamaño del panel verticalmente
+        int tamBoton = Math.min(dimX / botonesX, dimY / botonesY);
         botones = new JButton[botonesX][botonesY];
-//        lista = new int[botonesX * botonesY]; // inicializa la lista con la longitud adecuada
-
         setLayout(null);
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -69,28 +74,28 @@ public class MiPanel extends JPanel implements ActionListener {
                 boton.setContentAreaFilled(false);
                 boton.setFocusPainted(false);
                 boton.setOpaque(false);
-//                boton.setFont(new Font("Arial", Font.PLAIN, size / 2));
-//                boton.setBounds(x * size, y * size, size, size);
-                
                 botones[i][j] = boton;
                 botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
                 botones[i][j].addActionListener(this); // agregamos ActionListener
+                botones[i][j].setBounds(i * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
                 botones[i][j].setText(Integer.toString(lista[indice])); // establece el número correspondiente en el botón
                 add(botones[i][j]);
             }
         }
 
-        reescalar();
+        animacionCarga();
     }
 
     public void reescalar() {
-        int ancho = getWidth();
-        int alto = getHeight();
-        int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
+        if (animacionTerminada) {
+            int ancho = getWidth();
+            int alto = getHeight();
+            int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
 
-        for (int i = 0; i < botonesX; i++) {
-            for (int j = 0; j < botonesY; j++) {
-                botones[i][j].setBounds(i * tamBoton, j * tamBoton, tamBoton, tamBoton);
+            for (int i = 0; i < botonesX; i++) {
+                for (int j = 0; j < botonesY; j++) {
+                    botones[i][j].setBounds(i * tamBoton, j * tamBoton, tamBoton, tamBoton);
+                }
             }
         }
     }
@@ -104,10 +109,14 @@ public class MiPanel extends JPanel implements ActionListener {
     }
 
     public Dimension getPreferredSize() {
-        return new Dimension(500, 500);
+        return new Dimension(dimX, dimY);
     }
 
-     public int[] getLista() {
+    public void establecerDimension() {
+        this.setPreferredSize(getPreferredSize());
+    }
+
+    public int[] getLista() {
         return lista;
     }
 
@@ -122,7 +131,7 @@ public class MiPanel extends JPanel implements ActionListener {
             }
         }
     }
-    
+
     public void actualizarLabels() {
         // actualiza los labels de los botones
         for (int i = 0; i < botonesX; i++) {
@@ -132,7 +141,7 @@ public class MiPanel extends JPanel implements ActionListener {
             }
         }
     }
-    
+
     public void test(int x, int y) {
         // realiza la acción deseada con las coordenadas x e y
         System.out.println("Botón (" + x + ", " + y + ") pulsado.");
@@ -151,51 +160,108 @@ public class MiPanel extends JPanel implements ActionListener {
 //        moverBoton(botonPulsado,2);
         gravedad();
     }
-    
-private void gravedad(){
-    // Recorremos toda la lista para averiguar cuántas filas debe caer cada botón
-    int[][] desplazamientos = new int[botonesX][botonesY];
-    for (int i = 0; i < botonesX; i++) {    //dentro de cada fila
-        for (int j = 0; j < botonesY; j++) {   //para cada elemento de la columna
-            int indice = i * botonesY + j;      //indice en la lista original
-            if (lista[indice] > 0) {
-                int n = 0;
-                for (int k = 1+j;k < botonesY; k++){
-                    int indiceLocal = i * botonesY + k;
-                    if (lista[indiceLocal]==0){
-                        n++;
+
+    private void animacionCarga() {
+//        CountDownLatch latch = new CountDownLatch(botonesX * botonesY);
+        contador = botonesX * botonesY;
+        int delay = 80;
+
+        new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
+            @Override
+            public void run() {
+                try {
+                    int ancho = dimX;
+                    int alto = dimY;
+                    int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
+
+                    for (int i = botonesY - 1; i >= 0; i--) {
+                        if (i % 2 == 0) { // alternar el orden de las filas
+                            for (int j = 0; j < botonesX; j++) {
+                                JButton boton = botones[j][i];
+                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
+                                contador = contador - 1;
+                                System.out.println(tamBoton);
+                                System.out.println("Pos x = " + i * tamBoton);
+                                System.out.println("Pos Y=" + j * tamBoton);
+                                try {
+                                    Thread.sleep(delay); // pausa para dar efecto de animación
+                                    System.out.println("adios");
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else {
+                            for (int j = botonesX - 1; j >= 0; j--) {
+                                JButton boton = botones[j][i];
+                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
+                                contador = contador - 1;
+
+                                try {
+                                    Thread.sleep(delay); // pausa para dar efecto de animación
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                     }
+                } catch (Exception e) {
                 }
-                desplazamientos[i][j] = n;
-            } else {
-                desplazamientos[i][j] = -1;
             }
-        }
+        }).start();
+        new Thread(new Runnable() { //hilo usado para esperar a que terminen los hilos de animación
+            @Override
+            public void run() {
+                try {
+//                    latch.await(); // espera a que todos los hilos terminen
+                    while (contador > 0) {
+                        System.out.print("");   //para que no se salte el while
+                    }
+                    animacionTerminada = true; // todos los hilos han terminado, ponemos el booleano en true
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
-    // Creamos un hilo para cada botón que deba moverse
-    for (int i = 0; i < botonesX; i++) {
-        for (int j = botonesY - 1; j >= 0; j--) {
-            int n = desplazamientos[i][j];
-            if (n > 0) {
-                int indice = i * botonesY + j;
-                moverBoton(botones[i][j], n);
+    private void gravedad() {
+        // Recorremos toda la lista para averiguar cuántas filas debe caer cada botón
+        int[][] desplazamientos = new int[botonesX][botonesY];
+        for (int i = 0; i < botonesX; i++) {    //dentro de cada fila
+            for (int j = 0; j < botonesY; j++) {   //para cada elemento de la columna
+                int indice = i * botonesY + j;      //indice en la lista original
+                if (lista[indice] > 0) {
+                    int n = 0;
+                    for (int k = 1 + j; k < botonesY; k++) {
+                        int indiceLocal = i * botonesY + k;
+                        if (lista[indiceLocal] == 0) {
+                            n++;
+                        }
+                    }
+                    desplazamientos[i][j] = n;
+                } else {
+                    desplazamientos[i][j] = -1;
+                }
+            }
+        }
+
+        // Creamos un hilo para cada botón que deba moverse
+        for (int i = 0; i < botonesX; i++) {
+            for (int j = botonesY - 1; j >= 0; j--) {
+                int n = desplazamientos[i][j];
+                if (n > 0) {
+                    int indice = i * botonesY + j;
+                    moverBoton(botones[i][j], n);
 //                new Thread(() -> moverBoton(boton, n)).start();
+                }
             }
         }
     }
-}
 
+    private void moverBoton(JButton boton, int n) {
+        // Mover el botón n filas hacia abajo con una animación
+        new HiloAnimacion(boton, boton.getX(), boton.getY() + boton.getHeight() * n, 1.1).start();
 
-private void moverBoton(JButton boton, int n) {
-    // Mover el botón n filas hacia abajo con una animación
-    new HiloAnimacion(boton, boton.getX(), boton.getY() + boton.getHeight() * n, 1.1).start();
-}
-
+    }
 
 }
-
-    
-
-
-

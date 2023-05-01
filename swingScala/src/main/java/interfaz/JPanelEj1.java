@@ -13,13 +13,15 @@ import javax.swing.ImageIcon;
  * @author César Martín Guijarro Panel donde se ejecuta el ejercicio número 2.
  */
 public class JPanelEj1 extends javax.swing.JPanel {
+    
+    private int[] lista = {1,3,6,3,0,0,5,5,0,3,5,0,2,4,0,7,5,9,0,7};
 
     private jPanelInicio pnlAnterior;
     private Main jFrameMain;
 
     private ImageIcon imgNuevaCadena = (new ImageIcon("src/main/java/assets/imgNuevaCadena.png"));
     private ImageIcon imgInfo = (new ImageIcon("src/main/java/assets/imgInfo.png"));
-
+    private MiPanel panelPartida;
 
     public JPanelEj1(jPanelInicio pnlAnterior, Main jFrameMain) {
         this.pnlAnterior = pnlAnterior;
@@ -30,7 +32,12 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
 
         pnlInput.setBackground(new Color(0, 0, 0, 220));
-
+        panelPartida = new MiPanel(4, 5,700,400,lista);
+         panelPartida.setSize(panelPartida.getPreferredSize());
+        panelPartida.setLocation(200, 100);
+        this.add(panelPartida);
+//        panelPartida.setBounds(360, 1700,700,400);
+//        jPanel1.establecerDimension();
         iniciarTransicion();
     }
 
