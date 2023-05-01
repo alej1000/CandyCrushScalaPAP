@@ -13,7 +13,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     //    val miPrueba = new Prueba(6,10,miMat)
     //    miPrueba.imprimir()
 
-    
+
     val startTime = System.nanoTime()
 
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
@@ -132,8 +132,8 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     def controlFinal(filename: String, puntuacionFinal: Int,modoDeJuego:Char): Unit = {
       val (horaFin:String,duracionPartida:Long) = obtenerTiempos()
-      if(modoDeJuego == 'm'){
-        val puntuaciones: List[String] = cargarPuntuaciones(filename)
+      if(modoDeJuego == 'm'){ //Es manual
+//        val puntuaciones: List[String] = cargarPuntuaciones(filename)
 //        println("Ultimos records: ")
 //        mostrarPuntuaciones(puntuaciones)
         println("Tú puntuacion: " + puntuacionFinal)
@@ -144,7 +144,9 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         guardarPuntuaciones(filename,nombre,puntuacionFinal,horaFin,duracionPartida)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
         println("Records:")
-        println("Nombre\t\tPuntuacion\t\tDuracion\t\tFecha")
+        //println("Nombre\t\tPuntuacion\t\tDuracion\t\tFecha")
+        printf("%s %20s %20s %20s\n", "Nombre", "Puntuacion", "Duracion", "Fecha")
+
         mostrarPuntuaciones(nuevasPuntuaciones)
       }else{ // Es automatico
         println("La puntuacion final es: " + puntuacionFinal)
@@ -197,7 +199,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     def buscarClaveValor(str: String): (String, Int,String,Long) = { //Devuelve (nombre, puntuacion,tiempo,duracion)
       //El formato de guardado tendrá que ser nombre:puntuacion@tiempo&duracion
-      if(str == "") return (str,-1,str,-1)
+      if(str == "") return (str,-1,str,-1) //Si no hay nada
       def buscarClaveValorRec(str: String, i: Int): (String, Int,String,Long) = { //Busca nombre:resto -> resto = puntuacion@tiempo&duracion
 
         if (i >= strLength(str)) {
@@ -265,12 +267,54 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         //println(puntuaciones.head)
         def mostrarPuntuacionesFormato(puntuacion:String): Unit ={
           val (nombre:String,puntos:Int,fecha:String,duracion:Long) = buscarClaveValor(puntuacion)
-          println(nombre + "\t\t" + puntos + "\t\t" + duracion + "\t\t" + fecha)
+          //println(nombre + "\t\t" + puntos + "\t\t" + duracion + "\t\t" + fecha)
+          printf("%s %15d %15d %25s \n",nombre,puntos,duracion,fecha)
         }
         mostrarPuntuacionesFormato(puntuaciones.head)
         mostrarPuntuaciones(puntuaciones.tail)
       }
     }
+
+    def repeat(s: String, n: Int): String = {
+      s * n
+    }
+
+    def printPilaLlamadas(pilaLlamadas:List[String]): Unit = {
+      //Función que imprime la pila de llamadas de manera magistral
+      val titulo: String = "PILA DE LLAMADAS:"
+      var maxLength: Int = 0
+      // Primero, determina el tamaño máximo de cualquier elemento en la lista
+      for (i <- 0 until pilaLlamadas.size) {
+        maxLength = Math.max(Math.max(maxLength, pilaLlamadas(i).length), titulo.length)
+      }
+      // Añade 2 al tamaño máximo para tener en cuenta las líneas verticales
+      maxLength += 2
+      // Imprime el borde superior de la tabla
+      println()
+      try {
+        printf(" %s%s%s \n", repeat(" ", ((maxLength - titulo.length) / 2)), titulo, repeat(" ", ((maxLength - titulo.length) / 2)))
+      } catch {
+        case e: Exception => e.printStackTrace()
+      }
+      printf("┏%s┓\n", repeat("━", maxLength))
+      for (i <- pilaLlamadas.size - 1 to 0 by -1) {
+        // Calcula el número de espacios a rellenar en cada lado del elemento
+        var paddingExtra: Int = 1
+        if (maxLength % 2 == pilaLlamadas(i).length % 2) {
+          paddingExtra = 0
+        }
+        val padding: Int = ((maxLength - pilaLlamadas(i).length) / 2)
+        // Imprime una línea con el elemento centrado dentro de ella
+        printf("┃%s%s%s┃\n", repeat(" ", padding + paddingExtra), pilaLlamadas(i), repeat(" ", padding))
+        if (i > 0) {
+          // Imprime una línea horizontal entre elementos
+          printf("┣%s┫\n", repeat("━", maxLength))
+        }
+      }
+      // Imprime el borde inferior de la tabla
+      printf("┗%s┛\n", repeat("━", maxLength))
+    }
+
 
     def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int,dificultad:Int): Int = {
       elementoEliminado match {
