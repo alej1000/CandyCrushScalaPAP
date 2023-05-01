@@ -49,17 +49,17 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlVistaGeneral = new javax.swing.JPanel();
+        pnlVistaGeneral = new JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Procesadores del Lenguaje");
         setIconImage(new ImageIcon("src/assets/icon.png").getImage());
         setPreferredSize(new java.awt.Dimension(1183, 750));
         setResizable(false);
-        getContentPane().setLayout(new java.awt.CardLayout());
+        getContentPane().setLayout(new CardLayout());
 
         pnlVistaGeneral.setToolTipText("");
-        pnlVistaGeneral.setLayout(new java.awt.CardLayout());
+        pnlVistaGeneral.setLayout(new CardLayout());
         getContentPane().add(pnlVistaGeneral, "card2");
 
         pack();
@@ -82,13 +82,13 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -174,6 +174,6 @@ public class Main extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel pnlVistaGeneral;
+    private JPanel pnlVistaGeneral;
     // End of variables declaration//GEN-END:variables
 }

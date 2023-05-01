@@ -17,18 +17,19 @@ import javax.swing.JPanel;
  *
  * @author César
  */
-public class jPanelInicio extends javax.swing.JPanel {
+public class jPanelInicio extends JPanel {
 
     /**
      * Creates new form jPanelInicio
      */
     Main frame;
     private HiloAnimacion hiloAnimacion;
+    private String ruta = "src/main/java";
 
     public jPanelInicio(Main frame) {
         initComponents();
-        MetodosGUI.ponerImagenLabel(lblLogo, new ImageIcon("src/assets/portada.png"));
-        lblGif.setIcon(new ImageIcon("src/assets/gif.gif"));
+        MetodosGUI.ponerImagenLabel(lblLogo, new ImageIcon(ruta+"/assets/portada.png"));
+        lblGif.setIcon(new ImageIcon(ruta+"/assets/gif.gif"));
 
         pnlColor.setBackground(Color.decode("#438eff"));
         pnlCover.setBackground(Color.decode("#438eff"));
@@ -53,11 +54,11 @@ public class jPanelInicio extends javax.swing.JPanel {
 
         btnContinuar = new javax.swing.JButton();
         lblGif = new javax.swing.JLabel();
-        pnlTransicion = new javax.swing.JPanel();
-        pnlCover = new javax.swing.JPanel();
+        pnlTransicion = new JPanel();
+        pnlCover = new JPanel();
         lblLogo = new javax.swing.JLabel();
-        pnlColor = new javax.swing.JPanel();
-        pnlEjercicios = new javax.swing.JPanel();
+        pnlColor = new JPanel();
+        pnlEjercicios = new JPanel();
         btnRegresar = new javax.swing.JButton();
         btnCambiarModo = new javax.swing.JButton();
         btnAjustesDeTablero = new javax.swing.JButton();
@@ -65,7 +66,7 @@ public class jPanelInicio extends javax.swing.JPanel {
         btnVerVideo = new javax.swing.JButton();
         btnMemoria = new javax.swing.JButton();
         btnIniciar = new javax.swing.JButton();
-        pnlFondo = new javax.swing.JPanel();
+        pnlFondo = new JPanel();
 
         setMinimumSize(new java.awt.Dimension(1183, 750));
         setLayout(null);
@@ -94,9 +95,9 @@ public class jPanelInicio extends javax.swing.JPanel {
         );
         pnlEjercicios.setLayout(null);
 
-        btnRegresar.setBackground(new java.awt.Color(255, 255, 255));
+        btnRegresar.setBackground(new Color(255, 255, 255));
         btnRegresar.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        btnRegresar.setForeground(new java.awt.Color(0, 153, 255));
+        btnRegresar.setForeground(new Color(0, 153, 255));
         btnRegresar.setText("▶");
         btnRegresar.setBorder(null);
         btnRegresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -116,9 +117,9 @@ public class jPanelInicio extends javax.swing.JPanel {
         pnlEjercicios.add(btnRegresar);
         btnRegresar.setBounds(540, 20, 50, 50);
 
-        btnCambiarModo.setBackground(new java.awt.Color(255, 255, 255));
+        btnCambiarModo.setBackground(new Color(255, 255, 255));
         btnCambiarModo.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
-        btnCambiarModo.setForeground(new java.awt.Color(51, 153, 255));
+        btnCambiarModo.setForeground(new Color(51, 153, 255));
         btnCambiarModo.setText("EJERCICIO 3");
         btnCambiarModo.setBorder(null);
         btnCambiarModo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -139,9 +140,9 @@ public class jPanelInicio extends javax.swing.JPanel {
         pnlEjercicios.add(btnCambiarModo);
         btnCambiarModo.setBounds(63, 520, 490, 121);
 
-        btnAjustesDeTablero.setBackground(new java.awt.Color(255, 255, 255));
+        btnAjustesDeTablero.setBackground(new Color(255, 255, 255));
         btnAjustesDeTablero.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
-        btnAjustesDeTablero.setForeground(new java.awt.Color(51, 153, 255));
+        btnAjustesDeTablero.setForeground(new Color(51, 153, 255));
         btnAjustesDeTablero.setText("EJERCICIO 2");
         btnAjustesDeTablero.setBorder(null);
         btnAjustesDeTablero.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -162,9 +163,9 @@ public class jPanelInicio extends javax.swing.JPanel {
         pnlEjercicios.add(btnAjustesDeTablero);
         btnAjustesDeTablero.setBounds(63, 315, 490, 121);
 
-        btnIniciarPartida.setBackground(new java.awt.Color(255, 255, 255));
+        btnIniciarPartida.setBackground(new Color(255, 255, 255));
         btnIniciarPartida.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
-        btnIniciarPartida.setForeground(new java.awt.Color(0, 153, 255));
+        btnIniciarPartida.setForeground(new Color(0, 153, 255));
         btnIniciarPartida.setText("INICIAR PARTIDA");
         btnIniciarPartida.setBorder(null);
         btnIniciarPartida.setBorderPainted(false);
@@ -189,9 +190,9 @@ public class jPanelInicio extends javax.swing.JPanel {
         add(pnlEjercicios);
         pnlEjercicios.setBounds(0, 0, 615, 750);
 
-        btnVerVideo.setBackground(new java.awt.Color(151, 250, 99));
+        btnVerVideo.setBackground(new Color(151, 250, 99));
         btnVerVideo.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
-        btnVerVideo.setForeground(new java.awt.Color(255, 255, 255));
+        btnVerVideo.setForeground(new Color(255, 255, 255));
         btnVerVideo.setText("VÍDEO DEFENSA");
         btnVerVideo.setBorder(null);
         btnVerVideo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -212,9 +213,9 @@ public class jPanelInicio extends javax.swing.JPanel {
         add(btnVerVideo);
         btnVerVideo.setBounds(631, 520, 490, 121);
 
-        btnMemoria.setBackground(new java.awt.Color(151, 250, 99));
+        btnMemoria.setBackground(new Color(151, 250, 99));
         btnMemoria.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 36)); // NOI18N
-        btnMemoria.setForeground(new java.awt.Color(255, 255, 255));
+        btnMemoria.setForeground(new Color(255, 255, 255));
         btnMemoria.setText("VER MEMORIA");
         btnMemoria.setBorder(null);
         btnMemoria.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -235,9 +236,9 @@ public class jPanelInicio extends javax.swing.JPanel {
         add(btnMemoria);
         btnMemoria.setBounds(631, 315, 490, 121);
 
-        btnIniciar.setBackground(new java.awt.Color(151, 250, 99));
+        btnIniciar.setBackground(new Color(151, 250, 99));
         btnIniciar.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
-        btnIniciar.setForeground(new java.awt.Color(255, 255, 255));
+        btnIniciar.setForeground(new Color(255, 255, 255));
         btnIniciar.setText("EJERCICIOS");
         btnIniciar.setBorder(null);
         btnIniciar.setBorderPainted(false);
@@ -266,7 +267,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         //Botón que lanza la ejecución del 'Javamento'
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick2.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
 
         if (hiloAnimacion != null) {
             hiloAnimacion.interrupt();
@@ -278,7 +279,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnIniciarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIniciarMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick.wav");
 
         MetodosGUI.agrandarBoton(btnIniciar);
     }//GEN-LAST:event_btnIniciarMouseEntered
@@ -291,7 +292,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnMemoriaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMemoriaMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick.wav");
 
         MetodosGUI.agrandarBoton(btnMemoria);
 
@@ -305,10 +306,10 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnMemoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMemoriaActionPerformed
         //Botón que permite ver la memoria del trabajo.
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick2.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
 
         try {
-            File file = new File("src/assets/Memoria PL1 Martin Guijarro Cesar.pdf");
+            File file = new File(ruta+"/assets/Memoria PL1 Martin Guijarro Cesar.pdf");
             if (!Desktop.isDesktopSupported())//revisamos si Desktop es permitido por el sistema 
             {
                 JOptionPane.showMessageDialog(null, "No se ha podido abrir el archivo porque la plataforma no soporta Desktop");
@@ -330,7 +331,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnVerVideoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnVerVideoMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick.wav");
 
         MetodosGUI.agrandarBoton(btnVerVideo);
 
@@ -345,7 +346,7 @@ public class jPanelInicio extends javax.swing.JPanel {
     private void btnVerVideoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerVideoActionPerformed
         //este botón abre la defensa del trabajo
 
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick2.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
         try {
             URI uri = new URI("https://bit.ly/3fUVowh");
                     Desktop.getDesktop().browse(uri);
@@ -380,7 +381,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick2.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
 
 //        new HiloAnimacion(pnlEjercicios, 1183, 0, 1.14).start();
         if (hiloAnimacion != null) {
@@ -394,7 +395,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnCambiarModoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCambiarModoMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick.wav");
         MetodosGUI.agrandarBoton(btnCambiarModo);
 
     }//GEN-LAST:event_btnCambiarModoMouseEntered
@@ -407,7 +408,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnCambiarModoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarModoActionPerformed
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick2.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
         new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();
         jPanelInicio estePanel = this;
 //        new HiloTransicion(frame, this).start();
@@ -434,7 +435,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnAjustesDeTableroMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAjustesDeTableroMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick.wav");
         MetodosGUI.agrandarBoton(btnAjustesDeTablero);
 
 
@@ -448,7 +449,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnAjustesDeTableroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjustesDeTableroActionPerformed
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick2.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
         new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();
         jPanelInicio estePanel = this;
 //        new HiloTransicion(frame, this).start();
@@ -474,7 +475,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnIniciarPartidaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIniciarPartidaMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick.wav");
         MetodosGUI.agrandarBoton(btnIniciarPartida);
 
     }//GEN-LAST:event_btnIniciarPartidaMouseEntered
@@ -487,7 +488,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnIniciarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarPartidaActionPerformed
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick2.wav");   //reproducimos el sonido
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");   //reproducimos el sonido
         new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();        //iniciamos la animación de cortinilla
         jPanelInicio estePanel = this;
 //        new HiloTransicion(frame, this).start();
@@ -498,8 +499,8 @@ public class jPanelInicio extends javax.swing.JPanel {
                     try {
                         Thread.sleep(300);                 //esperamos a que termine la animación del cortinilla
 
-//                        frame.mostrarPanel(new JPanelEj1(estePanel, frame), "");    //cambiamos de panel
-//                        new JPanelEj1(estePanel, frame);
+                        frame.mostrarPanel(new JPanelEj1(estePanel, frame), "");    //cambiamos de panel
+                        new JPanelEj1(estePanel, frame);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -513,7 +514,7 @@ public class jPanelInicio extends javax.swing.JPanel {
 
     private void btnRegresarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresarMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick.wav");
         MetodosGUI.agrandarBoton(btnRegresar);
 
     }//GEN-LAST:event_btnRegresarMouseEntered
@@ -555,10 +556,10 @@ public class jPanelInicio extends javax.swing.JPanel {
     private javax.swing.JButton btnVerVideo;
     private javax.swing.JLabel lblGif;
     private javax.swing.JLabel lblLogo;
-    private javax.swing.JPanel pnlColor;
-    private javax.swing.JPanel pnlCover;
-    private javax.swing.JPanel pnlEjercicios;
-    private javax.swing.JPanel pnlFondo;
-    private javax.swing.JPanel pnlTransicion;
+    private JPanel pnlColor;
+    private JPanel pnlCover;
+    private JPanel pnlEjercicios;
+    private JPanel pnlFondo;
+    private JPanel pnlTransicion;
     // End of variables declaration//GEN-END:variables
 }

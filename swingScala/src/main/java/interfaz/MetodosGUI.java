@@ -41,6 +41,17 @@ public class MetodosGUI {
         }
     }
 
+    public static ImageIcon reescalarImagen(ImageIcon imagen, int resX, int resY) {
+        try {
+            //Se redimensiona
+            ImageIcon imgRedimensionada = new ImageIcon(imagen.getImage().getScaledInstance(resX, resY, Image.SCALE_SMOOTH));
+            return imgRedimensionada;
+        } catch (Exception e) {
+            System.out.println("Error: error al colocar la imagen." + e.toString());
+            return imagen;
+        }
+    }
+
     public static void encogerBoton(JButton btnElegido, ImageIcon imagen) {
         int posx = btnElegido.getX();
         int posy = btnElegido.getY();
@@ -102,7 +113,7 @@ public class MetodosGUI {
 
         btnElegido.setLocation(nuevaPosx, nuevaPosy);
     }
-    
+
     public static void reproducirSonido(String localizacion) {
         try {
             File archivoSonido = new File(localizacion);    //Leemos un archivo
@@ -115,11 +126,11 @@ public class MetodosGUI {
             ex.printStackTrace();
         }
     }
-    
-    public static void ajustarTexto(JLabel jLabel){
-                //fuente: https://stackoverflow.com/questions/2715118/how-to-change-the-size-of-the-font-of-a-jlabel-to-take-the-maximum-size/2715279#2715279
 
-    Font labelFont = jLabel.getFont();
+    public static void ajustarTexto(JLabel jLabel) {
+        //fuente: https://stackoverflow.com/questions/2715118/how-to-change-the-size-of-the-font-of-a-jlabel-to-take-the-maximum-size/2715279#2715279
+
+        Font labelFont = jLabel.getFont();
         String labelText = jLabel.getText();
 
         int stringWidth = jLabel.getFontMetrics(labelFont).stringWidth(labelText);

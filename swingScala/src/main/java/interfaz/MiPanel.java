@@ -33,11 +33,13 @@ package interfaz;
 //}
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.concurrent.CountDownLatch;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -49,6 +51,11 @@ public class MiPanel extends JPanel implements ActionListener {
     private int dimX, dimY;
     private boolean animacionTerminada = false;
     private int contador;
+    private String ruta = "src/main/java/assets/";
+
+//    private String ruta = "src/assets/";
+    private ImageIcon[] imagenes = {new ImageIcon(ruta + "candy" + 0 + ".png"), new ImageIcon(ruta + "candy" + 1 + ".png"), new ImageIcon(ruta + "candy" + 2 + ".png"), new ImageIcon(ruta + "candy" + 3 + ".png"), new ImageIcon(ruta + "candy" + 4 + ".png")};
+    private ImageIcon[] imagenesReescaladas = new ImageIcon[5];
 
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
     public MiPanel(int botonesX, int botonesY, int dimX, int dimY, int[] lista) {
@@ -78,7 +85,9 @@ public class MiPanel extends JPanel implements ActionListener {
                 botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setBounds(i * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
-                botones[i][j].setText(Integer.toString(lista[indice])); // establece el número correspondiente en el botón
+
+                MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
+
                 add(botones[i][j]);
             }
         }
@@ -98,6 +107,7 @@ public class MiPanel extends JPanel implements ActionListener {
                 }
             }
         }
+        actualizarLabels();
     }
 
     public JButton getBoton(int x, int y) {
@@ -122,24 +132,29 @@ public class MiPanel extends JPanel implements ActionListener {
 
     public void setLista(int[] lista) {
         this.lista = lista;
-
-        // actualiza los labels de los botones
-        for (int i = 0; i < botonesX; i++) {
-            for (int j = 0; j < botonesY; j++) {
-                int indice = i * botonesY + j; // calcula el índice correspondiente en la lista
-                botones[i][j].setText(Integer.toString(lista[indice])); // establece el número correspondiente en el botón
-            }
-        }
+        actualizarLabels();
     }
 
     public void actualizarLabels() {
+        int ancho = getWidth();
+        int alto = getHeight();
+        int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
         // actualiza los labels de los botones
+        for (int i = 0; i < imagenesReescaladas.length; i++) {
+            imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
+        }
         for (int i = 0; i < botonesX; i++) {
             for (int j = 0; j < botonesY; j++) {
                 int indice = i * botonesY + j; // calcula el índice correspondiente en la lista
-                botones[i][j].setText(Integer.toString(lista[indice])); // establece el número correspondiente en el botón
+                int finalI = i;
+                int finalJ = j;
+                new Thread(() -> {
+                   botones[finalI][finalJ].setIcon(imagenesReescaladas[lista[indice]]);
+                }).start();
+
             }
         }
+
     }
 
     public void test(int x, int y) {
@@ -156,8 +171,8 @@ public class MiPanel extends JPanel implements ActionListener {
         int x = Integer.parseInt(coordenada.split(",")[0]);
         int y = Integer.parseInt(coordenada.split(",")[1]);
 
+        MetodosGUI.reproducirSonido(ruta + "sonidoClick2.wav");
         test(x, y); // llama al método test con las coordenadas del botón pulsado
-//        moverBoton(botonPulsado,2);
         gravedad();
     }
 
