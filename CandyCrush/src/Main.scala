@@ -143,9 +143,9 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val nombre: String = scala.io.StdIn.readLine()
         guardarPuntuaciones(filename,nombre,puntuacionFinal,horaFin,duracionPartida)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
-        println("Records:")
+        println("\nRecords:")
         //println("Nombre\t\tPuntuacion\t\tDuracion\t\tFecha")
-        printf("%s %20s %20s %20s\n", "Nombre", "Puntuacion", "Duracion", "Fecha")
+        //printf("%s %20s %20s %20s\n", "Nombre", "Puntuacion", "Duracion", "Fecha")
 
         mostrarPuntuaciones(nuevasPuntuaciones)
       }else{ // Es automatico
@@ -262,57 +262,130 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    def mostrarPuntuaciones(puntuaciones: List[String]): Unit = {
-      if (!Matrix.isEmpty(puntuaciones)) {
-        //println(puntuaciones.head)
-        def mostrarPuntuacionesFormato(puntuacion:String): Unit ={
-          val (nombre:String,puntos:Int,fecha:String,duracion:Long) = buscarClaveValor(puntuacion)
-          //println(nombre + "\t\t" + puntos + "\t\t" + duracion + "\t\t" + fecha)
-          printf("%s %15d %15d %25s \n",nombre,puntos,duracion,fecha)
-        }
-        mostrarPuntuacionesFormato(puntuaciones.head)
-        mostrarPuntuaciones(puntuaciones.tail)
-      }
-    }
+//    def mostrarPuntuaciones(puntuaciones: List[String]): Unit = {
+//      if (!Matrix.isEmpty(puntuaciones)) {
+//        //println(puntuaciones.head)
+//        def mostrarPuntuacionesFormato(puntuacion:String): Unit ={
+//          val (nombre:String,puntos:Int,fecha:String,duracion:Long) = buscarClaveValor(puntuacion)
+//          //println(nombre + "\t\t" + puntos + "\t\t" + duracion + "\t\t" + fecha)
+//          printf("%s %15d %15d %25s \n",nombre,puntos,duracion,fecha)
+//        }
+//        mostrarPuntuacionesFormato(puntuaciones.head)
+//        mostrarPuntuaciones(puntuaciones.tail)
+//      }
+//    }
 
     def repeat(s: String, n: Int): String = {
       s * n
     }
 
-    def printPilaLlamadas(pilaLlamadas:List[String]): Unit = {
+    def mostrarPuntuaciones(listaRecords: List[String]): Unit = {
       //Función que imprime la pila de llamadas de manera magistral
-      val titulo: String = "PILA DE LLAMADAS:"
-      var maxLength: Int = 0
-      // Primero, determina el tamaño máximo de cualquier elemento en la lista
-      for (i <- 0 until pilaLlamadas.size) {
-        maxLength = Math.max(Math.max(maxLength, pilaLlamadas(i).length), titulo.length)
+      val name: String = "Nombre"
+      val score: String = "Puntuación"
+      val date: String = "Fecha"
+      val duration: String = "Duración"
+
+      //    var maxLength: Int = 0
+
+
+      //    var maxValues: (Int, Int, Int, Int) = (name.length, score.length, date.length, duration.length)
+      //    for (llamada <- pilaLlamadas) {
+      //      val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(llamada)
+      //      maxValues = (
+      //        Math.max(maxValues._1, nombre.length),
+      //        Math.max(maxValues._2, puntuacion.toString.length),
+      //        Math.max(maxValues._3, fecha.length),
+      //        Math.max(maxValues._4, duracion.toString.length)
+      //      )
+      //    }
+      // Busca el máximo valor de cada campo
+      def maxValuesRec(pilaLlamadas: List[String], maxValues: (Int, Int, Int, Int)): (Int, Int, Int, Int) = {
+        if (Matrix.isEmpty(pilaLlamadas)) {
+          maxValues
+        } else {
+          val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(pilaLlamadas.head)
+          val newMaxValues = (
+            Math.max(maxValues._1, strLength(nombre)),
+            Math.max(maxValues._2, strLength(puntuacion.toString)),
+            Math.max(maxValues._3, strLength(fecha)),
+            Math.max(maxValues._4, strLength(duracion.toString))
+          )
+          maxValuesRec(pilaLlamadas.tail, newMaxValues)
+        }
       }
-      // Añade 2 al tamaño máximo para tener en cuenta las líneas verticales
-      maxLength += 2
+
+      // Uso:
+      val maxValues = maxValuesRec(listaRecords, (name.length, score.length, date.length, duration.length))
+
+
+      // Calcula el tamaño de cada columna y el tamaño total de cada fila
+      val colSizes: List[Int] = List(maxValues._1, maxValues._2, maxValues._3, maxValues._4)
+      val totalRowSize: Int = colSizes.sum + (colSizes.length - 1) * 3 + 4 //TODO: Revisar esto
+
       // Imprime el borde superior de la tabla
       println()
-      try {
-        printf(" %s%s%s \n", repeat(" ", ((maxLength - titulo.length) / 2)), titulo, repeat(" ", ((maxLength - titulo.length) / 2)))
-      } catch {
-        case e: Exception => e.printStackTrace()
-      }
-      printf("┏%s┓\n", repeat("━", maxLength))
-      for (i <- pilaLlamadas.size - 1 to 0 by -1) {
-        // Calcula el número de espacios a rellenar en cada lado del elemento
-        var paddingExtra: Int = 1
-        if (maxLength % 2 == pilaLlamadas(i).length % 2) {
-          paddingExtra = 0
+      //printf(" %s%s%s \n", repeat(" ", ((totalRowSize - (name.length + score.length + date.length + duration.length - 3)) / 2)), s"$name $score $date $duration", repeat(" ", ((totalRowSize - (name.length + score.length + date.length + duration.length - 3)) / 2)))
+
+      printf("┏%s┓\n", repeat("━", totalRowSize))
+
+      val nameFormatted = name + repeat(" ", maxValues._1 - strLength(name))
+      val scoreFormatted = score + repeat(" ", maxValues._2 - strLength(score))
+      val dateFormatted = date + repeat(" ", maxValues._3 - strLength(date))
+      val durationFormatted = duration + repeat(" ", maxValues._4 - strLength(duration))
+
+      // Imprime una línea con la fila centrada dentro de ella
+      printf("┃ %s │ %s │ %s │ %s   ┃\n", nameFormatted, scoreFormatted, dateFormatted, durationFormatted)
+
+      printf("┣%s┫\n", repeat("━", totalRowSize))
+
+      // Imprime cada fila
+      //    //for (i <- pilaLlamadas.size - 1 to 0 by -1) { //Imprime de abajo a arriba (formato pila)
+      //    for(i <- 0 until pilaLlamadas.size) { //TODO: usar pilaLlamadas.indices -> ???
+      //      val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(pilaLlamadas(i))
+      //
+      //      // Formatea cada columna para que tenga el tamaño correcto
+      //      val nombreFormatted = nombre + repeat(" ", maxValues._1 - nombre.length)
+      //      val puntuacionFormatted = puntuacion.toString + repeat(" ", maxValues._2 - puntuacion.toString.length)
+      //      val fechaFormatted = fecha + repeat(" ", maxValues._3 - fecha.length)
+      //      val duracionFormatted = duracion.toString + repeat(" ", maxValues._4 - duracion.toString.length)
+      //
+      //      // Imprime una línea con la fila centrada dentro de ella
+      //      printf("┃ %s │ %s │ %s │ %s   ┃\n", nombreFormatted, puntuacionFormatted, fechaFormatted, duracionFormatted)
+      //
+      ////      if (i > 0) { //Cuando era de abajo a arriba
+      //      if(i<pilaLlamadas.size-1) {
+      //        // Imprime una línea horizontal entre filas
+      //        printf("┣%s┫\n", repeat("━", totalRowSize))
+      //      }
+      //    }
+
+      def printRows(pilaLlamadas: List[String], maxValues: (Int, Int, Int, Int)): Unit = {
+        if (!Matrix.isEmpty(pilaLlamadas)) {
+          val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(pilaLlamadas.head)
+
+          // Formatea cada columna para que tenga el tamaño correcto
+          val nombreFormatted = nombre + repeat(" ", maxValues._1 - strLength(nombre))
+          val puntuacionFormatted = puntuacion.toString + repeat(" ", maxValues._2 - strLength(puntuacion.toString))
+          val fechaFormatted = fecha + repeat(" ", maxValues._3 - strLength(fecha))
+          val duracionFormatted = duracion.toString + repeat(" ", maxValues._4 - strLength(duracion.toString))
+
+          // Imprime una línea con la fila centrada dentro de ella
+          printf("┃ %s │ %s │ %s │ %s   ┃\n", nombreFormatted, puntuacionFormatted, fechaFormatted, duracionFormatted)
+
+          if (pilaLlamadas.size > 1) { //TODO: Meter longitud en Object de Matrix y no en Class
+            // Imprime una línea horizontal entre filas
+            printf("┣%s┫\n", repeat("━", totalRowSize))
+          }
+
+          printRows(pilaLlamadas.tail, maxValues)
         }
-        val padding: Int = ((maxLength - pilaLlamadas(i).length) / 2)
-        // Imprime una línea con el elemento centrado dentro de ella
-        printf("┃%s%s%s┃\n", repeat(" ", padding + paddingExtra), pilaLlamadas(i), repeat(" ", padding))
-        if (i > 0) {
-          // Imprime una línea horizontal entre elementos
-          printf("┣%s┫\n", repeat("━", maxLength))
-        }
       }
+
+      printRows(listaRecords, maxValues)
+
       // Imprime el borde inferior de la tabla
-      printf("┗%s┛\n", repeat("━", maxLength))
+      printf("┗%s┛\n", repeat("━", totalRowSize))
     }
 
 

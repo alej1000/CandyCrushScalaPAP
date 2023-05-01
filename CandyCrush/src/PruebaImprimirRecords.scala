@@ -22,7 +22,7 @@ object PruebaImprimirRecords {
       }
     }
     val puntuaciones:List[String] = cargarPuntuaciones("Records.txt")
-    printPilaLlamadas(puntuaciones)
+    mostrarPuntuaciones(puntuaciones)
 
   }
 
@@ -89,7 +89,7 @@ object PruebaImprimirRecords {
     s * n
   }
 
-  def printPilaLlamadas(pilaLlamadas: List[String]): Unit = { //TODO: Quitar bucles for y usar recursividad
+  def mostrarPuntuaciones(listaRecords: List[String]): Unit = {
     //Función que imprime la pila de llamadas de manera magistral
     val name: String = "Nombre"
     val score: String = "Puntuación"
@@ -126,7 +126,7 @@ object PruebaImprimirRecords {
     }
 
     // Uso:
-    val maxValues = maxValuesRec(pilaLlamadas, (name.length, score.length, date.length, duration.length))
+    val maxValues = maxValuesRec(listaRecords, (name.length, score.length, date.length, duration.length))
 
 
     // Calcula el tamaño de cada columna y el tamaño total de cada fila
@@ -191,7 +191,7 @@ object PruebaImprimirRecords {
         printRows(pilaLlamadas.tail, maxValues)
       }
     }
-    printRows(pilaLlamadas, maxValues)
+    printRows(listaRecords, maxValues)
 
     // Imprime el borde inferior de la tabla
     printf("┗%s┛\n", repeat("━", totalRowSize))
