@@ -37,6 +37,7 @@ public class HiloAnimacion extends Thread {
         this.coordXFinal = coordXFinal;
         this.coordYFinal = coordYFinal;
         this.aceleracion = aceleracion;
+        
     }
 
     public void run() {
@@ -87,7 +88,7 @@ public class HiloAnimacion extends Thread {
                 }
             }
             if (!interrumpido) {
-                            coomponente.setLocation(coordXFinal, coordYFinal);
+                coomponente.setLocation(coordXFinal, coordYFinal);
 
             }
 
