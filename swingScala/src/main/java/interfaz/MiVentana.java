@@ -9,14 +9,21 @@ package interfaz;
  * @author César
  */
 import javax.swing.JFrame;
+import java.util.Random;
 
 public class MiVentana extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
     public MiVentana() {
-        int[] lista = {1,3,6,3,0,0,5,5,0,3,5,0,2,4,0,7,5,9,0,7};
-        MiPanel miPanel = new MiPanel(10, 2,700,400,lista); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
+        Random random = new Random();
+        int filas = 9;
+        int columnas = 14;
+        int[] lista = new int[filas*columnas];
+        for (int i = 0; i<filas*columnas;i++){
+            lista[i] = random.nextInt(0, 8);
+        }
+        MiPanel miPanel = new MiPanel(columnas, filas,700,400,lista); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Establece la acción por defecto al cerrar la ventana
         this.add(miPanel); // Agrega el panel al JFrame
         this.pack(); // Ajusta el tamaño del JFrame al tamaño del panel

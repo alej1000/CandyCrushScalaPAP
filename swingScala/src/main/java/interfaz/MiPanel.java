@@ -164,7 +164,7 @@ public class MiPanel extends JPanel implements ActionListener {
     private void animacionCarga() {
 //        CountDownLatch latch = new CountDownLatch(botonesX * botonesY);
         contador = botonesX * botonesY;
-        int delay = 80;
+        int delay = 50;
 
         new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
             @Override
@@ -178,7 +178,7 @@ public class MiPanel extends JPanel implements ActionListener {
                         if (i % 2 == 0) { // alternar el orden de las filas
                             for (int j = 0; j < botonesX; j++) {
                                 JButton boton = botones[j][i];
-                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
+                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.05).start();
                                 contador = contador - 1;
                                 System.out.println(tamBoton);
                                 System.out.println("Pos x = " + i * tamBoton);
@@ -193,7 +193,7 @@ public class MiPanel extends JPanel implements ActionListener {
                         } else {
                             for (int j = botonesX - 1; j >= 0; j--) {
                                 JButton boton = botones[j][i];
-                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
+                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.05).start();
                                 contador = contador - 1;
 
                                 try {
