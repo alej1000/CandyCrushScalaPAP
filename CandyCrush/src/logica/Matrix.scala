@@ -255,6 +255,17 @@ def imprimir(data: List[Int], cols: Int): Unit = {
   }
 
   def consulta(fila: Int, columna: Int, vidas: Int): (Matrix, Int, Int,Int) = { //7: Bomba 8: TNT 9: Rompecabezas
+    /**
+     * Metodo que consulta el elemento de la matriz en la posicion fila,columna
+     * Si es una bomba, se elimina la bomba y se activa la gravedad
+     * Si es un TNT, se elimina el TNT y se activa la gravedad
+     * Si es un rompecabezas, se elimina el rompecabezas y se activa la gravedad
+     * Si es un elemento normal, se activa la gravedad
+     * @param fila
+     * @param columna
+     * @param vidas
+     * @return (Matrix,Int,Int,Int) -> (matriz,vidas,contador,elemento)
+     */
     val elemento = getElem(fila, columna)
     val rand = new Random()
     elemento match {

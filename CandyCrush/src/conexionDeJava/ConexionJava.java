@@ -1,6 +1,9 @@
 package conexionDeJava;
 
 import conexionDeScala.ConexionScala$;
+import conexionDeScala.Matrix$;
+
+
 
 public class ConexionJava {
 
@@ -11,6 +14,7 @@ public class ConexionJava {
     public static void main(String args[]){
         //Module es la raiz de todos los objetos
         ConexionScala$ instanciaScala = ConexionScala$.MODULE$; //Metodo Module$ de la clase objeto
+        Matrix$ instanciaScala2 = Matrix$.MODULE$; //Metodo Module$ de la clase objeto
         //MODULE$ en java apunta a la unica instancia del objeto singleton
         instanciaScala.miFuncion("Hola desde Java");
     }

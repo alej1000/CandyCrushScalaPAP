@@ -195,12 +195,8 @@ public class MiPanel extends JPanel implements ActionListener {
                                 JButton boton = botones[j][i];
                                 new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.05).start();
                                 contador = contador - 1;
-                                System.out.println(tamBoton);
-                                System.out.println("Pos x = " + i * tamBoton);
-                                System.out.println("Pos Y=" + j * tamBoton);
                                 try {
                                     Thread.sleep(delay); // pausa para dar efecto de animación
-                                    System.out.println("adios");
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

@@ -164,6 +164,7 @@ public class MiPanel extends JPanel implements ActionListener {
         System.out.println("Botón (" + x + ", " + y + ") pulsado.");
         ConexionScala$ instanciaScala = ConexionScala$.MODULE$; //Metodo Module$ de la clase objeto
         //MODULE$ en java apunta a la unica instancia del objeto singleton
+
         instanciaScala.miFuncion("Hola desde Java");
     }
 
@@ -181,6 +182,29 @@ public class MiPanel extends JPanel implements ActionListener {
         gravedad();
     }
 
+
+//    def partida(tablero: Matrix, vidas: Int, modoDeJuego: Char, puntosTotales: Int, dificultad: Int): Unit = {
+//        if (vidas == 0) {
+//            println("Has perdido 😭")
+//            controlFinal("Records.txt", puntosTotales,modoDeJuego)
+//            return
+//        }
+//        print("Vidas restantes: ")
+//        mostrarVidas(vidas)
+//        println()
+//        println("Puntos: " + puntosTotales)
+//        tablero.toString()
+//        if(modoDeJuego == 'm'){ //Es manual
+//            val fila = introducirInt("Introduce la fila")
+//            val columna = introducirInt("Introduce la columna")
+//            val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+//            val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado,dificultad)
+//            partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
+//        } else { //Es automático
+//            val (tableroNew: Matrix, vidasNew: Int, puntosSumados: Int) = modoAutomatico(tablero, vidas, puntosTotales, dificultad: Int)
+//            partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
+//        }
+//    }
     private void animacionCarga() {
 //        CountDownLatch latch = new CountDownLatch(botonesX * botonesY);
         contador = botonesX * botonesY;
