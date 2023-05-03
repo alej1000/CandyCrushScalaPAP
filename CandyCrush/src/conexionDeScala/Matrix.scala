@@ -1,6 +1,6 @@
 package conexionDeScala
 
-import conexionDeScala.Matrix.{concatenar, generarMatriz}
+import Matrix.{concatenar, generarMatriz}
 
 import scala.util.Random
 
@@ -37,72 +37,72 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   def getData(): List[Int] = data
 
-// Este es el primer imprimir bonito pero usa bucles
-//  def imprimir(data: List[Int], cols: Int): Unit = {
-//    val rows = data.length / cols
-//    if (rows * cols != data.length) {
-//      throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
-//    }
-//    imprimirRec(data, cols, rows, 0, 0)
-//  }
-//
-//  def imprimirRec(data: List[Int], cols: Int, rows: Int, rowIndex: Int, colIndex: Int): Unit = {
-//    if (rowIndex >= rows) {
-//      return
-//    }
-//    if (colIndex == 0) {
-//      // imprimir números de columna solo en la primera fila
-//      if (rowIndex == 0) {
-//        printf("%4s", "")
-//        for (i <- 0 until cols) {
-//          printf("%4d", i)
-//        }
-//        println()
-//      }
-//
-//      // imprimir línea separadora superior solo en la primera fila
-//      if (rowIndex == 0) {
-//        printf("%s", " " * 4)
-//        for (i <- 0 until cols) {
-//          printf("%s", "-" * 4)
-//        }
-//        println()
-//      }
-//    }
-//    if (colIndex == 0) {
-//      // imprimir número de fila
-//      printf("%4d", rowIndex)
-//    }
-//    // imprimir celda
-//    printf("%4d", data(rowIndex * cols + colIndex))
-//
-//    // imprimir línea separadora lateral
-//    if (colIndex == cols - 1) {
-//      printf("%s", "|")
-//      println()
-//    } else {
-//      printf("%s", "|")
-//    }
-//
-//    // imprimir línea separadora entre filas
-//    if (colIndex == cols - 1) {
-//      printf("%s", " " * 4)
-//      for (i <- 0 until cols) {
-//        printf("%s", "-" * 4)
-//      }
-//      println()
-//    }
-//
-//    imprimirRec(data, cols, rows, rowIndex + (colIndex + 1) / cols, (colIndex + 1) % cols)
-//  }
-//
-def imprimir(data: List[Int], cols: Int): Unit = {
-  val rows = data.length / cols
-  if (rows * cols != data.length) {
-    throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
+  // Este es el primer imprimir bonito pero usa bucles
+  //  def imprimir(data: List[Int], cols: Int): Unit = {
+  //    val rows = data.length / cols
+  //    if (rows * cols != data.length) {
+  //      throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
+  //    }
+  //    imprimirRec(data, cols, rows, 0, 0)
+  //  }
+  //
+  //  def imprimirRec(data: List[Int], cols: Int, rows: Int, rowIndex: Int, colIndex: Int): Unit = {
+  //    if (rowIndex >= rows) {
+  //      return
+  //    }
+  //    if (colIndex == 0) {
+  //      // imprimir números de columna solo en la primera fila
+  //      if (rowIndex == 0) {
+  //        printf("%4s", "")
+  //        for (i <- 0 until cols) {
+  //          printf("%4d", i)
+  //        }
+  //        println()
+  //      }
+  //
+  //      // imprimir línea separadora superior solo en la primera fila
+  //      if (rowIndex == 0) {
+  //        printf("%s", " " * 4)
+  //        for (i <- 0 until cols) {
+  //          printf("%s", "-" * 4)
+  //        }
+  //        println()
+  //      }
+  //    }
+  //    if (colIndex == 0) {
+  //      // imprimir número de fila
+  //      printf("%4d", rowIndex)
+  //    }
+  //    // imprimir celda
+  //    printf("%4d", data(rowIndex * cols + colIndex))
+  //
+  //    // imprimir línea separadora lateral
+  //    if (colIndex == cols - 1) {
+  //      printf("%s", "|")
+  //      println()
+  //    } else {
+  //      printf("%s", "|")
+  //    }
+  //
+  //    // imprimir línea separadora entre filas
+  //    if (colIndex == cols - 1) {
+  //      printf("%s", " " * 4)
+  //      for (i <- 0 until cols) {
+  //        printf("%s", "-" * 4)
+  //      }
+  //      println()
+  //    }
+  //
+  //    imprimirRec(data, cols, rows, rowIndex + (colIndex + 1) / cols, (colIndex + 1) % cols)
+  //  }
+  //
+  def imprimir(data: List[Int], cols: Int): Unit = {
+    val rows = data.length / cols
+    if (rows * cols != data.length) {
+      throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
+    }
+    imprimirRec(data, cols, rows, 0, 0)
   }
-  imprimirRec(data, cols, rows, 0, 0)
-}
 
   def imprimirRec(data: List[Int], cols: Int, rows: Int, rowIndex: Int, colIndex: Int): Unit = {
     if (rowIndex >= rows) {
@@ -170,26 +170,26 @@ def imprimir(data: List[Int], cols: Int): Unit = {
 
 
   //  def imprimir(data: List[Int]): Unit = {
-//    //val num = cols
-//    //val l = data
-//    if (Matrix.longitud(data) == 0) return
-//    if (Matrix.longitud(data) % cols == 0) {
-//      val chunk = Matrix.toma(cols, data)
-//      imprimirBonito(chunk)
-//      imprimir(Matrix.deja(cols, data))
-//    } else {
-//      throw new Error("La lista no tiene una longitud de mútiplo " + cols + "*" + rows)
-//    }
-//  }
-//
-//  def imprimirBonito(l: List[Int]): Unit = {
-//    if (Matrix.longitud(l) == 0) {
-//      println()
-//      return
-//    }
-//    printf("|%3s |", l.head)
-//    imprimirBonito(l.tail)
-//  }
+  //    //val num = cols
+  //    //val l = data
+  //    if (Matrix.longitud(data) == 0) return
+  //    if (Matrix.longitud(data) % cols == 0) {
+  //      val chunk = Matrix.toma(cols, data)
+  //      imprimirBonito(chunk)
+  //      imprimir(Matrix.deja(cols, data))
+  //    } else {
+  //      throw new Error("La lista no tiene una longitud de mútiplo " + cols + "*" + rows)
+  //    }
+  //  }
+  //
+  //  def imprimirBonito(l: List[Int]): Unit = {
+  //    if (Matrix.longitud(l) == 0) {
+  //      println()
+  //      return
+  //    }
+  //    printf("|%3s |", l.head)
+  //    imprimirBonito(l.tail)
+  //  }
 
 
   def getElem(index: Int): Int = {
@@ -258,15 +258,15 @@ def imprimir(data: List[Int], cols: Int): Unit = {
 
   def consulta(fila: Int, columna: Int, vidas: Int): (Matrix, Int, Int,Int) = { //7: Bomba 8: TNT 9: Rompecabezas
     /**
-     * Metodo que consulta el elemento de la matriz en la posicion fila,columna
-     * Si es una bomba, se elimina la bomba y se activa la gravedad
-     * Si es un TNT, se elimina el TNT y se activa la gravedad
-     * Si es un rompecabezas, se elimina el rompecabezas y se activa la gravedad
-     * Si es un elemento normal, se activa la gravedad
-     * @param fila
-     * @param columna
-     * @param vidas
-     * @return (Matrix,Int,Int,Int) -> (matriz,vidas,contador,elemento)
+     * Se elimina el elemento y se activa la gravedad. En caso de borrar más de
+     * 4 bloques se creará el bloque especial correspondiente
+     * @Param fila Fila del elemento
+     * @Param columna Columna del elemento
+     * @Param vidas Vidas del jugador
+     * @return Matrix: la matriz resultante
+     *         vidas: las vidas del jugador
+     *         contador: el número de bloques eliminados
+     *         elemento: el elemento que se ha eliminado
      */
     val elemento = getElem(fila, columna)
     val rand = new Random()
@@ -285,16 +285,16 @@ def imprimir(data: List[Int], cols: Int): Unit = {
         (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,8)
 
       }
-//      case 9 => {
-//        println("Has encontrado un rompecabezas")
-//        val matriz:Matrix =eliminarRompecabezas(fila, columna, data)
-//        println("Matriz después de eliminar el rompecabezas")
-//        matriz.toString()
-//        println("Matriz después de activar la gravedad")
-//        val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
-//        (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
-//
-//      }
+      //      case 9 => {
+      //        println("Has encontrado un rompecabezas")
+      //        val matriz:Matrix =eliminarRompecabezas(fila, columna, data)
+      //        println("Matriz después de eliminar el rompecabezas")
+      //        matriz.toString()
+      //        println("Matriz después de activar la gravedad")
+      //        val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
+      //        (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
+      //
+      //      }
       case default => {
         if(elemento>=11 && elemento<=16){ //Es rompecabezas
           println("Has encontrado un rompecabezas")
@@ -397,14 +397,14 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     }
   }
 
-//  def eliminarColumnaAux(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
-//    if (index >= columnas) matriz
-//    else {
-//      val fila = index / columnas
-//      val col = index % columnas
-//      eliminarColumnaAux(col, cols, reemplazarElemento(fila, col, 0, matriz))
-//    }
-//  }
+  //  def eliminarColumnaAux(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
+  //    if (index >= columnas) matriz
+  //    else {
+  //      val fila = index / columnas
+  //      val col = index % columnas
+  //      eliminarColumnaAux(col, cols, reemplazarElemento(fila, col, 0, matriz))
+  //    }
+  //  }
   def eliminarColumnaAux(col:Int,fila:Int,matriz:List[Int]):List[Int]={
     if (fila >= rows) matriz
     else {
@@ -471,18 +471,18 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     val (lista:List[Int],contador:Int) = eliminarTNTAux(-4,-4,fila,columna,matriz,0)
     (new Matrix(rows,cols,lista,dificultad),contador)
   }
-//  private def eliminarTNTAux(filaInicio:Int,filaFin:Int,columnaInicio:Int,columnaFin:Int,filaActual:Int,columnaActual:Int,filaSeleccionada:Int,columnaSeleccionada:Int,matriz:List[Int]):List[Int]={
-//    if(filaActual>=filaActual && filaActual<filaFin && filaActual<rows && filaActual>=0){ //Estoy en la fila correcta
-//      if((filaActual*filaActual,columnaActual*columnaActual) <= 16){//Pitagoras para ver si estoy en el rango correcto
-//        val matriz0:List[Int] = reemplazarElemento(filaActual,columnaActual,0) //Elimino la posicion
-//        eliminarTNTAux(filaInicio, filaFin, columnaInicio, columnaFin, filaActual, columnaActual+1, filaSeleccionada, columnaSeleccionada, matriz0)
-//      }else{
-//        eliminarTNTAux(filaInicio,filaFin, columnaInicio, columnaFin, filaActual, columnaActual+1, filaSeleccionada, columnaSeleccionada, matriz)
-//      }
-//    }else{
-//      matriz
-//    }
-//  }
+  //  private def eliminarTNTAux(filaInicio:Int,filaFin:Int,columnaInicio:Int,columnaFin:Int,filaActual:Int,columnaActual:Int,filaSeleccionada:Int,columnaSeleccionada:Int,matriz:List[Int]):List[Int]={
+  //    if(filaActual>=filaActual && filaActual<filaFin && filaActual<rows && filaActual>=0){ //Estoy en la fila correcta
+  //      if((filaActual*filaActual,columnaActual*columnaActual) <= 16){//Pitagoras para ver si estoy en el rango correcto
+  //        val matriz0:List[Int] = reemplazarElemento(filaActual,columnaActual,0) //Elimino la posicion
+  //        eliminarTNTAux(filaInicio, filaFin, columnaInicio, columnaFin, filaActual, columnaActual+1, filaSeleccionada, columnaSeleccionada, matriz0)
+  //      }else{
+  //        eliminarTNTAux(filaInicio,filaFin, columnaInicio, columnaFin, filaActual, columnaActual+1, filaSeleccionada, columnaSeleccionada, matriz)
+  //      }
+  //    }else{
+  //      matriz
+  //    }
+  //  }
 
   private def eliminarTNTAux(filaRelativa:Int,columnaRelativa:Int,filaOriginal:Int,columnaOriginal:Int,matriz:List[Int],contador:Int):(List[Int],Int)={
     val filaActual:Int = filaRelativa+filaOriginal
@@ -517,7 +517,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     else if(getElem(fila,columna)==8) eliminarTNT(fila,columna,data)
     else if(getElem(fila,columna)>=11 && getElem(fila, columna)<=16) eliminarRompecabezas(fila,columna,data)
     else
-    eliminarElemento(fila,columna,data)
+      eliminarElemento(fila,columna,data)
   }
 
   private def eliminarElemento(fila: Int, columna: Int, matriz: List[Int]): (Matrix, Int) = {
@@ -615,14 +615,42 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     if (valoresARandomizar == 0) {
       return columna
     }
-      concatenar(generarMatriz(1,valoresARandomizar,dificultad),Matrix.deja(valoresARandomizar,columna))
+    concatenar(generarMatriz(1,valoresARandomizar,dificultad),Matrix.deja(valoresARandomizar,columna))
+  }
+  /*
+  def activarGravedad2(): Matrix = {
+    //Algoritmo que permite añadir gravedad al tablero haciendo que cualquier posición vacía (0) desaparezca para que el usuario pueda continuar su partida.
+    //Por cada columna, declara un contador.
+    // Recursivamente se recorre la columna de abajo a arriba comprobando si la posición actual es o no una posición vacía (0).
+    // En ese caso de ser no vacía, se copiará este elemento en la posición de la columna (de abajo a arriba) que indique el contador,y este se incrementará en 1.
+    // En caso de encontrar un valor nulo, se pasará a la siguiente posición de la columna sin incrementar el contador (lo que asegurará que, si más adelante hay un valor no nulo, esta posición será sustituida por el valor apropiado).
+    // Esto hará que se depositen en orden todos los elementos que había en la columna, dejando los valores "libres" en las partes altas de la columna, los cuales se eliminarán generando números aleatorios.
+    // Gracias al contador, se puede averiguar en qué posiciones se deben generar estos valores aleatorios.
+
+    def moveDown(matriz: List[Int], fila: Int, columna: Int): List[Int] = {
+      if (fila == 0 && columna == 0) matriz // si llegamos al principio, regresamos la matriz actual
+      else if (fila == 0) moveDown(matriz, rows - 1, columna - 1) // si llegamos al principio de una fila, avanzamos a la fila anterior y la última columna
+      else if (matriz(fila * cols + columna) == 0) {
+        // si encontramos un cero, buscamos el primer elemento no cero por encima de él
+        val firstNonZeroIndex = (0 until fila).reverse.find(i => matriz(i * cols + columna) != 0)
+        firstNonZeroIndex match {
+          case Some(i) => {
+            // intercambiamos el cero con el primer elemento no cero encontrado
+            val currentIndex = i * cols + columna
+            val nonZeroIndex = fila * cols + columna
+            val newMatriz = matriz.updated(nonZeroIndex, matriz(currentIndex)).updated(currentIndex, 0)
+            moveDown(newMatriz, i, columna) // hacemos recursión con la posición original del elemento no cero
+          }
+          case None => moveDown(matriz, fila - 1, columna) // si no encontramos ningún elemento no cero por encima, avanzamos a la posición superior
+        }
+      }
+      else moveDown(matriz, fila - 1, columna) // si el elemento actual no es cero, avanzamos a la posición superior
     }
 
-//  def generarMatriz(filas: Int, columnas: Int,dificultad:Int): List[Int] = {
-//
-//    this.generarMatriz(filas,columnas,dificultad)
-//  }
-  /*}*/
+    val newMatriz = moveDown(data, rows - 1, cols - 1)
+    new Matrix(rows, cols, newMatriz, dificultad)
+  }
+*/
 
 
 
@@ -635,7 +663,7 @@ def imprimir(data: List[Int], cols: Int): Unit = {
 //En este objeto se guardan las funciones para usar dentro de la clase ->
 object Matrix {
 
-  private def longitud[T](l: List[T]): Int = {
+  def longitud[T](l: List[T]): Int = {
     l match {
       case Nil => 0 //Si la lista está vacía la longitud es 0
       case _ :: tail => 1 + longitud(tail) //Si no está vacía la longitud es 1 + la longitud de la cola
@@ -659,7 +687,7 @@ object Matrix {
   private def generarColumnas(n: Int,dificultad:Int): List[Int] = {
     val rand = new scala.util.Random()
     if (n == 0) Nil
-    //Tendré que hacer que mire el nivel de dificultad y genere entre 4 y 6 
+    //Tendré que hacer que mire el nivel de dificultad y genere entre 4 y 6
     else {
       //(rand.nextInt(5) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio
       if (dificultad == 1) (rand.nextInt(4) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 4
@@ -698,6 +726,9 @@ object Matrix {
     }
   }
 
+def test():(Int,Int,Int)={
+  (1,2,3)
+}
 
   def estaEnLista[Int](elem: Int, lista: List[Int]): Boolean = {
     lista match {

@@ -7,6 +7,9 @@ package interfaz;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import java.util.Random;
+
+import conexionDeScala.Matrix;
 
 /**
  *
@@ -14,7 +17,6 @@ import javax.swing.ImageIcon;
  */
 public class JPanelEj1 extends javax.swing.JPanel {
     
-    private int[] lista = {1,3,6,3,0,0,5,5,0,3,5,0,2,4,0,7,5,9,0,7};
 
     private jPanelInicio pnlAnterior;
     private Main jFrameMain;
@@ -32,6 +34,14 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
 
         pnlInput.setBackground(new Color(0, 0, 0, 220));
+        Random random = new Random();
+        int filas = 4;
+        int columnas = 5;
+        int[] lista = new int[filas*columnas];
+        Matrix matrix = new Matrix(filas, columnas,1);
+        lista = convertirListaScalaAJava(matrix.getData());
+
+        MiPanel miPanel = new MiPanel(columnas, filas,700,400,lista);
         panelPartida = new MiPanel(4, 5,700,400,lista);
          panelPartida.setSize(panelPartida.getPreferredSize());
         panelPartida.setLocation(200, 100);
@@ -214,7 +224,16 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
     }
 
-  
+    private int[] convertirListaScalaAJava(scala.collection.immutable.List<Object> listaScala){
+        int[] listaJava = new int[listaScala.size()];
+        for(int i = 0; i < listaScala.size(); i++){
+            listaJava[i] = (int) listaScala.apply(i);
+        }
+        return listaJava;
+    }
+
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnRegresar;

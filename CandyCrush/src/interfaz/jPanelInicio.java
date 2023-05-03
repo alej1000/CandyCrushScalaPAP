@@ -24,7 +24,11 @@ public class jPanelInicio extends JPanel {
      */
     Main frame;
     private HiloAnimacion hiloAnimacion;
-    private String ruta = "src/main/java";
+
+//    private String ruta = "src/main/java";
+
+    private String ruta = "src";
+
 
     public jPanelInicio(Main frame) {
         initComponents();
