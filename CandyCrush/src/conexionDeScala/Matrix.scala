@@ -268,6 +268,9 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
      *         contador: el número de bloques eliminados
      *         elemento: el elemento que se ha eliminado
      */
+    this.toString()
+    println("fila:",fila)
+    println("columna:",columna)
     val elemento = getElem(fila, columna)
     val rand = new Random()
     elemento match {

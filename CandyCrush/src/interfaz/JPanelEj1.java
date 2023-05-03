@@ -37,12 +37,12 @@ public class JPanelEj1 extends javax.swing.JPanel {
         Random random = new Random();
         int filas = 4;
         int columnas = 5;
-        int[] lista = new int[filas*columnas];
+        //int[] lista = new int[filas*columnas];
         Matrix matrix = new Matrix(filas, columnas,1);
-        lista = convertirListaScalaAJava(matrix.getData());
+        //lista = convertirListaScalaAJava(matrix.getData());
 
-        MiPanel miPanel = new MiPanel(columnas, filas,700,400,lista);
-        panelPartida = new MiPanel(4, 5,700,400,lista);
+        //MiPanel miPanel = new MiPanel(columnas, filas,700,400,matrix);
+        panelPartida = new MiPanel(columnas, filas,700,400,matrix);
          panelPartida.setSize(panelPartida.getPreferredSize());
         panelPartida.setLocation(200, 100);
         this.add(panelPartida);
@@ -224,13 +224,7 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
     }
 
-    private int[] convertirListaScalaAJava(scala.collection.immutable.List<Object> listaScala){
-        int[] listaJava = new int[listaScala.size()];
-        for(int i = 0; i < listaScala.size(); i++){
-            listaJava[i] = (int) listaScala.apply(i);
-        }
-        return listaJava;
-    }
+
 
 
 

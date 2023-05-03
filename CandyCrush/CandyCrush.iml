@@ -11,5 +11,14 @@
     <orderEntry type="library" name="scala.lang.modules.swing_2.12" level="project" />
     <orderEntry type="library" name="json4s.ast_2.10" level="project" />
     <orderEntry type="library" name="eduworks.json.ld" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/plugins/DatabaseTools/lib/jdbc-console.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
