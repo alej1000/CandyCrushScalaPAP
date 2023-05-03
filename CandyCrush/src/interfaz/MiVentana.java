@@ -26,7 +26,7 @@ public class MiVentana extends JFrame {
         //    lista[i] = random.nextInt(0, 5);
         //}
         //int[] lista = new int[filas*columnas];
-        Matrix matrix = new Matrix(filas, columnas,1);
+        Matrix matrix = new Matrix(filas, columnas,2);
         //lista = convertirListaScalaAJava(matrix.getData());
 
         //MiPanel miPanel = new MiPanel(columnas, filas,700,400,matrix);

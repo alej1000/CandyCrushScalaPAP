@@ -586,7 +586,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
     else {
       val columna: List[Int] = getColumna(indiceColumna)
-      val (columna0: List[Int],contador) = activarGravedadAux(columna,cols-1,0) //se dejan los ceros arriba
+      val (columna0: List[Int],contador) = activarGravedadAux(columna,rows-1,0) //se dejan los ceros arriba
       val columnaRandomizada: List[Int] = randomizarCerosdeColumna(columna0,contador) //se randomizan los ceros
       activarGravedad(indiceColumna+1,reemplazarColumna(indiceColumna, columnaRandomizada,datos))
     }

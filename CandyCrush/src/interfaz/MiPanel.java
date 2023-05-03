@@ -59,8 +59,8 @@ public class MiPanel extends JPanel implements ActionListener {
 //    private String ruta = "src/main/java/assets/";
 
     private String ruta = "src/assets/";
-    private ImageIcon[] imagenes = {new ImageIcon(ruta + "candy" + 0 + ".png"), new ImageIcon(ruta + "candy" + 1 + ".png"), new ImageIcon(ruta + "candy" + 2 + ".png"), new ImageIcon(ruta + "candy" + 3 + ".png"), new ImageIcon(ruta + "candy" + 4 + ".png")};
-    private ImageIcon[] imagenesReescaladas = new ImageIcon[5];
+    private ImageIcon[] imagenes =  new ImageIcon[16];
+    private ImageIcon[] imagenesReescaladas = new ImageIcon[16];
 
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
     public MiPanel(int botonesX, int botonesY, int dimX, int dimY, Matrix matriz) {
@@ -70,7 +70,13 @@ public class MiPanel extends JPanel implements ActionListener {
         this.lista = convertirListaScalaAJava(matriz.getData());
         this.dimX = dimX;   //tamaño del panel horizontalmente
         this.dimY = dimY;   //tamaño del panel verticalmente
+        for (int i = 0; i < imagenes.length; i++) {
+            imagenes[i] = new ImageIcon(ruta + "candy" + i + ".png");
+        }
         int tamBoton = Math.min(dimX / botonesX, dimY / botonesY);
+        for (int i = 0; i < imagenesReescaladas.length; i++) {
+            imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
+        }
         botones = new JButton[botonesY][botonesX];
         setLayout(null);
         addComponentListener(new ComponentAdapter() {
@@ -92,7 +98,9 @@ public class MiPanel extends JPanel implements ActionListener {
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setBounds(j * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
 
-                MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
+                botones[i][j].setIcon(imagenesReescaladas[lista[indice]]);
+                //MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
+                //botones[i][j].setText(""+lista[indice]);
 
                 add(botones[i][j]);
             }
@@ -101,51 +109,15 @@ public class MiPanel extends JPanel implements ActionListener {
         animacionCarga();
     }
 
-    public MiPanel(int botonesX, int botonesY, int dimX, int dimY, int[] lista) {
-        this.botonesX = botonesX;
-        this.botonesY = botonesY;
-        this.lista = lista;
-        this.dimX = dimX;   //tamaño del panel horizontalmente
-        this.dimY = dimY;   //tamaño del panel verticalmente
-        int tamBoton = Math.min(dimX / botonesX, dimY / botonesY);
-        botones = new JButton[botonesX][botonesY];
-        setLayout(null);
-        addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                reescalar();
-            }
-        });
-
-        for (int i = 0; i < botonesX; i++) {
-            for (int j = 0; j < botonesY; j++) {
-                int indice = i * botonesY + j; // calcula el índice correspondiente en la lista
-                JButton boton = new JButton();
-                boton.setBorderPainted(false);
-                boton.setContentAreaFilled(false);
-                boton.setFocusPainted(false);
-                boton.setOpaque(false);
-                botones[i][j] = boton;
-                botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
-                botones[i][j].addActionListener(this); // agregamos ActionListener
-                botones[i][j].setBounds(i * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
-
-                MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
-
-                add(botones[i][j]);
-            }
-        }
-
-        animacionCarga();
-    }
-
+   
     public void reescalar() {
         if (animacionTerminada) {
             int ancho = getWidth();
             int alto = getHeight();
             int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
 
-                for (int i = 0; i < botonesY; i++) {
-            for (int j = 0; j < botonesX; j++) {
+            for (int i = 0; i < botonesY; i++) {
+                for (int j = 0; j < botonesX; j++) {
                     botones[i][j].setBounds(j * tamBoton, i * tamBoton, tamBoton, tamBoton);
                 }
             }
@@ -193,6 +165,7 @@ public class MiPanel extends JPanel implements ActionListener {
                 int finalJ = j;
                 new Thread(() -> {
                    botones[finalI][finalJ].setIcon(imagenesReescaladas[lista[indice]]);
+                   //botones[finalI][finalJ].setText(""+lista[indice]);
                 }).start();
 
             }
@@ -207,6 +180,7 @@ public class MiPanel extends JPanel implements ActionListener {
         matriz = tupla._1();
         lista = convertirListaScalaAJava(matriz.getData());
         actualizarLabels();
+        matriz.toString();
 //        ConexionScala$ instanciaScala = ConexionScala$.MODULE$; //Metodo Module$ de la clase objeto
 //        //MODULE$ en java apunta a la unica instancia del objeto singleton
 //
