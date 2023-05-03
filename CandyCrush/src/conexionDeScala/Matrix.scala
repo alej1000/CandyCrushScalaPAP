@@ -689,7 +689,7 @@ object Matrix {
     else 0 :: generarColumnasPila(n-1)
   }
 
-  
+
 
   private def concatenar(x: List[Int], y: List[Int]): List[Int] = {
     x match {

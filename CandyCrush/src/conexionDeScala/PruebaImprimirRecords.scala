@@ -1,5 +1,8 @@
 package conexionDeScala
 
+import scala.io.Source
+import java.io._
+
 object PruebaImprimirRecords{
 
         def main(args:Array[String]):Unit={

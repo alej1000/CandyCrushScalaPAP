@@ -27,7 +27,7 @@ private def parseListItem(jsonString:String):((String,String),String)={
 
 private def parseItem(jsonString:String):(String,String)={
         val keyEndIndex=jsonString.indexOf(':')
-        if(keyEndIndex==-1){
+        if(keyEndIndex== -1){
         throw new IllegalArgumentException("Invalid JSON item: missing colon separator")
         }
         val key=jsonString.take(keyEndIndex).replaceAll("\"","")
