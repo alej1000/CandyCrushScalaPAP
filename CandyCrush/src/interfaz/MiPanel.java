@@ -32,7 +32,8 @@ package interfaz;
 //    }
 //}
 
-import conexionDeScala.ConexionScala$;
+import conexionDeScala.Matrix;
+import conexionDeScala.Matrix$;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -53,6 +54,8 @@ public class MiPanel extends JPanel implements ActionListener {
     private int dimX, dimY;
     private boolean animacionTerminada = false;
     private int contador;
+
+    private Matrix matriz;
 //    private String ruta = "src/main/java/assets/";
 
     private String ruta = "src/assets/";
@@ -60,6 +63,43 @@ public class MiPanel extends JPanel implements ActionListener {
     private ImageIcon[] imagenesReescaladas = new ImageIcon[5];
 
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
+    public MiPanel(int botonesX, int botonesY, int dimX, int dimY, Matrix matriz) {
+        this.botonesX = botonesX;
+        this.botonesY = botonesY;
+        this.matriz = matriz;
+        this.dimX = dimX;   //tamaño del panel horizontalmente
+        this.dimY = dimY;   //tamaño del panel verticalmente
+        int tamBoton = Math.min(dimX / botonesX, dimY / botonesY);
+        botones = new JButton[botonesX][botonesY];
+        setLayout(null);
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                reescalar();
+            }
+        });
+
+        for (int i = 0; i < botonesX; i++) {
+            for (int j = 0; j < botonesY; j++) {
+                int indice = i * botonesY + j; // calcula el índice correspondiente en la lista
+                JButton boton = new JButton();
+                boton.setBorderPainted(false);
+                boton.setContentAreaFilled(false);
+                boton.setFocusPainted(false);
+                boton.setOpaque(false);
+                botones[i][j] = boton;
+                botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
+                botones[i][j].addActionListener(this); // agregamos ActionListener
+                botones[i][j].setBounds(i * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
+
+                MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
+
+                add(botones[i][j]);
+            }
+        }
+
+        animacionCarga();
+    }
+
     public MiPanel(int botonesX, int botonesY, int dimX, int dimY, int[] lista) {
         this.botonesX = botonesX;
         this.botonesY = botonesY;
