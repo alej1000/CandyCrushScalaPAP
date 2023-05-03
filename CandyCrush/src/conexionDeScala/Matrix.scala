@@ -617,40 +617,12 @@ def imprimir(data: List[Int], cols: Int): Unit = {
     }
       concatenar(generarMatriz(1,valoresARandomizar,dificultad),Matrix.deja(valoresARandomizar,columna))
     }
-  /*
-  def activarGravedad2(): Matrix = {
-    //Algoritmo que permite añadir gravedad al tablero haciendo que cualquier posición vacía (0) desaparezca para que el usuario pueda continuar su partida.
-    //Por cada columna, declara un contador.
-    // Recursivamente se recorre la columna de abajo a arriba comprobando si la posición actual es o no una posición vacía (0).
-    // En ese caso de ser no vacía, se copiará este elemento en la posición de la columna (de abajo a arriba) que indique el contador,y este se incrementará en 1.
-    // En caso de encontrar un valor nulo, se pasará a la siguiente posición de la columna sin incrementar el contador (lo que asegurará que, si más adelante hay un valor no nulo, esta posición será sustituida por el valor apropiado).
-    // Esto hará que se depositen en orden todos los elementos que había en la columna, dejando los valores "libres" en las partes altas de la columna, los cuales se eliminarán generando números aleatorios.
-    // Gracias al contador, se puede averiguar en qué posiciones se deben generar estos valores aleatorios.
 
-    def moveDown(matriz: List[Int], fila: Int, columna: Int): List[Int] = {
-      if (fila == 0 && columna == 0) matriz // si llegamos al principio, regresamos la matriz actual
-      else if (fila == 0) moveDown(matriz, rows - 1, columna - 1) // si llegamos al principio de una fila, avanzamos a la fila anterior y la última columna
-      else if (matriz(fila * cols + columna) == 0) {
-        // si encontramos un cero, buscamos el primer elemento no cero por encima de él
-        val firstNonZeroIndex = (0 until fila).reverse.find(i => matriz(i * cols + columna) != 0)
-        firstNonZeroIndex match {
-          case Some(i) => {
-            // intercambiamos el cero con el primer elemento no cero encontrado
-            val currentIndex = i * cols + columna
-            val nonZeroIndex = fila * cols + columna
-            val newMatriz = matriz.updated(nonZeroIndex, matriz(currentIndex)).updated(currentIndex, 0)
-            moveDown(newMatriz, i, columna) // hacemos recursión con la posición original del elemento no cero
-          }
-          case None => moveDown(matriz, fila - 1, columna) // si no encontramos ningún elemento no cero por encima, avanzamos a la posición superior
-        }
-      }
-      else moveDown(matriz, fila - 1, columna) // si el elemento actual no es cero, avanzamos a la posición superior
-    }
-
-    val newMatriz = moveDown(data, rows - 1, cols - 1)
-    new Matrix(rows, cols, newMatriz, dificultad)
-  }
-*/
+//  def generarMatriz(filas: Int, columnas: Int,dificultad:Int): List[Int] = {
+//
+//    this.generarMatriz(filas,columnas,dificultad)
+//  }
+  /*}*/
 
 
 
@@ -675,7 +647,7 @@ object Matrix {
     case _ :: _ => false
   }
 
-  private def generarMatriz(filas: Int, columnas: Int,dificultad:Int): List[Int] = {
+  def generarMatriz(filas: Int, columnas: Int,dificultad:Int): List[Int] = {
     if (filas == 0) Nil
     else {
       concatenar(generarColumnas(columnas,dificultad), generarMatriz(filas - 1, columnas,dificultad))
