@@ -64,6 +64,7 @@ public class MiPanel extends JPanel implements ActionListener {
     private Matrix matriz;
 //    private String ruta = "src/main/java/assets/";
 
+    private boolean botonesActivos = false;
     private String ruta = "src/assets/";
     private ImageIcon[] imagenes =  new ImageIcon[17];
     private ImageIcon[] imagenesReescaladas = new ImageIcon[17];
@@ -223,42 +224,43 @@ public class MiPanel extends JPanel implements ActionListener {
 
     public void test(int fila, int columna) {
         // realiza la acción deseada con las coordenadas x e y
-        if (vidas>0){
-        System.out.println("Botón (" + fila + ", " + columna + ") pulsado.");
-        scala.Tuple5<Matrix,Object,Object,Object,Matrix> tupla = matriz.consulta(fila,columna, vidas);
-        matriz = tupla._1();
-        Matrix matrizCeros = tupla._5();
-        int[] listaCeros = convertirListaScalaAJava(matrizCeros.getData());
-        int[] listaNueva = convertirListaScalaAJava(matriz.getData());
-        System.out.println("ListaCeros:"+Arrays.toString(listaCeros));
-        System.out.println("ListaNueva: "+Arrays.toString(listaNueva));
+        if (vidas>0 && botonesActivos){
+            botonesActivos = false;
+            System.out.println("Botón (" + fila + ", " + columna + ") pulsado.");
+            scala.Tuple5<Matrix,Object,Object,Object,Matrix> tupla = matriz.consulta(fila,columna, vidas);
+            matriz = tupla._1();
+            Matrix matrizCeros = tupla._5();
+            int[] listaCeros = convertirListaScalaAJava(matrizCeros.getData());
+            int[] listaNueva = convertirListaScalaAJava(matriz.getData());
+            System.out.println("ListaCeros:"+Arrays.toString(listaCeros));
+            System.out.println("ListaNueva: "+Arrays.toString(listaNueva));
 
 
 
-        lista = listaCeros;
-        actualizarLabels();
-        this.gravedadFin = false;
-//        new Thread(() -> {
-//            try{
-//                Thread.sleep(600);
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//            actualizarLabels(listaNueva);
-//            lista = listaNueva;
-//            reescalar();
-//        }).start();
+            lista = listaCeros;
+            actualizarLabels();
+            this.gravedadFin = false;
+    //        new Thread(() -> {
+    //            try{
+    //                Thread.sleep(600);
+    //            }catch (Exception e){
+    //                e.printStackTrace();
+    //            }
+    //            actualizarLabels(listaNueva);
+    //            lista = listaNueva;
+    //            reescalar();
+    //        }).start();
 
-        gravedad(listaNueva);
+            gravedad(listaNueva);
 
-        this.vidas = (int) tupla._2();
-        this.labelVidas.setText("Vidas: "+this.vidas);
-        this.numeroPuntos = Main.sumarPuntos(numeroPuntos,(int) tupla._3(),(int) tupla._4(), dificultad); //tupla._3 -> contadorEliminados; tupla._4 -> elementoEliminado
-        this.labelPuntos.setText("Puntos: "+this.numeroPuntos);
+            this.vidas = (int) tupla._2();
+            this.labelVidas.setText("Vidas: "+this.vidas);
+            this.numeroPuntos = Main.sumarPuntos(numeroPuntos,(int) tupla._3(),(int) tupla._4(), dificultad); //tupla._3 -> contadorEliminados; tupla._4 -> elementoEliminado
+            this.labelPuntos.setText("Puntos: "+this.numeroPuntos);
 
-        if(this.vidas == 0){
-            gameOver();
-        }
+            if(this.vidas == 0){
+                gameOver();
+            }
         }
 
 
@@ -313,7 +315,8 @@ public class MiPanel extends JPanel implements ActionListener {
 //    }
     private void animacionCarga() {
 //        CountDownLatch latch = new CountDownLatch(botonesX * botonesY);
-        contador = botonesX * botonesY;
+        AtomicInteger contador = new AtomicInteger(botonesX * botonesY);
+
         int delay = 45;
 
         new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
@@ -329,7 +332,7 @@ public class MiPanel extends JPanel implements ActionListener {
                             for (int j = 0; j < botonesX; j++) {
                                 JButton boton = botones[i][j];
                                 new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
-                                contador = contador - 1;
+                                contador.decrementAndGet();
                                 System.out.println(tamBoton);
                                 System.out.println("Fila = " + i * tamBoton);
                                 System.out.println("Columna =" + j * tamBoton);
@@ -344,8 +347,7 @@ public class MiPanel extends JPanel implements ActionListener {
                             for (int j = botonesX - 1; j >= 0; j--) {
                                 JButton boton = botones[i][j];
                                 new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
-                                contador = contador - 1;
-
+                                contador.decrementAndGet();
                                 try {
                                     Thread.sleep(delay); // pausa para dar efecto de animación
                                 } catch (InterruptedException e) {
@@ -363,9 +365,9 @@ public class MiPanel extends JPanel implements ActionListener {
             public void run() {
                 try {
 //                    latch.await(); // espera a que todos los hilos terminen
-                    while (contador > 0) {
-                        System.out.print("");   //para que no se salte el while
+                    while (contador.get() > 0) {
                     }
+                    botonesActivos = true; // activamos los botones
                     animacionTerminada = true; // todos los hilos han terminado, ponemos el booleano en true
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -387,7 +389,6 @@ public class MiPanel extends JPanel implements ActionListener {
                         int indiceLocal = k * botonesX + j;
                         if (lista[indiceLocal] == 0) {
                         if (n == 0)   celdasAMover++;
-
                             n++;
                         }
                     }
@@ -425,6 +426,7 @@ public class MiPanel extends JPanel implements ActionListener {
             actualizarLabels(listaNueva);
             lista = listaNueva;
             reescalar();
+            botonesActivos = true;
         }).start();
     }
 
@@ -452,4 +454,11 @@ public class MiPanel extends JPanel implements ActionListener {
         //System.exit(0);
     }
 
+    public void setLabelVidas(JLabel labelVidas) {
+        this.labelVidas = labelVidas;
+    }
+
+    public void setLabelPuntos(JLabel labelPuntos) {
+        this.labelPuntos = labelPuntos;
+    }
 }

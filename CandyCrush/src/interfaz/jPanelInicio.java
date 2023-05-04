@@ -4,14 +4,14 @@
  */
 package interfaz;
 
+import conexionDeScala.Matrix;
+
 import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 /**
  *
@@ -28,6 +28,11 @@ public class jPanelInicio extends JPanel {
 //    private String ruta = "src/main/java";
 
     private String ruta = "src";
+
+    private int dificultad = 2;
+
+    private int filas = 9;
+    private int columnas = 9;
 
 
     public jPanelInicio(Main frame) {
@@ -457,29 +462,28 @@ public class jPanelInicio extends JPanel {
     private void btnAjustesDeTableroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjustesDeTableroActionPerformed
         // TODO add your handling code here:
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
-        new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();
-        jPanelInicio estePanel = this;
+//        new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();
+//        jPanelInicio estePanel = this;
 //        new HiloTransicion(frame, this).start();
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(300);                 //esperamos a que termine la animación del pnlTransicion
-
-//                        frame.mostrarPanel(new JPanelEj2(estePanel, frame), TOOL_TIP_TEXT_KEY);
-
-//                        new JPanelEj1(estePanel, frame);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        } catch (Exception e) {
-        }
+        filas = pedirEntero("filas");
+        columnas = pedirEntero("columnas");
 
     }//GEN-LAST:event_btnAjustesDeTableroActionPerformed
 
+    private int pedirEntero(String mensaje){
+        String number = JOptionPane.showInputDialog(null, "Introduczca el número de "+mensaje+":");
+        //while number was not a number greater than 0
+        try {
+            int num = Integer.parseInt(number);
+            if (num > 0) {
+                return num;
+            } else {
+                return pedirEntero(mensaje);
+            }
+        } catch (Exception e) {
+            return pedirEntero(mensaje);
+        }
+    }
     private void btnIniciarPartidaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIniciarPartidaMouseEntered
         // TODO add your handling code here:
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick.wav");
@@ -498,6 +502,10 @@ public class jPanelInicio extends JPanel {
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");   //reproducimos el sonido
         new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();        //iniciamos la animación de cortinilla
         jPanelInicio estePanel = this;
+        Matrix matrix = new Matrix(filas, columnas,dificultad);
+
+        MiPanel panelPartida = new MiPanel(columnas, filas,700,400,matrix,null,null);
+
 //        new HiloTransicion(frame, this).start();
         try {
             new Thread(new Runnable() {
@@ -506,8 +514,7 @@ public class jPanelInicio extends JPanel {
                     try {
                         Thread.sleep(300);                 //esperamos a que termine la animación del cortinilla
 
-                        frame.mostrarPanel(new JPanelEj1(estePanel, frame), "");    //cambiamos de panel
-                        new JPanelEj1(estePanel, frame);
+                        frame.mostrarPanel(new JPanelEj1(estePanel,panelPartida, frame), "");    //cambiamos de panel
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

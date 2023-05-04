@@ -31,7 +31,7 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
     private int puntos = 0;
 
-    public JPanelEj1(jPanelInicio pnlAnterior, Main jFrameMain) {
+    public JPanelEj1(jPanelInicio pnlAnterior, MiPanel panelPartida, Main jFrameMain) {
         this.pnlAnterior = pnlAnterior;
         this.jFrameMain = jFrameMain;
         initComponents();
@@ -51,16 +51,11 @@ public class JPanelEj1 extends javax.swing.JPanel {
         this.add(labelPuntos);
 
         pnlInput.setBackground(new Color(0, 0, 0, 220));
-        Random random = new Random();
-        int filas = 4;
-        int columnas = 5;
-        //int[] lista = new int[filas*columnas];
-        Matrix matrix = new Matrix(filas, columnas,2);
-        //lista = convertirListaScalaAJava(matrix.getData());
 
         //MiPanel miPanel = new MiPanel(columnas, filas,700,400,matrix);
-        panelPartida = new MiPanel(columnas, filas,700,400,matrix,labelVidas,labelPuntos);
-         panelPartida.setSize(panelPartida.getPreferredSize());
+        panelPartida.setLabelPuntos(labelPuntos);
+        panelPartida.setLabelVidas(labelVidas);
+        panelPartida.setSize(panelPartida.getPreferredSize());
         panelPartida.setLocation(200, 100);
         this.add(panelPartida);
 //        panelPartida.setBounds(360, 1700,700,400);
