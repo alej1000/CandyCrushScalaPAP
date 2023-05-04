@@ -256,7 +256,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     matriz
   }
 
-  def consulta(fila: Int, columna: Int, vidas: Int): (Matrix, Int, Int,Int) = { //7: Bomba 8: TNT 9: Rompecabezas
+  def consulta(fila: Int, columna: Int, vidas: Int): (Matrix, Int, Int,Int,Matrix) = { //7: Bomba 8: TNT 9: Rompecabezas
     /**
      * Se elimina el elemento y se activa la gravedad. En caso de borrar más de
      * 4 bloques se creará el bloque especial correspondiente
@@ -267,6 +267,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
      *         vidas: las vidas del jugador
      *         contador: el número de bloques eliminados
      *         elemento: el elemento que se ha eliminado
+     *         matriz: la matriz antes de aplicar la gravedad
      */
     this.toString()
     println("fila:",fila)
@@ -276,16 +277,16 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     elemento match {
       case 7 => {
         println("Has encontrado una bomba")
-        val (matriz:Matrix,contador:Int) =eliminarBomba(fila, columna, rand.nextInt(1))
+        val (matriz:Matrix,contador:Int) =eliminarBomba(fila, columna, rand.nextInt(2))
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
-        (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,7)
+        (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,7,matriz)
 
       }
       case 8 => {
         println("Has encontrado un TNT")
         val (matriz:Matrix,contador:Int) =eliminarTNT(fila, columna, data)
         val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
-        (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,8)
+        (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,8,matriz)
 
       }
       //      case 9 => {
@@ -304,13 +305,13 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
           val elemento:Int = getElem(fila,columna)
           val (matriz: Matrix,contador:Int) = eliminarRompecabezas(fila, columna, data)
           val matrizGrav: List[Int] = matriz.activarGravedad(0, matriz.data)
-          return (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,elemento)
+          return (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,elemento,matriz)
         }
         val elementoEliminado:Int = getElem(fila,columna)
         val (matriz: Matrix, contador: Int) = eliminarElemento(fila, columna, data)
         if (contador <= 1) {
           println("No se ha eliminado ningún elemento")
-          (this, vidas - 1,0,0)
+          (this, vidas - 1,0,0,this)
         }
         else {
           println("Se han eliminado " + contador + " elementos")
@@ -319,29 +320,29 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
             //Se pone matriz.data porque se añade la bomba a la matriz que se ha modificado en la función eliminarElemento
             val matrizBomba:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,7,matriz.data),dificultad))
             val matrizGrav: List[Int] = matrizBomba.activarGravedad(0, matriz.data)
-            return (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,elementoEliminado)
+            return (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,elementoEliminado,matrizBomba)
           }
           if (contador==6){
             //añadimos una TNT (8) a la matriz en la posición que se introdujo
 
             val matrizTNT:Matrix=(new Matrix(rows,cols,reemplazarElemento(fila,columna,8,matriz.data),dificultad))
             val matrizGrav: List[Int] = matrizTNT.activarGravedad(0, matriz.data)
-            return (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,elementoEliminado)
+            return (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,elementoEliminado,matrizTNT)
           }
           if(contador>=7){
             //Añadimos Rompecabezas (11,12,13,14,15,16) en la posición que se introdujo
             if(dificultad==1){
               val matrizRompecabezas: Matrix = (new Matrix(rows, cols, reemplazarElemento(fila, columna, rand.nextInt(4) + 11, matriz.data), dificultad))
               val matrizGrav: List[Int] = matrizRompecabezas.activarGravedad(0, matriz.data)
-              return (new Matrix(rows, cols, matrizGrav, dificultad), vidas, contador, elementoEliminado)
+              return (new Matrix(rows, cols, matrizGrav, dificultad), vidas, contador, elementoEliminado,matrizRompecabezas)
             }else{
               val matrizRompecabezas: Matrix = (new Matrix(rows, cols, reemplazarElemento(fila, columna, rand.nextInt(6) + 11, matriz.data), dificultad))
               val matrizGrav: List[Int] = matrizRompecabezas.activarGravedad(0, matriz.data)
-              return (new Matrix(rows, cols, matrizGrav, dificultad), vidas, contador, elementoEliminado)
+              return (new Matrix(rows, cols, matrizGrav, dificultad), vidas, contador, elementoEliminado,matrizRompecabezas)
             }
           }
           val matrizGrav:List[Int] = matriz.activarGravedad(0,matriz.data)
-          (new Matrix(rows, cols, matrizGrav,dificultad), vidas,contador,elementoEliminado)
+          (new Matrix(rows, cols, matrizGrav,dificultad), vidas,contador,elementoEliminado,matriz)
         }
 
       }

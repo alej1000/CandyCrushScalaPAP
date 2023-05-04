@@ -41,7 +41,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -54,13 +58,14 @@ public class MiPanel extends JPanel implements ActionListener {
     private int dimX, dimY;
     private boolean animacionTerminada = false;
     private int contador;
+    private boolean gravedadFin = true;
 
     private Matrix matriz;
 //    private String ruta = "src/main/java/assets/";
 
     private String ruta = "src/assets/";
-    private ImageIcon[] imagenes =  new ImageIcon[16];
-    private ImageIcon[] imagenesReescaladas = new ImageIcon[16];
+    private ImageIcon[] imagenes =  new ImageIcon[17];
+    private ImageIcon[] imagenesReescaladas = new ImageIcon[17];
 
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
     public MiPanel(int botonesX, int botonesY, int dimX, int dimY, Matrix matriz) {
@@ -109,8 +114,8 @@ public class MiPanel extends JPanel implements ActionListener {
         animacionCarga();
     }
 
-   
-    public void reescalar() {
+
+    public void reescalar() { // reescala los botones cuando se cambia el tamaño del panel
         if (animacionTerminada) {
             int ancho = getWidth();
             int alto = getHeight();
@@ -151,6 +156,7 @@ public class MiPanel extends JPanel implements ActionListener {
     }
 
     public void actualizarLabels() {
+        System.out.println("Lista:"+Arrays.toString(lista));
         int ancho = getWidth();
         int alto = getHeight();
         int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
@@ -172,15 +178,62 @@ public class MiPanel extends JPanel implements ActionListener {
         }
 
     }
+    public void actualizarLabels(int[] listaNueva) {
+        System.out.println("ListaNueva:"+Arrays.toString(listaNueva));
+        int ancho = getWidth();
+        int alto = getHeight();
+        int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
+        // actualiza los labels de los botones
+        for (int i = 0; i < imagenesReescaladas.length; i++) {
+            imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
+        }
+        for (int i = 0; i < botonesY; i++) {
+            for (int j = 0; j < botonesX; j++) {
+                int indice = i * botonesX + j; // calcula el índice correspondiente en la lista
+                int finalI = i;
+                int finalJ = j;
+                new Thread(() -> {
+                    botones[finalI][finalJ].setIcon(imagenesReescaladas[listaNueva[indice]]);
+                    //botones[finalI][finalJ].setText(""+lista[indice]);
+                }).start();
+
+            }
+        }
+
+    }
 
     public void test(int fila, int columna) {
         // realiza la acción deseada con las coordenadas x e y
         System.out.println("Botón (" + fila + ", " + columna + ") pulsado.");
-        scala.Tuple4<Matrix,Object,Object,Object> tupla = matriz.consulta(fila,columna,5);
+        scala.Tuple5<Matrix,Object,Object,Object,Matrix> tupla = matriz.consulta(fila,columna,5);
         matriz = tupla._1();
-        lista = convertirListaScalaAJava(matriz.getData());
+        Matrix matrizCeros = tupla._5();
+        int[] listaCeros = convertirListaScalaAJava(matrizCeros.getData());
+        int[] listaNueva = convertirListaScalaAJava(matriz.getData());
+        System.out.println("ListaCeros:"+Arrays.toString(listaCeros));
+        System.out.println("ListaNueva: "+Arrays.toString(listaNueva));
+        lista = listaCeros;
         actualizarLabels();
-        matriz.toString();
+        this.gravedadFin = false;
+        new Thread(() -> {
+            try{
+                Thread.sleep(1000);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            actualizarLabels(listaNueva);
+            lista = listaNueva;
+            reescalar();
+        }).start();
+
+        gravedad(listaNueva);
+
+        //Hacemos parar el programa durante 1000 milisegundos
+
+        //lista = listaNueva;
+        //reescalar();
+
+        //matriz.toString();
 //        ConexionScala$ instanciaScala = ConexionScala$.MODULE$; //Metodo Module$ de la clase objeto
 //        //MODULE$ en java apunta a la unica instancia del objeto singleton
 //
@@ -198,7 +251,6 @@ public class MiPanel extends JPanel implements ActionListener {
 
         MetodosGUI.reproducirSonido(ruta + "sonidoClick2.wav");
         test(x, y); // llama al método test con las coordenadas del botón pulsado
-        //gravedad();
     }
 
 
@@ -287,17 +339,20 @@ public class MiPanel extends JPanel implements ActionListener {
         }).start();
     }
 
-    private void gravedad() {
+    private void gravedad(int[] listaNueva) { //Muestra la animación de caída de los caramelos
         // Recorremos toda la lista para averiguar cuántas filas debe caer cada botón
+        int celdasAMover = 0;
         int[][] desplazamientos = new int[botonesY][botonesX];
         for (int i = 0; i < botonesY; i++) {    //dentro de cada fila
-            for (int j = 0; j < botonesY; j++) {   //para cada elemento de la columna
+            for (int j = 0; j < botonesX; j++) {   //para cada elemento de la columna
                 int indice = i * botonesX + j;      //indice en la lista original
                 if (lista[indice] > 0) {
                     int n = 0;
-                    for (int k = 1 + j; k < botonesX; k++) {
-                        int indiceLocal = i * botonesX + k;
+                    for (int k = 1 + i; k < botonesY; k++) {
+                        int indiceLocal = k * botonesX + j;
                         if (lista[indiceLocal] == 0) {
+                        if (n == 0)   celdasAMover++;
+
                             n++;
                         }
                     }
@@ -307,18 +362,43 @@ public class MiPanel extends JPanel implements ActionListener {
                 }
             }
         }
+        AtomicInteger contador = new AtomicInteger(celdasAMover);
 
-        // Creamos un hilo para cada botón que deba moverse
+        Thread[] threads = new Thread[botonesY * botonesX];
+        int index = 0;
+
+// Creamos un hilo para cada botón que deba moverse
         for (int i = 0; i < botonesY; i++) {
             for (int j = botonesX - 1; j >= 0; j--) {
-                int n = desplazamientos[j][i];
+                int indice = i * botonesX + j;
+                int n = desplazamientos[i][j];
                 if (n > 0) {
-                    int indice = i * botonesX + j;
-                    moverBoton(botones[i][j], n);
-//                new Thread(() -> moverBoton(boton, n)).start();
+                    int iFinal = i;
+                    int jFinal = j;
+                    Thread thread = new Thread(() -> {
+                        moverBoton(botones[iFinal][jFinal], n);
+                        contador.decrementAndGet();
+
+                    });
+                    thread.start();
+                    threads[index] = thread;
+                    index++;
                 }
             }
         }
+
+// Esperamos a que todos los hilos terminen
+        for (Thread thread : threads) {
+            if (thread != null) {
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
     }
 
     private void moverBoton(JButton boton, int n) {
@@ -326,6 +406,7 @@ public class MiPanel extends JPanel implements ActionListener {
         new HiloAnimacion(boton, boton.getX(), boton.getY() + boton.getHeight() * n, 1.1).start();
 
     }
+
 
     private int[] convertirListaScalaAJava(scala.collection.immutable.List<Object> listaScala){
         int[] listaJava = new int[listaScala.size()];

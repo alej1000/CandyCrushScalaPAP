@@ -68,7 +68,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       if (modoDeJuego == 'm') { //Es manual
         val fila = introducirInt("Introduce la fila")
         val columna = introducirInt("Introduce la columna")
-        val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+        val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int,matriz0:Matrix) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
         val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado, dificultad)
         partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
       } else { //Es automático
@@ -101,7 +101,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     def modoAutomatico(tablero: Matrix, vidas: Int, puntosTotales: Int, dificultad: Int): (Matrix, Int, Int) = {
       val (fila: Int, columna: Int) = consultarMejorOpcion(tablero)
       println("La mejor opción es la fila: " + fila + " y la columna: " + columna + "")
-      val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int) = tablero.consulta(fila, columna, vidas)
+      val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int,matriz0:Matrix) = tablero.consulta(fila, columna, vidas)
       scala.io.StdIn.readLine() //Para que pare y se pueda ver
       val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado, dificultad)
       (tableroNew, vidasNew, puntosSumados)
