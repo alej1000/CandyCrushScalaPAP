@@ -86,21 +86,21 @@ public class MiPanel extends JPanel implements ActionListener {
             imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
         }
         botones = new JButton[botonesY][botonesX];
-        MouseListener mouseListener = new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                // Código para manejar el evento de mouse entered
-                JButton button = (JButton) e.getSource();
-                MetodosGUI.agrandarBoton(button);
-                System.out.println("Entraste al boton");
-            }
-            public void mouseExited(MouseEvent e) {
-                // Código para manejar el evento de mouse entered
-                JButton button = (JButton) e.getSource();
-                MetodosGUI.encogerBoton(button);
-                System.out.println("Saliste del boton");
-            }
-        };
+//        MouseListener mouseListener = new MouseAdapter() {
+//            @Override
+//            public void mouseEntered(MouseEvent e) {
+//                // Código para manejar el evento de mouse entered
+//                JButton button = (JButton) e.getSource();
+//                MetodosGUI.agrandarBoton(button);
+//                System.out.println("Entraste al boton");
+//            }
+//            public void mouseExited(MouseEvent e) {
+//                // Código para manejar el evento de mouse entered
+//                JButton button = (JButton) e.getSource();
+//                MetodosGUI.encogerBoton(button);
+//                System.out.println("Saliste del boton");
+//            }
+//        };
         setLayout(null);
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -120,7 +120,7 @@ public class MiPanel extends JPanel implements ActionListener {
                 botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setBounds(j * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
-                botones[i][j].addMouseListener(mouseListener);
+//                botones[i][j].addMouseListener(mouseListener);
 
                 botones[i][j].setIcon(imagenesReescaladas[lista[indice]]);
                 //MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
@@ -238,18 +238,19 @@ public class MiPanel extends JPanel implements ActionListener {
         lista = listaCeros;
         actualizarLabels();
         this.gravedadFin = false;
-        new Thread(() -> {
-            try{
-                Thread.sleep(600);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            actualizarLabels(listaNueva);
-            lista = listaNueva;
-            reescalar();
-        }).start();
+//        new Thread(() -> {
+//            try{
+//                Thread.sleep(600);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//            actualizarLabels(listaNueva);
+//            lista = listaNueva;
+//            reescalar();
+//        }).start();
 
         gravedad(listaNueva);
+
         this.vidas = (int) tupla._2();
         this.labelVidas.setText("Vidas: "+this.vidas);
         this.numeroPuntos = Main.sumarPuntos(numeroPuntos,(int) tupla._3(),(int) tupla._4(), dificultad); //tupla._3 -> contadorEliminados; tupla._4 -> elementoEliminado
@@ -398,9 +399,6 @@ public class MiPanel extends JPanel implements ActionListener {
         }
         AtomicInteger contador = new AtomicInteger(celdasAMover);
 
-        Thread[] threads = new Thread[botonesY * botonesX];
-        int index = 0;
-
 // Creamos un hilo para cada botón que deba moverse
         for (int i = 0; i < botonesY; i++) {
             for (int j = botonesX - 1; j >= 0; j--) {
@@ -415,31 +413,25 @@ public class MiPanel extends JPanel implements ActionListener {
 
                     });
                     thread.start();
-                    threads[index] = thread;
-                    index++;
+
                 }
             }
         }
-
-// Esperamos a que todos los hilos terminen
-        for (Thread thread : threads) {
-            if (thread != null) {
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            //hilo que debe entrar en el while cuando todos los hilos de movimiento hayan terminado
+            while (contador.get() > 0) {
+                //System.out.print(contador.get());   //para que no se salte el while
             }
-        }
-
-
+            actualizarLabels(listaNueva);
+            lista = listaNueva;
+            reescalar();
+        }).start();
     }
 
     private void moverBoton(JButton boton, int n) {
         // Mover el botón n filas hacia abajo con una animación
-        new HiloAnimacion(boton, boton.getX(), boton.getY() + boton.getHeight() * n, 1.15).start();
-
-    }
+        new HiloAnimacion(boton, boton.getX(), boton.getY() + boton.getHeight() * n, 1.15).animacion();
+        }
 
 
     private int[] convertirListaScalaAJava(scala.collection.immutable.List<Object> listaScala){

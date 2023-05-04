@@ -379,7 +379,10 @@ public class jPanelInicio extends JPanel {
         btnContinuar.setVisible(false);
         btnContinuar.setEnabled(false);
         pnlEjercicios.setLocation(1500, 0);
-        new HiloAnimacion(pnlColor, lblLogo, 0).start();
+        new HiloAnimacion(pnlColor,-pnlColor.getWidth(),0,1.14).start();
+        new HiloAnimacion(lblLogo,0,0,1.14).start();
+
+//        new HiloAnimacion(pnlColor, lblLogo, 0).start();
 
     }//GEN-LAST:event_btnContinuarActionPerformed
 

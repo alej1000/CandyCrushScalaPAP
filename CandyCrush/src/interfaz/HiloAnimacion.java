@@ -17,7 +17,7 @@ import javax.swing.JPanel;
  */
 public class HiloAnimacion extends Thread {
 
-    private JComponent coomponente;
+    private JComponent componente;
     private JLabel label;
     private int posFinal;
     private int coordXFinal;
@@ -25,14 +25,10 @@ public class HiloAnimacion extends Thread {
     private double aceleracion;
     private boolean interrumpido = false;
 
-    public HiloAnimacion(JPanel panel, JLabel label, int posFinal) {
-        this.coomponente = panel;
-        this.label = label;
-        this.posFinal = posFinal;
-    }
+
 
     public HiloAnimacion(JComponent componente, int coordXFinal, int coordYFinal, double aceleracion) {
-        this.coomponente = componente;
+        this.componente = componente;
         this.label = label;
         this.coordXFinal = coordXFinal;
         this.coordYFinal = coordYFinal;
@@ -41,58 +37,34 @@ public class HiloAnimacion extends Thread {
     }
 
     public void run() {
-
-        if (label != null && coomponente != null) {
-            int primeraPosLbl = label.getX();       //primera posición que tuvo el
-            //label a la hora de crearse el hilo
-
-            while (label.getX() > posFinal) {         //mientras que el label no haya llegado a su pos final
-                //se calcula la nueva posición del label usando
-                //MRUA para que quede fluido
-                int lblNuevaPos = (int) ((int) label.getX() / 1.1);
-                //se aplica el mismo movimiento relativo al label
-                int pnlNuevaPos = (int) ((coomponente.getWidth() - label.getWidth()) * ((float) lblNuevaPos / primeraPosLbl) - (coomponente.getWidth() - label.getWidth()));
-                label.setLocation(lblNuevaPos, posFinal);
-                coomponente.setLocation(pnlNuevaPos, posFinal);
+    animacion();
+}
+    public void animacion(){
+        double distancia = sqrt(((coordXFinal - componente.getX()) * (coordXFinal - componente.getX())) + ((coordYFinal - componente.getY()) * (coordYFinal - componente.getY())));
+        double coseno = (float) ((componente.getX() - coordXFinal) / distancia);
+        double seno = (componente.getY() - coordYFinal) / distancia;
+        while (distancia > 0.49) {         //mientras que el label no haya llegado a su pos final
+            //se calcula la nueva posición del label usando
+            //MRUA para que quede fluido
+            distancia = distancia / aceleracion;
+            int componenteNuevaPosX = (int) (coseno * distancia) + coordXFinal;
+            int componenteNuevaPosY = (int) (seno * distancia) + coordYFinal;
+            if (distancia > 0.49) {
+                componente.setLocation(componenteNuevaPosX, componenteNuevaPosY);
                 try {
                     Thread.sleep(14);   //descanso de 14 ms para que no sea
                     //un movimiento instantáneo
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(HiloAnimacion.class.getName()).log(Level.SEVERE, null, ex);
+//                        Logger.getLogger(HiloAnimacion.class.getName()).log(Level.SEVERE, null, ex);
+                    interrumpido = true;
                     break;
                 }
             }
-            if (!Thread.interrupted()) {
-                coomponente.setVisible(false);
-            }
-        } else {
-            double distancia = sqrt(((coordXFinal - coomponente.getX()) * (coordXFinal - coomponente.getX())) + ((coordYFinal - coomponente.getY()) * (coordYFinal - coomponente.getY())));
-            double coseno = (float) ((coomponente.getX() - coordXFinal) / distancia);
-            double seno = (coomponente.getY() - coordYFinal) / distancia;
-            while (distancia > 0.49) {         //mientras que el label no haya llegado a su pos final
-                //se calcula la nueva posición del label usando
-                //MRUA para que quede fluido
-                distancia = distancia / aceleracion;
-                int componenteNuevaPosX = (int) (coseno * distancia) + coordXFinal;
-                int componenteNuevaPosY = (int) (seno * distancia) + coordYFinal;
-                if (distancia > 0.49) {
-                    coomponente.setLocation(componenteNuevaPosX, componenteNuevaPosY);
-                    try {
-                        Thread.sleep(14);   //descanso de 14 ms para que no sea
-                        //un movimiento instantáneo
-                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(HiloAnimacion.class.getName()).log(Level.SEVERE, null, ex);
-                        interrumpido = true;
-                        break;
-                    }
-                }
-            }
-            if (!interrumpido) {
-                coomponente.setLocation(coordXFinal, coordYFinal);
-
-            }
+        }
+        if (!interrumpido) {
+            componente.setLocation(coordXFinal, coordYFinal);
 
         }
 
     }
-}
+    }
