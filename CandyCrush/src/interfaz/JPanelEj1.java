@@ -6,7 +6,7 @@ package interfaz;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import javax.swing.ImageIcon;
+import javax.swing.*;
 import java.util.Random;
 
 import conexionDeScala.Matrix;
@@ -23,7 +23,13 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
     private ImageIcon imgNuevaCadena = (new ImageIcon("src/main/java/assets/imgNuevaCadena.png"));
     private ImageIcon imgInfo = (new ImageIcon("src/main/java/assets/imgInfo.png"));
+
+    private String ruta = "src/assets/";
     private MiPanel panelPartida;
+
+    private int numeroVidas = 5;
+
+    private int puntos = 0;
 
     public JPanelEj1(jPanelInicio pnlAnterior, Main jFrameMain) {
         this.pnlAnterior = pnlAnterior;
@@ -32,17 +38,28 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
         this.setBackground(Color.decode("#292930"));
 
+        JLabel labelVidas = new JLabel();
+        labelVidas.setText("Vidas: " + numeroVidas);
+        labelVidas.setBounds(100, 200, 100, 20);
+        labelVidas.setVisible(true);
+        this.add(labelVidas);
+
+        JLabel labelPuntos = new JLabel();
+        labelPuntos.setText("Puntos: " + puntos);
+        labelPuntos.setBounds(100, 250, 100, 20);
+        labelPuntos.setVisible(true);
+        this.add(labelPuntos);
 
         pnlInput.setBackground(new Color(0, 0, 0, 220));
         Random random = new Random();
         int filas = 4;
         int columnas = 5;
         //int[] lista = new int[filas*columnas];
-        Matrix matrix = new Matrix(filas, columnas,1);
+        Matrix matrix = new Matrix(filas, columnas,2);
         //lista = convertirListaScalaAJava(matrix.getData());
 
         //MiPanel miPanel = new MiPanel(columnas, filas,700,400,matrix);
-        panelPartida = new MiPanel(columnas, filas,700,400,matrix);
+        panelPartida = new MiPanel(columnas, filas,700,400,matrix,labelVidas,labelPuntos);
          panelPartida.setSize(panelPartida.getPreferredSize());
         panelPartida.setLocation(200, 100);
         this.add(panelPartida);
@@ -118,7 +135,7 @@ public class JPanelEj1 extends javax.swing.JPanel {
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
 
         //Al pulsar el botón se inicia la animación de regreso a la página principal
-        MetodosGUI.reproducirSonido("src/main/java/assets/sonidoClick2.wav");
+        MetodosGUI.reproducirSonido(ruta+"sonidoClick2.wav");
         new HiloAnimacion(btnRegresar, -96, 36, 1.2).start();   //se esconde el botón de regreso
 
         new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
@@ -158,7 +175,7 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        MetodosGUI.reproducirSonido("src/main/java/assets/sonidoClick2.wav");
+        MetodosGUI.reproducirSonido(ruta+"sonidoClick2.wav");
         btnRegresar.setEnabled(true);
 
         new HiloAnimacion(pnlInput, 262, 750, 1.2).start();
@@ -168,7 +185,7 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
     private void btnRegresarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegresarMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/main/java/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"sonidoClick.wav");
         MetodosGUI.agrandarBoton(btnRegresar);
     }//GEN-LAST:event_btnRegresarMouseEntered
 
@@ -179,7 +196,7 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
     private void btnCancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelarMouseEntered
         // TODO add your handling code here:
-        MetodosGUI.reproducirSonido("src/main/java/assets/sonidoClick.wav");
+        MetodosGUI.reproducirSonido(ruta+"sonidoClick.wav");
 
         MetodosGUI.agrandarBoton(btnCancelar);
 
@@ -232,6 +249,6 @@ public class JPanelEj1 extends javax.swing.JPanel {
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel jLblIntroduzcaCadena;
-    private javax.swing.JPanel pnlInput;
+    private javax.swing.JPanel pnlInput; //Panel GameOver
     // End of variables declaration//GEN-END:variables
 }

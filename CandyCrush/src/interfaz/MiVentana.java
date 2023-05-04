@@ -10,7 +10,7 @@ package interfaz;
  */
 import conexionDeScala.Matrix;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.util.Random;
 
 public class MiVentana extends JFrame {
@@ -29,8 +29,13 @@ public class MiVentana extends JFrame {
         Matrix matrix = new Matrix(filas, columnas,2);
         //lista = convertirListaScalaAJava(matrix.getData());
 
+
+        JLabel labelVidas = new JLabel();
+        JLabel labelPuntos = new JLabel();
+
+
         //MiPanel miPanel = new MiPanel(columnas, filas,700,400,matrix);
-        MiPanel miPanel =new MiPanel(columnas, filas,700,400,matrix); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
+        MiPanel miPanel =new MiPanel(columnas, filas,700,400,matrix,labelVidas,labelPuntos); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Establece la acción por defecto al cerrar la ventana
         this.add(miPanel); // Agrega el panel al JFrame
         this.pack(); // Ajusta el tamaño del JFrame al tamaño del panel

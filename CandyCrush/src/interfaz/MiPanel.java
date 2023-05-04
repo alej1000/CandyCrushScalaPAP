@@ -32,23 +32,17 @@ package interfaz;
 //    }
 //}
 
+import conexionDeScala.Main;
 import conexionDeScala.Matrix;
-import conexionDeScala.Matrix$;
 
 import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
+import java.awt.event.*;
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 public class MiPanel extends JPanel implements ActionListener {
 
@@ -60,6 +54,13 @@ public class MiPanel extends JPanel implements ActionListener {
     private int contador;
     private boolean gravedadFin = true;
 
+    private int vidas =5;
+    private JLabel labelVidas;
+
+    private  int numeroPuntos=0;
+    private JLabel labelPuntos;
+
+    private int dificultad=2;
     private Matrix matriz;
 //    private String ruta = "src/main/java/assets/";
 
@@ -68,10 +69,12 @@ public class MiPanel extends JPanel implements ActionListener {
     private ImageIcon[] imagenesReescaladas = new ImageIcon[17];
 
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
-    public MiPanel(int botonesX, int botonesY, int dimX, int dimY, Matrix matriz) {
+    public MiPanel(int botonesX, int botonesY, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos) {
         this.botonesX = botonesX;
         this.botonesY = botonesY;
         this.matriz = matriz;
+        this.labelVidas= labelVidas;
+        this.labelPuntos= labelPuntos;
         this.lista = convertirListaScalaAJava(matriz.getData());
         this.dimX = dimX;   //tamaño del panel horizontalmente
         this.dimY = dimY;   //tamaño del panel verticalmente
@@ -83,6 +86,21 @@ public class MiPanel extends JPanel implements ActionListener {
             imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
         }
         botones = new JButton[botonesY][botonesX];
+        MouseListener mouseListener = new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Código para manejar el evento de mouse entered
+                JButton button = (JButton) e.getSource();
+                MetodosGUI.agrandarBoton(button);
+                System.out.println("Entraste al boton");
+            }
+            public void mouseExited(MouseEvent e) {
+                // Código para manejar el evento de mouse entered
+                JButton button = (JButton) e.getSource();
+                MetodosGUI.encogerBoton(button);
+                System.out.println("Saliste del boton");
+            }
+        };
         setLayout(null);
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -102,6 +120,7 @@ public class MiPanel extends JPanel implements ActionListener {
                 botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setBounds(j * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
+                botones[i][j].addMouseListener(mouseListener);
 
                 botones[i][j].setIcon(imagenesReescaladas[lista[indice]]);
                 //MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
@@ -204,20 +223,24 @@ public class MiPanel extends JPanel implements ActionListener {
 
     public void test(int fila, int columna) {
         // realiza la acción deseada con las coordenadas x e y
+        if (vidas>0){
         System.out.println("Botón (" + fila + ", " + columna + ") pulsado.");
-        scala.Tuple5<Matrix,Object,Object,Object,Matrix> tupla = matriz.consulta(fila,columna,5);
+        scala.Tuple5<Matrix,Object,Object,Object,Matrix> tupla = matriz.consulta(fila,columna, vidas);
         matriz = tupla._1();
         Matrix matrizCeros = tupla._5();
         int[] listaCeros = convertirListaScalaAJava(matrizCeros.getData());
         int[] listaNueva = convertirListaScalaAJava(matriz.getData());
         System.out.println("ListaCeros:"+Arrays.toString(listaCeros));
         System.out.println("ListaNueva: "+Arrays.toString(listaNueva));
+
+
+
         lista = listaCeros;
         actualizarLabels();
         this.gravedadFin = false;
         new Thread(() -> {
             try{
-                Thread.sleep(1000);
+                Thread.sleep(600);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -227,6 +250,17 @@ public class MiPanel extends JPanel implements ActionListener {
         }).start();
 
         gravedad(listaNueva);
+        this.vidas = (int) tupla._2();
+        this.labelVidas.setText("Vidas: "+this.vidas);
+        this.numeroPuntos = Main.sumarPuntos(numeroPuntos,(int) tupla._3(),(int) tupla._4(), dificultad); //tupla._3 -> contadorEliminados; tupla._4 -> elementoEliminado
+        this.labelPuntos.setText("Puntos: "+this.numeroPuntos);
+
+        if(this.vidas == 0){
+            gameOver();
+        }
+        }
+
+
 
         //Hacemos parar el programa durante 1000 milisegundos
 
@@ -279,7 +313,7 @@ public class MiPanel extends JPanel implements ActionListener {
     private void animacionCarga() {
 //        CountDownLatch latch = new CountDownLatch(botonesX * botonesY);
         contador = botonesX * botonesY;
-        int delay = 50;
+        int delay = 45;
 
         new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
             @Override
@@ -293,7 +327,7 @@ public class MiPanel extends JPanel implements ActionListener {
                         if (i % 2 == 0) { // alternar el orden de las filas
                             for (int j = 0; j < botonesX; j++) {
                                 JButton boton = botones[i][j];
-                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.05).start();
+                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
                                 contador = contador - 1;
                                 System.out.println(tamBoton);
                                 System.out.println("Fila = " + i * tamBoton);
@@ -308,7 +342,7 @@ public class MiPanel extends JPanel implements ActionListener {
                         } else {
                             for (int j = botonesX - 1; j >= 0; j--) {
                                 JButton boton = botones[i][j];
-                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.05).start();
+                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
                                 contador = contador - 1;
 
                                 try {
@@ -403,7 +437,7 @@ public class MiPanel extends JPanel implements ActionListener {
 
     private void moverBoton(JButton boton, int n) {
         // Mover el botón n filas hacia abajo con una animación
-        new HiloAnimacion(boton, boton.getX(), boton.getY() + boton.getHeight() * n, 1.1).start();
+        new HiloAnimacion(boton, boton.getX(), boton.getY() + boton.getHeight() * n, 1.15).start();
 
     }
 
@@ -414,6 +448,16 @@ public class MiPanel extends JPanel implements ActionListener {
             listaJava[i] = (int) listaScala.apply(i);
         }
         return listaJava;
+    }
+
+    private void gameOver(){
+        javax.swing.JOptionPane.showMessageDialog(null, "GAME OVER");
+//        for(int i = 0; i< botonesY; i++){
+//            for(int j = 0; j< botonesX; j++){
+//                botones[i][j].setEnabled(false);
+//            }
+//        }
+        //System.exit(0);
     }
 
 }
