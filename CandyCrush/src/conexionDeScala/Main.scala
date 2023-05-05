@@ -20,7 +20,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
     val puntosIniciales: Int = 0
-    if (args.length > 4) { //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
+    if (args.length > 3) { //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
       val filas = args(0).toInt
       val columnas = args(1).toInt
       val modoDeJuego = args(2).charAt(0)
