@@ -129,7 +129,7 @@ public class jPanelInicio extends JPanel {
         btnCambiarModo.setBackground(new Color(255, 255, 255));
         btnCambiarModo.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
         btnCambiarModo.setForeground(new Color(51, 153, 255));
-        btnCambiarModo.setText("EJERCICIO 3");
+        btnCambiarModo.setText("MODO DIFÍCIL");
         btnCambiarModo.setBorder(null);
         btnCambiarModo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCambiarModo.setFocusPainted(false);
@@ -152,7 +152,7 @@ public class jPanelInicio extends JPanel {
         btnAjustesDeTablero.setBackground(new Color(255, 255, 255));
         btnAjustesDeTablero.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
         btnAjustesDeTablero.setForeground(new Color(51, 153, 255));
-        btnAjustesDeTablero.setText("EJERCICIO 2");
+        btnAjustesDeTablero.setText("Cambiar Dimensiones");
         btnAjustesDeTablero.setBorder(null);
         btnAjustesDeTablero.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAjustesDeTablero.setFocusPainted(false);
@@ -421,26 +421,28 @@ public class jPanelInicio extends JPanel {
     private void btnCambiarModoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarModoActionPerformed
         // TODO add your handling code here:
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
-        new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();
-        jPanelInicio estePanel = this;
+        dificultad = dificultad % 2+1;
+        btnCambiarModo.setText(dificultad == 1 ? "MODO FÁCIL" : "MODO DIFÍCIL");
+//        new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();
+//        jPanelInicio estePanel = this;
 //        new HiloTransicion(frame, this).start();
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(300);                 //esperamos a que termine la animación del pnlTransicion
-
-//                        frame.mostrarPanel(new JPanelEj3(estePanel, frame), TOOL_TIP_TEXT_KEY);
-
-//                        new JPanelEj1(estePanel, frame);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        } catch (Exception e) {
-        }
+//        try {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        Thread.sleep(300);                 //esperamos a que termine la animación del pnlTransicion
+//
+////                        frame.mostrarPanel(new JPanelEj3(estePanel, frame), TOOL_TIP_TEXT_KEY);
+//
+////                        new JPanelEj1(estePanel, frame);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }).start();
+//        } catch (Exception e) {
+//        }
 
 
     }//GEN-LAST:event_btnCambiarModoActionPerformed

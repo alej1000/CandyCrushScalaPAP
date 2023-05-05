@@ -333,9 +333,6 @@ public class MiPanel extends JPanel implements ActionListener {
                                 JButton boton = botones[i][j];
                                 new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
                                 contador.decrementAndGet();
-                                System.out.println(tamBoton);
-                                System.out.println("Fila = " + i * tamBoton);
-                                System.out.println("Columna =" + j * tamBoton);
                                 try {
                                     Thread.sleep(delay); // pausa para dar efecto de animación
                                     System.out.println("adios");
@@ -366,6 +363,9 @@ public class MiPanel extends JPanel implements ActionListener {
                 try {
 //                    latch.await(); // espera a que todos los hilos terminen
                     while (contador.get() > 0) {
+                        Thread.sleep(150);
+                        MetodosGUI.reproducirSonido(ruta + "slide sound effect.wav");
+
                     }
                     botonesActivos = true; // activamos los botones
                     animacionTerminada = true; // todos los hilos han terminado, ponemos el booleano en true

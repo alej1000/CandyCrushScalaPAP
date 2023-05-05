@@ -61,6 +61,16 @@ public class JPanelEj1 extends javax.swing.JPanel {
 //        panelPartida.setBounds(360, 1700,700,400);
 //        jPanel1.establecerDimension();
         iniciarTransicion();
+        new Thread(() -> {
+            try {
+                while (true) {
+                    MetodosGUI.reproducirSonido(ruta + "musicaDeFondo.wav");
+                    Thread.sleep(58000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     @SuppressWarnings("unchecked")
