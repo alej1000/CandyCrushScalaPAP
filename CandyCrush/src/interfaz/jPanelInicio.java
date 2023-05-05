@@ -151,7 +151,7 @@ public class jPanelInicio extends JPanel {
         btnAjustesDeTablero.setBackground(new Color(255, 255, 255));
         btnAjustesDeTablero.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
         btnAjustesDeTablero.setForeground(new Color(51, 153, 255));
-        btnAjustesDeTablero.setText("Cambiar Dimensiones");
+        btnAjustesDeTablero.setText("CAMBIAR DIMENSIONES");
         btnAjustesDeTablero.setBorder(null);
         btnAjustesDeTablero.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAjustesDeTablero.setFocusPainted(false);
@@ -247,7 +247,7 @@ public class jPanelInicio extends JPanel {
         btnIniciar.setBackground(new Color(151, 250, 99));
         btnIniciar.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
         btnIniciar.setForeground(new Color(255, 255, 255));
-        btnIniciar.setText("EJERCICIOS");
+        btnIniciar.setText("JUGAR");
         btnIniciar.setBorder(null);
         btnIniciar.setBorderPainted(false);
         btnIniciar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

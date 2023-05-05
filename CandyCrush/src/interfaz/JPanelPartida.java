@@ -6,6 +6,7 @@ package interfaz;
 
 import java.awt.Color;
 import javax.swing.*;
+import java.awt.Image;
 
 /**
  *
@@ -74,6 +75,10 @@ public class JPanelPartida extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         }).start();
+        JLabel jLabelFondo = new javax.swing.JLabel();
+        jLabelFondo.setBounds(0,  0, this.getPreferredSize().width, this.getPreferredSize().height);
+        MetodosGUI.ponerImagenLabel(jLabelFondo, new ImageIcon(ruta+ "fondo.png"));
+        add(jLabelFondo);
     }
 
     public void reajustarPanel(){
@@ -99,6 +104,10 @@ public class JPanelPartida extends javax.swing.JPanel {
 
         }
         panelPartida.setLocation((anchuraReal - panelPartida.getWidth()) / 2, (altura - panelPartida.getHeight()) / 2);
+        panelPartida.setDimXPadre(anchuraReal);
+        panelPartida.setDimYPadre(altura);
+        panelPartida.setDesplazamientoXPadre(-(anchuraReal - panelPartida.getWidth()) / 2);
+        panelPartida.setDesplazamientoYPadre(-(altura - panelPartida.getHeight()) / 2);
     }
 
     @SuppressWarnings("unchecked")

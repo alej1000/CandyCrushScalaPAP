@@ -35,7 +35,7 @@ package interfaz;
 import conexionDeScala.Main;
 import conexionDeScala.Matrix;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -60,16 +60,95 @@ public class MiPanel extends JPanel implements ActionListener {
     private  int numeroPuntos=0;
     private JLabel labelPuntos;
 
+    private JLabel fondo = new JLabel();
     private int dificultad=2;
     private Matrix matriz;
 //    private String ruta = "src/main/java/assets/";
 
     private boolean botonesActivos = false;
     private String ruta = "src/assets/";
+
+    private ImageIcon imgFondo = new ImageIcon(ruta+"fondoTransparente.jpg");
+
     private ImageIcon[] imagenes =  new ImageIcon[17];
     private ImageIcon[] imagenesReescaladas = new ImageIcon[17];
 
+    private Integer dimXPadre;
+    private Integer dimYPadre;
+    private Integer desplazamientoXPadre;
+    private Integer desplazamientoYPadre;
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
+    public MiPanel(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos,int dimXPadre, int dimYPadre, int desplazamientoXPadre, int desplazamientoYPadre) {
+        this.botonesColumnas = botonesX;
+        this.botonesFilas = botonesFilas;
+        this.matriz = matriz;
+        this.labelVidas= labelVidas;
+        this.labelPuntos= labelPuntos;
+        this.lista = convertirListaScalaAJava(matriz.getData());
+        this.dimX = dimX;   //tamaño del panel horizontalmente
+        this.dimY = dimY;   //tamaño del panel verticalmente
+        this.desplazamientoXPadre = desplazamientoXPadre;
+        this.desplazamientoYPadre = desplazamientoYPadre;
+        this.dimXPadre = dimXPadre;
+        this.dimYPadre = dimYPadre;
+        for (int i = 0; i < imagenes.length; i++) {
+            imagenes[i] = new ImageIcon(ruta + "candy" + i + ".png");
+        }
+        int tamBoton = Math.min(dimX / botonesX, dimY / botonesFilas);
+        for (int i = 0; i < imagenesReescaladas.length; i++) {
+            imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
+        }
+        botones = new JButton[botonesFilas][botonesX];
+//        MouseListener mouseListener = new MouseAdapter() {
+//            @Override
+//            public void mouseEntered(MouseEvent e) {
+//                // Código para manejar el evento de mouse entered
+//                JButton button = (JButton) e.getSource();
+//                MetodosGUI.agrandarBoton(button);
+//                System.out.println("Entraste al boton");
+//            }
+//            public void mouseExited(MouseEvent e) {
+//                // Código para manejar el evento de mouse entered
+//                JButton button = (JButton) e.getSource();
+//                MetodosGUI.encogerBoton(button);
+//                System.out.println("Saliste del boton");
+//            }
+//        };
+        setLayout(null);
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                reescalar();
+            }
+        });
+
+        for (int i = 0; i < botonesFilas; i++) { //El bucle de la fila
+            for (int j = 0; j < botonesX; j++) { //El bucle de la columna
+                int indice = i * botonesX + j; // calcula el índice correspondiente en la lista
+                JButton boton = new JButton();
+                boton.setBorderPainted(false);
+                boton.setContentAreaFilled(false);
+                boton.setFocusPainted(false);
+                boton.setOpaque(false);
+                botones[i][j] = boton;
+                botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
+                botones[i][j].addActionListener(this); // agregamos ActionListener
+                botones[i][j].setBounds(j * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
+//                botones[i][j].addMouseListener(mouseListener);
+
+                botones[i][j].setIcon(imagenesReescaladas[lista[indice]]);
+                //MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
+                //botones[i][j].setText(""+lista[indice]);
+
+                add(botones[i][j]);
+            }
+        }
+        fondo.setBounds(0,0, dimX, dimY);
+        MetodosGUI.ponerImagenLabel(fondo, imgFondo);
+        add(fondo);
+
+        //animacionCarga();
+    }
+
     public MiPanel(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos) {
         this.botonesColumnas = botonesX;
         this.botonesFilas = botonesFilas;
@@ -130,14 +209,30 @@ public class MiPanel extends JPanel implements ActionListener {
                 add(botones[i][j]);
             }
         }
+        fondo.setBounds(0,0, dimX, dimY);
+        MetodosGUI.ponerImagenLabel(fondo, imgFondo);
+        add(fondo);
 
         //animacionCarga();
     }
+
+    public void actualizarFondo() {
+        if (desplazamientoXPadre == null) {
+            fondo.setBounds(0, 0, dimX, dimY);
+        }else{
+            fondo.setBounds(desplazamientoXPadre, desplazamientoYPadre, dimXPadre, dimYPadre);
+        }
+        MetodosGUI.ponerImagenLabel(fondo, imgFondo);
+
+    }
+
 
 
     public void reescalar() { // reescala los botones cuando se cambia el tamaño del panel
         int ancho = getWidth();
         int alto = getHeight();
+        dimX = ancho;
+        dimY = alto;
         int tamBoton = Math.min(ancho / botonesColumnas, alto / botonesFilas);
         if (animacionTerminada) {
 
@@ -155,6 +250,8 @@ public class MiPanel extends JPanel implements ActionListener {
             }
         }
         actualizarLabels();
+        actualizarFondo();
+
     }
 
     public JButton getBoton(int fila, int columna) {
@@ -482,5 +579,20 @@ public class MiPanel extends JPanel implements ActionListener {
 
     public int getBotonesFilas() {
         return botonesFilas;
+    }
+
+    public void setDesplazamientoXPadre(int desplazamientoXPadre) {
+        this.desplazamientoXPadre = desplazamientoXPadre;
+    }
+
+    public void setDesplazamientoYPadre(int desplazamientoYPadre) {
+        this.desplazamientoYPadre = desplazamientoYPadre;
+    }
+
+    public void setDimXPadre(int dimXPadre) {
+        this.dimXPadre = dimXPadre;
+    }
+    public void setDimYPadre(int dimYPadre) {
+        this.dimYPadre = dimYPadre;
     }
 }
