@@ -47,7 +47,7 @@ import javax.swing.JLabel;
 public class MiPanel extends JPanel implements ActionListener {
 
     private JButton[][] botones;
-    private int botonesX, botonesY;
+    private int botonesColumnas, botonesFilas;
     private int[] lista;
     private int dimX, dimY;
     private boolean animacionTerminada = false;
@@ -70,9 +70,9 @@ public class MiPanel extends JPanel implements ActionListener {
     private ImageIcon[] imagenesReescaladas = new ImageIcon[17];
 
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
-    public MiPanel(int botonesX, int botonesY, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos) {
-        this.botonesX = botonesX;
-        this.botonesY = botonesY;
+    public MiPanel(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos) {
+        this.botonesColumnas = botonesX;
+        this.botonesFilas = botonesFilas;
         this.matriz = matriz;
         this.labelVidas= labelVidas;
         this.labelPuntos= labelPuntos;
@@ -82,11 +82,11 @@ public class MiPanel extends JPanel implements ActionListener {
         for (int i = 0; i < imagenes.length; i++) {
             imagenes[i] = new ImageIcon(ruta + "candy" + i + ".png");
         }
-        int tamBoton = Math.min(dimX / botonesX, dimY / botonesY);
+        int tamBoton = Math.min(dimX / botonesX, dimY / botonesFilas);
         for (int i = 0; i < imagenesReescaladas.length; i++) {
             imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
         }
-        botones = new JButton[botonesY][botonesX];
+        botones = new JButton[botonesFilas][botonesX];
 //        MouseListener mouseListener = new MouseAdapter() {
 //            @Override
 //            public void mouseEntered(MouseEvent e) {
@@ -109,7 +109,7 @@ public class MiPanel extends JPanel implements ActionListener {
             }
         });
 
-        for (int i = 0; i < botonesY; i++) { //El bucle de la fila
+        for (int i = 0; i < botonesFilas; i++) { //El bucle de la fila
             for (int j = 0; j < botonesX; j++) { //El bucle de la columna
                 int indice = i * botonesX + j; // calcula el índice correspondiente en la lista
                 JButton boton = new JButton();
@@ -131,19 +131,26 @@ public class MiPanel extends JPanel implements ActionListener {
             }
         }
 
-        animacionCarga();
+        //animacionCarga();
     }
 
 
     public void reescalar() { // reescala los botones cuando se cambia el tamaño del panel
+        int ancho = getWidth();
+        int alto = getHeight();
+        int tamBoton = Math.min(ancho / botonesColumnas, alto / botonesFilas);
         if (animacionTerminada) {
-            int ancho = getWidth();
-            int alto = getHeight();
-            int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
 
-            for (int i = 0; i < botonesY; i++) {
-                for (int j = 0; j < botonesX; j++) {
+
+            for (int i = 0; i < botonesFilas; i++) {
+                for (int j = 0; j < botonesColumnas; j++) {
                     botones[i][j].setBounds(j * tamBoton, i * tamBoton, tamBoton, tamBoton);
+                }
+            }
+        }else {
+            for (int i = 0; i < botonesFilas; i++) {
+                for (int j = 0; j < botonesColumnas; j++) {
+                    botones[i][j].setBounds(j * tamBoton, -tamBoton*5, tamBoton, tamBoton);
                 }
             }
         }
@@ -179,14 +186,14 @@ public class MiPanel extends JPanel implements ActionListener {
         System.out.println("Lista:"+Arrays.toString(lista));
         int ancho = getWidth();
         int alto = getHeight();
-        int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
+        int tamBoton = Math.min(ancho / botonesColumnas, alto / botonesFilas);
         // actualiza los labels de los botones
         for (int i = 0; i < imagenesReescaladas.length; i++) {
             imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
         }
-        for (int i = 0; i < botonesY; i++) {
-            for (int j = 0; j < botonesX; j++) {
-                int indice = i * botonesX + j; // calcula el índice correspondiente en la lista
+        for (int i = 0; i < botonesFilas; i++) {
+            for (int j = 0; j < botonesColumnas; j++) {
+                int indice = i * botonesColumnas + j; // calcula el índice correspondiente en la lista
                 int finalI = i;
                 int finalJ = j;
                 new Thread(() -> {
@@ -202,14 +209,14 @@ public class MiPanel extends JPanel implements ActionListener {
         System.out.println("ListaNueva:"+Arrays.toString(listaNueva));
         int ancho = getWidth();
         int alto = getHeight();
-        int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
+        int tamBoton = Math.min(ancho / botonesColumnas, alto / botonesFilas);
         // actualiza los labels de los botones
         for (int i = 0; i < imagenesReescaladas.length; i++) {
             imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
         }
-        for (int i = 0; i < botonesY; i++) {
-            for (int j = 0; j < botonesX; j++) {
-                int indice = i * botonesX + j; // calcula el índice correspondiente en la lista
+        for (int i = 0; i < botonesFilas; i++) {
+            for (int j = 0; j < botonesColumnas; j++) {
+                int indice = i * botonesColumnas + j; // calcula el índice correspondiente en la lista
                 int finalI = i;
                 int finalJ = j;
                 new Thread(() -> {
@@ -313,9 +320,9 @@ public class MiPanel extends JPanel implements ActionListener {
 //            partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
 //        }
 //    }
-    private void animacionCarga() {
+    public void animacionCarga() {
 //        CountDownLatch latch = new CountDownLatch(botonesX * botonesY);
-        AtomicInteger contador = new AtomicInteger(botonesX * botonesY);
+        AtomicInteger contador = new AtomicInteger(botonesColumnas * botonesFilas);
 
         int delay = 45;
 
@@ -325,23 +332,22 @@ public class MiPanel extends JPanel implements ActionListener {
                 try {
                     int ancho = dimX;
                     int alto = dimY;
-                    int tamBoton = Math.min(ancho / botonesX, alto / botonesY);
+                    int tamBoton = Math.min(ancho / botonesColumnas, alto / botonesFilas);
 
-                    for (int i = botonesY - 1; i >= 0; i--) {
+                    for (int i = botonesFilas - 1; i >= 0; i--) {
                         if (i % 2 == 0) { // alternar el orden de las filas
-                            for (int j = 0; j < botonesX; j++) {
+                            for (int j = 0; j < botonesColumnas; j++) {
                                 JButton boton = botones[i][j];
                                 new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
                                 contador.decrementAndGet();
                                 try {
                                     Thread.sleep(delay); // pausa para dar efecto de animación
-                                    System.out.println("adios");
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
                             }
                         } else {
-                            for (int j = botonesX - 1; j >= 0; j--) {
+                            for (int j = botonesColumnas - 1; j >= 0; j--) {
                                 JButton boton = botones[i][j];
                                 new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
                                 contador.decrementAndGet();
@@ -379,14 +385,14 @@ public class MiPanel extends JPanel implements ActionListener {
     private void gravedad(int[] listaNueva) { //Muestra la animación de caída de los caramelos
         // Recorremos toda la lista para averiguar cuántas filas debe caer cada botón
         int celdasAMover = 0;
-        int[][] desplazamientos = new int[botonesY][botonesX];
-        for (int i = 0; i < botonesY; i++) {    //dentro de cada fila
-            for (int j = 0; j < botonesX; j++) {   //para cada elemento de la columna
-                int indice = i * botonesX + j;      //indice en la lista original
+        int[][] desplazamientos = new int[botonesFilas][botonesColumnas];
+        for (int i = 0; i < botonesFilas; i++) {    //dentro de cada fila
+            for (int j = 0; j < botonesColumnas; j++) {   //para cada elemento de la columna
+                int indice = i * botonesColumnas + j;      //indice en la lista original
                 if (lista[indice] > 0) {
                     int n = 0;
-                    for (int k = 1 + i; k < botonesY; k++) {
-                        int indiceLocal = k * botonesX + j;
+                    for (int k = 1 + i; k < botonesFilas; k++) {
+                        int indiceLocal = k * botonesColumnas + j;
                         if (lista[indiceLocal] == 0) {
                         if (n == 0)   celdasAMover++;
                             n++;
@@ -401,9 +407,9 @@ public class MiPanel extends JPanel implements ActionListener {
         AtomicInteger contador = new AtomicInteger(celdasAMover);
 
 // Creamos un hilo para cada botón que deba moverse
-        for (int i = 0; i < botonesY; i++) {
-            for (int j = botonesX - 1; j >= 0; j--) {
-                int indice = i * botonesX + j;
+        for (int i = 0; i < botonesFilas; i++) {
+            for (int j = botonesColumnas - 1; j >= 0; j--) {
+                int indice = i * botonesColumnas + j;
                 int n = desplazamientos[i][j];
                 if (n > 0) {
                     int iFinal = i;
@@ -460,5 +466,21 @@ public class MiPanel extends JPanel implements ActionListener {
 
     public void setLabelPuntos(JLabel labelPuntos) {
         this.labelPuntos = labelPuntos;
+    }
+
+    public void setDimX(int dimX) {
+        this.dimX = dimX;
+    }
+
+    public void setDimY(int dimY) {
+        this.dimY = dimY;
+    }
+
+    public int getBotonesColumnas() {
+        return botonesColumnas;
+    }
+
+    public int getBotonesFilas() {
+        return botonesFilas;
     }
 }

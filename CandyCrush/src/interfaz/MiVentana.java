@@ -36,6 +36,7 @@ public class MiVentana extends JFrame {
 
         //MiPanel miPanel = new MiPanel(columnas, filas,700,400,matrix);
         MiPanel miPanel =new MiPanel(columnas, filas,700,400,matrix,labelVidas,labelPuntos); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
+        miPanel.animacionCarga();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Establece la acción por defecto al cerrar la ventana
         this.add(miPanel); // Agrega el panel al JFrame
         this.pack(); // Ajusta el tamaño del JFrame al tamaño del panel

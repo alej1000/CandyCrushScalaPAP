@@ -10,7 +10,6 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import javax.swing.*;
 
 /**
@@ -506,7 +505,7 @@ public class jPanelInicio extends JPanel {
         jPanelInicio estePanel = this;
         Matrix matrix = new Matrix(filas, columnas,dificultad);
 
-        MiPanel panelPartida = new MiPanel(columnas, filas,700,400,matrix,null,null);
+        MiPanel panelPartida = new MiPanel(columnas, filas,columnas*20,filas*20,matrix,null,null);
 
 //        new HiloTransicion(frame, this).start();
         try {
@@ -516,7 +515,7 @@ public class jPanelInicio extends JPanel {
                     try {
                         Thread.sleep(300);                 //esperamos a que termine la animación del cortinilla
 
-                        frame.mostrarPanel(new JPanelEj1(estePanel,panelPartida, frame), "");    //cambiamos de panel
+                        frame.mostrarPanel(new JPanelPartida(estePanel,panelPartida, frame), "");    //cambiamos de panel
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

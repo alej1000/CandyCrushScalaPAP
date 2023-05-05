@@ -5,17 +5,13 @@
 package interfaz;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import javax.swing.*;
-import java.util.Random;
-
-import conexionDeScala.Matrix;
 
 /**
  *
  * @author César Martín Guijarro Panel donde se ejecuta el ejercicio número 2.
  */
-public class JPanelEj1 extends javax.swing.JPanel {
+public class JPanelPartida extends javax.swing.JPanel {
     
 
     private jPanelInicio pnlAnterior;
@@ -31,9 +27,11 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
     private int puntos = 0;
 
-    public JPanelEj1(jPanelInicio pnlAnterior, MiPanel panelPartida, Main jFrameMain) {
+
+    public JPanelPartida(jPanelInicio pnlAnterior, MiPanel panelPartida, Main jFrameMain) {
         this.pnlAnterior = pnlAnterior;
         this.jFrameMain = jFrameMain;
+        this.panelPartida = panelPartida;
         initComponents();
 
         this.setBackground(Color.decode("#292930"));
@@ -52,12 +50,17 @@ public class JPanelEj1 extends javax.swing.JPanel {
 
         pnlInput.setBackground(new Color(0, 0, 0, 220));
 
+        int centroX = (int) (this.getWidth() / 2 );
+        int centroY = (int) (this.getHeight() / 2 );
         //MiPanel miPanel = new MiPanel(columnas, filas,700,400,matrix);
-        panelPartida.setLabelPuntos(labelPuntos);
-        panelPartida.setLabelVidas(labelVidas);
-        panelPartida.setSize(panelPartida.getPreferredSize());
-        panelPartida.setLocation(200, 100);
-        this.add(panelPartida);
+        this.panelPartida.setLabelPuntos(labelPuntos);
+        this.panelPartida.setLabelVidas(labelVidas);
+//        panelPartida.setSize(panelPartida.getPreferredSize());
+//        panelPartida.setLocation(200, 100);
+//        panelPartida.setLocation(centroX - panelPartida.getWidth() / 2, centroY - panelPartida.getHeight() / 2);
+        reajustarPanel();
+        panelPartida.animacionCarga();
+        this.add(this.panelPartida);
 //        panelPartida.setBounds(360, 1700,700,400);
 //        jPanel1.establecerDimension();
         iniciarTransicion();
@@ -71,6 +74,31 @@ public class JPanelEj1 extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public void reajustarPanel(){
+//        1183, 750
+        double aspectRatio = panelPartida.getBotonesColumnas() / (panelPartida.getBotonesFilas()+0.0);
+        System.out.println("aspectRatio: " + aspectRatio);
+        int anchuraReal = getPreferredSize().width;
+        int altura = getPreferredSize().height-36;
+        int anchura = Math.round((float)(anchuraReal*0.8));
+        double aspectRatioPanel = anchura / (altura+0.0);
+        System.out.println("aspectRatioPanel: " + aspectRatioPanel);
+        if (aspectRatio > aspectRatioPanel) {
+            panelPartida.setSize(anchura, Math.round((float)(anchura / aspectRatio)));
+            panelPartida.setDimX(anchura);
+            panelPartida.setDimY(Math.round((float)(anchura / aspectRatio)));
+        } else {
+            panelPartida.setSize((int) (altura * aspectRatio),altura);
+            panelPartida.setDimX((int) (altura * aspectRatio));
+            panelPartida.setDimY(altura);
+
+//            panelPartida.setSize((int) (getPreferredSize().height * aspectRatio), getHeight());
+
+
+        }
+        panelPartida.setLocation((anchuraReal - panelPartida.getWidth()) / 2, (altura - panelPartida.getHeight()) / 2);
     }
 
     @SuppressWarnings("unchecked")
