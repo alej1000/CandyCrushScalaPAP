@@ -1,0 +1,4 @@
+{"nombre":"AutoGod","puntuacion":151604,"tiempo":"2023-04-30 22:02:36","duracion":21} 
+{"nombre":"Dios Del Mundo","puntuacion":30,"tiempo":"2023-05-01 02:28:06","duracion":54} 
+{"nombre":"iluminati","puntuacion":18,"tiempo":"2023-04-30 22:45:23","duracion":41}
+{"nombre":"asdfsadf","puntuacion":0,"tiempo":"2023-05-01 02:30:23","duracion":9} 

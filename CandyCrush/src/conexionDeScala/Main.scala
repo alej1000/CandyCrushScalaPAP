@@ -144,6 +144,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         println("Introduce tu nombre para que figure en los records")
         val nombre: String = scala.io.StdIn.readLine()
         guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
+        guardarPuntuacionesJson("RecordsJson.txt",filename)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
         println("\nRecords:")
         //println("Nombre\t\tPuntuacion\t\tDuracion\t\tFecha")
@@ -155,6 +156,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         println("El Robotito duró: " + duracionPartida + " segundos jugando")
         val nombre: String = "AutoGod"
         guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
+        guardarPuntuacionesJson("RecordsJson.txt",filename)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
         mostrarPuntuaciones(nuevasPuntuaciones)
       }
@@ -198,6 +200,30 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         }
         val cadena: String = puntuacionesAcum + (nombre + ": " + puntuacion + " @" + horaFin + " &" + duracionPartida + " \n")
         guardarPuntuacionesAux(filename, lastRecords, "-1", -1, horaFin, duracionPartida, cadena, mejorPuntuacion)
+      }
+    }
+
+    def guardarPuntuacionesJson(filenameJson:String,filenameRecords:String): Unit ={
+      val file = new File(filenameJson)
+      if (!file.exists()) {
+        file.createNewFile()
+      }
+      val lastRecords: List[String] = cargarPuntuaciones(filenameRecords)
+
+      val puntuaciones: String = guardarPuntuacionesJsonAux(filenameJson, lastRecords,"")
+      val writer = new FileWriter(new File(filenameJson)) //True para que no borre lo que ya hay -> Append
+      writer.write(puntuaciones)
+      writer.close()
+    }
+
+    def guardarPuntuacionesJsonAux(filename:String,lastRecords:List[String], puntuacionAcum:String): String ={
+      if(Matrix.isEmpty(lastRecords) || lastRecords.head == ""){
+        return puntuacionAcum
+      }else{
+  //      val lastRecords: List[String] = cargarPuntuaciones(filename)
+        val (first: String, score: Int, time: String, duracion: Long) = buscarClaveValor(lastRecords.head)
+        val record  = puntuacionAcum + "{\"nombre\":\""+first+"\",\"puntuacion\":"+score+",\"tiempo\":\""+time+"\",\"duracion\":"+duracion+"} \n"
+        return guardarPuntuacionesJsonAux(filename,lastRecords.tail,record)
       }
     }
 
