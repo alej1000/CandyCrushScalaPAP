@@ -208,24 +208,49 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       if (!file.exists()) {
         file.createNewFile()
       }
-      val lastRecords: List[String] = cargarPuntuaciones(filenameRecords)
+      val lastRecords: List[String] = cargarPuntuaciones(filenameJson)
 
       val puntuaciones: String = guardarPuntuacionesJsonAux(filenameJson, lastRecords,"")
+      val listaPuntuaciones: String = "[\n" + puntuaciones + "]\n"
       val writer = new FileWriter(new File(filenameJson)) //True para que no borre lo que ya hay -> Append
-      writer.write(puntuaciones)
+      writer.write(listaPuntuaciones)
       writer.close()
     }
 
     def guardarPuntuacionesJsonAux(filename:String,lastRecords:List[String], puntuacionAcum:String): String ={
-      if(Matrix.isEmpty(lastRecords) || lastRecords.head == ""){
+      if(Matrix.isEmpty(lastRecords) || lastRecords.head == "" || lastRecords.head == "]"){
         return puntuacionAcum
       }else{
-  //      val lastRecords: List[String] = cargarPuntuaciones(filename)
-        val (first: String, score: Int, time: String, duracion: Long) = buscarClaveValor(lastRecords.head)
-        val record  = puntuacionAcum + "{\"nombre\":\""+first+"\",\"puntuacion\":"+score+",\"tiempo\":\""+time+"\",\"duracion\":"+duracion+"} \n"
+        if(lastRecords.head == "["){
+          return guardarPuntuacionesJsonAux(filename,lastRecords.tail,puntuacionAcum)
+        }
+        //val (first: String, score: Int, time: String, duracion: Long) = buscarClaveValor(lastRecords.head)
+        val (nombre:String, puntuacion:Int, tiempo:String, duracionPartida:Int) = parsearJson(lastRecords.head)
+        val record  = puntuacionAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"tiempo\":\""+tiempo+"\",\"duracion\":"+duracionPartida+"} \n"
         return guardarPuntuacionesJsonAux(filename,lastRecords.tail,record)
       }
     }
+    //TODO: Funciones indexOf, substring , charAt recursivas
+    def parsearJson(cadenaJson: String): (String, Int, String, Int) = {
+      val nombreInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("nombre")) +2 //Es más dos porque tiene comillas después del :
+      val puntuacionInicio = cadenaJson.indexOf(':', cadenaJson.indexOf("puntuacion")) + 1
+      val fechaInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("tiempo")) + 2
+      val duracionInicio = cadenaJson.indexOf(':', cadenaJson.indexOf("duracion")) + 1
+
+
+      val nombreFin = cadenaJson.indexOf('"', nombreInicio+2)
+      val puntuacionFin = cadenaJson.indexOf(',', puntuacionInicio)
+      val fechaFin = cadenaJson.indexOf('"', fechaInicio+2)
+      val duracionFin = cadenaJson.indexOf('}', duracionInicio)
+
+      val nombre = cadenaJson.substring(nombreInicio, nombreFin)
+      val puntuacion = cadenaJson.substring(puntuacionInicio, puntuacionFin).toInt
+      val fecha = cadenaJson.substring(fechaInicio, fechaFin)
+      val duracion = cadenaJson.substring(duracionInicio, duracionFin).toInt
+
+      (nombre, puntuacion, fecha, duracion)
+    }
+
 
     def buscarClaveValor(str: String): (String, Int, String, Long) = { //Devuelve (nombre, puntuacion,tiempo,duracion)
       //El formato de guardado tendrá que ser nombre:puntuacion@tiempo&duracion
