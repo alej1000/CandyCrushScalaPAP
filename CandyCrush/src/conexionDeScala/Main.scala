@@ -144,7 +144,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         println("Introduce tu nombre para que figure en los records")
         val nombre: String = scala.io.StdIn.readLine()
         guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
-        guardarPuntuacionesJson("RecordsJson.txt",filename)
+        guardarPuntuacionesJson("RecordsJson.txt",nombre, puntuacionFinal, horaFin, duracionPartida)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
         println("\nRecords:")
         //println("Nombre\t\tPuntuacion\t\tDuracion\t\tFecha")
@@ -156,7 +156,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         println("El Robotito duró: " + duracionPartida + " segundos jugando")
         val nombre: String = "AutoGod"
         guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
-        guardarPuntuacionesJson("RecordsJson.txt",filename)
+        guardarPuntuacionesJson("RecordsJson.txt",nombre, puntuacionFinal, horaFin, duracionPartida)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
         mostrarPuntuaciones(nuevasPuntuaciones)
       }
@@ -203,35 +203,55 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    def guardarPuntuacionesJson(filenameJson:String,filenameRecords:String): Unit ={
-      val file = new File(filenameJson)
+    def guardarPuntuacionesJson(filename:String, nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long): Unit ={
+      val file = new File(filename)
       if (!file.exists()) {
         file.createNewFile()
       }
-      val lastRecords: List[String] = cargarPuntuaciones(filenameJson)
+      val lastRecords: List[String] = cargarPuntuaciones(filename)
 
-      val puntuaciones: String = guardarPuntuacionesJsonAux(filenameJson, lastRecords,"")
+      def getBestScore(lastRecords: List[String]): Int = {
+        if (Matrix.isEmpty(lastRecords) || lastRecords.head == "" || lastRecords.head == "[" || lastRecords.head == "]") return -1
+        val (_, mejorPuntuacion: Int, _, _) = parsearJson(lastRecords.head)
+        mejorPuntuacion
+      }
+
+      val mejorPuntuacion = getBestScore(lastRecords)
+      val puntuaciones: String = guardarPuntuacionesJsonAux(filename, lastRecords, nombre, puntuacion, horaFin, duracionPartida, "", mejorPuntuacion)
       val listaPuntuaciones: String = "[\n" + puntuaciones + "]\n"
-      val writer = new FileWriter(new File(filenameJson)) //True para que no borre lo que ya hay -> Append
+      val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
       writer.write(listaPuntuaciones)
       writer.close()
     }
 
-    def guardarPuntuacionesJsonAux(filename:String,lastRecords:List[String], puntuacionAcum:String): String ={
+    def guardarPuntuacionesJsonAux(filename: String, lastRecords: List[String], nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long, puntuacionesAcum: String, mejorPuntuacion: Int): String ={
       if(Matrix.isEmpty(lastRecords) || lastRecords.head == "" || lastRecords.head == "]"){
-        return puntuacionAcum
+        if (puntuacion == -1) { //Si puse mi ultima puntuacion acabo
+          return puntuacionesAcum
+        } else { //Si no he puesto mi ultima puntuacion
+          return puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"tiempo\":\""+horaFin+"\",\"duracion\":"+duracionPartida+"} \n"
+        }
       }else{
         if(lastRecords.head == "["){
-          return guardarPuntuacionesJsonAux(filename,lastRecords.tail,puntuacionAcum)
+          return guardarPuntuacionesJsonAux(filename,lastRecords.tail,nombre,puntuacion,horaFin,duracionPartida,puntuacionesAcum,mejorPuntuacion)
         }
-        //val (first: String, score: Int, time: String, duracion: Long) = buscarClaveValor(lastRecords.head)
-        val (nombre:String, puntuacion:Int, tiempo:String, duracionPartida:Int) = parsearJson(lastRecords.head)
-        val record  = puntuacionAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"tiempo\":\""+tiempo+"\",\"duracion\":"+duracionPartida+"} \n"
-        return guardarPuntuacionesJsonAux(filename,lastRecords.tail,record)
+        val (first: String, score: Int, time: String, duracion: Long) = parsearJson(lastRecords.head)
+        if (score > puntuacion) {
+          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+first+"\",\"puntuacion\":"+score+",\"tiempo\":\""+time+"\",\"duracion\":"+duracion+"} \n"
+          guardarPuntuacionesJsonAux(filename, lastRecords.tail, nombre, puntuacion, horaFin, duracionPartida, cadena, mejorPuntuacion)
+        } else { //Superé la puntuación
+          if (puntuacion > mejorPuntuacion && mejorPuntuacion != -1) { //Si haces nuevo record
+            println("Nuevo Record!!🏆")
+          }
+          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"tiempo\":\""+horaFin+"\",\"duracion\":"+duracionPartida+"} \n"
+          guardarPuntuacionesJsonAux(filename, lastRecords, "-1", -1, horaFin, duracionPartida, cadena, mejorPuntuacion)
+        }
       }
     }
     //TODO: Funciones indexOf, substring , charAt recursivas
-    def parsearJson(cadenaJson: String): (String, Int, String, Int) = {
+    def parsearJson(cadenaJson: String): (String, Int, String, Long) = {
+      //if (cadenaJson == "" || cadenaJson == "[]" || cadenaJson == "[" || cadenaJson == "]") return (cadenaJson, -1, cadenaJson, -1) //Si no hay nada
+
       val nombreInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("nombre")) +2 //Es más dos porque tiene comillas después del :
       val puntuacionInicio = cadenaJson.indexOf(':', cadenaJson.indexOf("puntuacion")) + 1
       val fechaInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("tiempo")) + 2
@@ -246,7 +266,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val nombre = cadenaJson.substring(nombreInicio, nombreFin)
       val puntuacion = cadenaJson.substring(puntuacionInicio, puntuacionFin).toInt
       val fecha = cadenaJson.substring(fechaInicio, fechaFin)
-      val duracion = cadenaJson.substring(duracionInicio, duracionFin).toInt
+      val duracion = cadenaJson.substring(duracionInicio, duracionFin).toLong
 
       (nombre, puntuacion, fecha, duracion)
     }
