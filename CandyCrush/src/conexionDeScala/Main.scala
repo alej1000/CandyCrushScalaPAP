@@ -136,8 +136,18 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         println("Introduce tu nombre para que figure en los records")
         val nombre: String = scala.io.StdIn.readLine()
         guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
-        guardarPuntuacionesJson("RecordsJson.txt",nombre, puntuacionFinal, horaFin, duracionPartida)
+        val file:String = substringRecursive(filename,0,indexOfRecursive(filename,'.'))
+        val fileJson:String = file + "Json.txt"
+        guardarPuntuacionesJson(fileJson,nombre, puntuacionFinal, horaFin, duracionPartida)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
+
+        //val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida)
+        //HttpRequest.post("http://localhost:8080/records").header("Content-Type", "application/json").send(cadenaJson)
+        //println("Se ha enviado la puntuacion a la base de datos")
+        //val peticion:List[String] = HttpRequest.get("http://localhost:8080/records")
+
+
+
         println("\nRecords:")
         //println("Nombre\t\tPuntuacion\t\tDuracion\t\tFecha")
         //printf("%s %20s %20s %20s\n", "Nombre", "Puntuacion", "Duracion", "Fecha")
@@ -240,7 +250,11 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         }
       }
     }
-    
+
+    def puntuacionJson(nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long):String={
+      "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"fecha\":\""+horaFin+"\",\"duracion\":"+duracionPartida+"} \n"
+    }
+
     def parsearJson(cadenaJson: String): (String, Int, String, Long) = {
       //if (cadenaJson == "" || cadenaJson == "[]" || cadenaJson == "[" || cadenaJson == "]") return (cadenaJson, -1, cadenaJson, -1) //Si no hay nada
 
@@ -369,18 +383,19 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       //      )
       //    }
       // Busca el máximo valor de cada campo
-      def maxValuesRec(pilaLlamadas: List[String], maxValues: (Int, Int, Int, Int)): (Int, Int, Int, Int) = {
-        if (Matrix.isEmpty(pilaLlamadas)) {
+      def maxValuesRec(listaRecords: List[String], maxValues: (Int, Int, Int, Int)): (Int, Int, Int, Int) = {
+        if (Matrix.isEmpty(listaRecords)) {
           maxValues
         } else {
-          val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(pilaLlamadas.head)
+          val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(listaRecords.head)
+          //val (nombre, puntuacion, fecha, duracion) = parsearJson(listaRecords.head)
           val newMaxValues = (
             Math.max(maxValues._1, strLength(nombre)),
             Math.max(maxValues._2, strLength(puntuacion.toString)),
             Math.max(maxValues._3, strLength(fecha)),
             Math.max(maxValues._4, strLength(duracion.toString))
           )
-          maxValuesRec(pilaLlamadas.tail, newMaxValues)
+          maxValuesRec(listaRecords.tail, newMaxValues)
         }
       }
 
@@ -429,9 +444,9 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       //      }
       //    }
 
-      def printRows(pilaLlamadas: List[String], maxValues: (Int, Int, Int, Int)): Unit = {
-        if (!Matrix.isEmpty(pilaLlamadas)) {
-          val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(pilaLlamadas.head)
+      def printRows(listaRecords: List[String], maxValues: (Int, Int, Int, Int)): Unit = {
+        if (!Matrix.isEmpty(listaRecords)) {
+          val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(listaRecords.head)
 
           // Formatea cada columna para que tenga el tamaño correcto
           val nombreFormatted = nombre + repeat(" ", maxValues._1 - strLength(nombre))
@@ -442,12 +457,12 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
           // Imprime una línea con la fila centrada dentro de ella
           printf("┃ %s │ %s │ %s │ %s   ┃\n", nombreFormatted, puntuacionFormatted, fechaFormatted, duracionFormatted)
 
-          if (pilaLlamadas.size > 1) { //TODO: Meter longitud en Object de Matrix y no en Class
+          if (listaRecords.size > 1) { //TODO: Meter longitud en Object de Matrix y no en Class
             // Imprime una línea horizontal entre filas
             printf("┣%s┫\n", repeat("━", totalRowSize))
           }
 
-          printRows(pilaLlamadas.tail, maxValues)
+          printRows(listaRecords.tail, maxValues)
         }
       }
 
@@ -531,7 +546,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     else
       charAtRecursive(str,start)+substringRecursive(str,start+1)
   }
-
 
   def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int, dificultad: Int): Int = {
     elementoEliminado match {
