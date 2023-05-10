@@ -4,9 +4,9 @@ import sys.process._
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val json = "{\"ala\": \"sur\",\"pasillo\": 2,\"piso\": 1}"
-    println(HttpRequest.post(json, "http://localhost:8000/taquillas"))
-    println(HttpRequest.get("http://localhost:8000/taquillas"))
+    val json = "{\"nombre\":\"alejandro\",\"puntuacion\":355,\"fecha\":\"2023-04-10T19:47:05.080539\",\"duracion\":434}"
+    println(HttpRequest.post(json, "http://localhost:8000/records"))
+    println(HttpRequest.get("http://localhost:8000/records"))
   }
 }
 
