@@ -127,6 +127,20 @@ public class MetodosGUI {
         }
     }
 
+    public static Clip reproducirSonido(String localizacion,boolean loop) {
+        try {
+            File archivoSonido = new File(localizacion);    //Leemos un archivo
+            AudioInputStream audio = AudioSystem.getAudioInputStream(archivoSonido); //creamos el objeto que traerá el sonido al programa
+            Clip clip = AudioSystem.getClip();
+            clip.open(audio);
+            clip.start();
+            return clip;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error al reproducir el archivo de sonido.", "Error:", JOptionPane.INFORMATION_MESSAGE);
+            ex.printStackTrace();
+            return null;
+        }
+    }
     public static void ajustarTexto(JLabel jLabel) {
         //fuente: https://stackoverflow.com/questions/2715118/how-to-change-the-size-of-the-font-of-a-jlabel-to-take-the-maximum-size/2715279#2715279
 

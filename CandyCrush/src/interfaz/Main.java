@@ -52,7 +52,7 @@ public class Main extends javax.swing.JFrame {
         pnlVistaGeneral = new JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Procesadores del Lenguaje");
+        setTitle("Cundy Crosh");
         setIconImage(new ImageIcon("src/assets/icon.png").getImage());
         setPreferredSize(new java.awt.Dimension(1183, 750));
         setResizable(false);
