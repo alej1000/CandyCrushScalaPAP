@@ -38,6 +38,7 @@ import conexionDeScala.Matrix;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -326,18 +327,41 @@ public class MiPanel extends JPanel implements ActionListener {
 
     }
 
+//    public void animacionEspeciales(int[] listaCeros,int contadorEliminados, int elementoPulsado,int fila, int columna){
+//        if (contadorEliminados==5 & elementoPulsado<7){
+//            MetodosGUI.reproducirSonido(ruta+"bomba.wav");
+//            int ancho = getWidth();
+//            int alto = getHeight();
+//            int tamBoton = Math.min(ancho / botonesColumnas, alto / botonesFilas);
+//            //para cada botón cuyo indice en listaCeros es un 0, se printea hola
+//            for (int i = 0; i < botonesFilas; i++) {
+//                for (int j = 0; j < botonesColumnas; j++) {
+//                    int indice = i * botonesColumnas + j; // calcula el índice correspondiente en la lista
+//                    int finalI = i;
+//                    int finalJ = j;
+//                        if (listaCeros[indice]==0){
+//                            System.out.println("hola");
+//                           new HiloAnimacion(botones[finalI][finalJ],columna*tamBoton,fila*tamBoton,1.2).start();
+//                        }
+//
+//                }
+//            }
+//
+//        }
+//    }
     public void test(int fila, int columna) {
         // realiza la acción deseada con las coordenadas x e y
         if (vidas>0 && botonesActivos){
             botonesActivos = false;
-            System.out.println("Botón (" + fila + ", " + columna + ") pulsado.");
             scala.Tuple5<Matrix,Object,Object,Object,Matrix> tupla = matriz.consulta(fila,columna, vidas);
             matriz = tupla._1();
             Matrix matrizCeros = tupla._5();
+//            int contadorEliminados = (int) tupla._3();
+//            int elementoPulsado = (int) tupla._4();
             int[] listaCeros = convertirListaScalaAJava(matrizCeros.getData());
             int[] listaNueva = convertirListaScalaAJava(matriz.getData());
-            System.out.println("ListaCeros:"+Arrays.toString(listaCeros));
-            System.out.println("ListaNueva: "+Arrays.toString(listaNueva));
+//            animacionEspeciales(listaCeros,contadorEliminados,elementoPulsado,fila,columna);
+
 
 
 

@@ -5,6 +5,7 @@
 package interfaz;
 
 import java.awt.Color;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.Image;
 
@@ -20,6 +21,8 @@ public class JPanelPartida extends javax.swing.JPanel {
 
     private ImageIcon imgNuevaCadena = (new ImageIcon("src/main/java/assets/imgNuevaCadena.png"));
     private ImageIcon imgInfo = (new ImageIcon("src/main/java/assets/imgInfo.png"));
+
+    private Thread hiloMusica;
 
     private String ruta = "src/assets/";
     private MiPanel panelPartida;
@@ -65,16 +68,19 @@ public class JPanelPartida extends javax.swing.JPanel {
 //        panelPartida.setBounds(360, 1700,700,400);
 //        jPanel1.establecerDimension();
         iniciarTransicion();
-        new Thread(() -> {
+        hiloMusica = new Thread(() -> {
+            Clip miClip = null;
             try {
                 while (true) {
-                    MetodosGUI.reproducirSonido(ruta + "musicaDeFondo.wav");
+                    miClip = MetodosGUI.reproducirSonido(ruta + "musicaDeFondo.wav",true);
                     Thread.sleep(58000);
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                miClip.stop();
+//                e.printStackTrace();
             }
-        }).start();
+        });
+        hiloMusica.start();
         JLabel jLabelFondo = new javax.swing.JLabel();
         jLabelFondo.setBounds(0,  0, this.getPreferredSize().width, this.getPreferredSize().height);
         MetodosGUI.ponerImagenLabel(jLabelFondo, new ImageIcon(ruta+ "fondo.png"));
@@ -179,7 +185,7 @@ public class JPanelPartida extends javax.swing.JPanel {
         //Al pulsar el botón se inicia la animación de regreso a la página principal
         MetodosGUI.reproducirSonido(ruta+"sonidoClick2.wav");
         new HiloAnimacion(btnRegresar, -96, 36, 1.2).start();   //se esconde el botón de regreso
-
+        hiloMusica.interrupt(); //se detiene la música
         new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
             @Override
             public void run() {
