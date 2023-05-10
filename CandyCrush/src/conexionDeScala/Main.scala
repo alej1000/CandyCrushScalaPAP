@@ -405,7 +405,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
       // Calcula el tamaño de cada columna y el tamaño total de cada fila
       val colSizes: List[Int] = List(maxValues._1, maxValues._2, maxValues._3, maxValues._4)
-      val totalRowSize: Int = colSizes.sum + (colSizes.length - 1) * 3 + 4 //TODO: Revisar esto
+      val totalRowSize: Int = sumRecursive(colSizes) + (Matrix.longitud(colSizes) - 1) * 3 + 4
 
       // Imprime el borde superior de la tabla
       println()
@@ -425,7 +425,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
       // Imprime cada fila
       //    //for (i <- pilaLlamadas.size - 1 to 0 by -1) { //Imprime de abajo a arriba (formato pila)
-      //    for(i <- 0 until pilaLlamadas.size) { //TODO: usar pilaLlamadas.indices -> ???
+      //    for(i <- 0 until pilaLlamadas.size) { 
       //      val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(pilaLlamadas(i))
       //
       //      // Formatea cada columna para que tenga el tamaño correcto
@@ -545,6 +545,13 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       ""
     else
       charAtRecursive(str,start)+substringRecursive(str,start+1)
+  }
+
+  def sumRecursive(lst: List[Int]): Int = {
+    lst match {
+      case Nil => 0 // Caso base: lista vacía, retorna 0
+      case head :: tail => head + sumRecursive(tail) // Suma el primer elemento con la suma del resto de la lista
+    }
   }
 
   def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int, dificultad: Int): Int = {
