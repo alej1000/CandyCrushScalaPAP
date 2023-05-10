@@ -13,4 +13,4 @@ app.include_router(records.router)
 app.include_router(paginasHTML.router)
 
 #Mount the static files directory at "/static"
-# app.mount("/static", StaticFiles(directory="FRONT/static"), name="static")
+app.mount("/static", StaticFiles(directory="FRONT/static"), name="static")
