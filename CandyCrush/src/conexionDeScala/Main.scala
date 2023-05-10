@@ -102,7 +102,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val (fila: Int, columna: Int) = consultarMejorOpcion(tablero)
       println("La mejor opción es la fila: " + fila + " y la columna: " + columna + "")
       val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int,matriz0:Matrix) = tablero.consulta(fila, columna, vidas)
-      scala.io.StdIn.readLine() //Para que pare y se pueda ver
+      //scala.io.StdIn.readLine() //Para que pare y se pueda ver
       val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado, dificultad)
       (tableroNew, vidasNew, puntosSumados)
     }
@@ -229,7 +229,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         if (puntuacion == -1) { //Si puse mi ultima puntuacion acabo
           return puntuacionesAcum
         } else { //Si no he puesto mi ultima puntuacion
-          return puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"tiempo\":\""+horaFin+"\",\"duracion\":"+duracionPartida+"} \n"
+          return puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"fecha\":\""+horaFin+"\",\"duracion\":"+duracionPartida+"} \n"
         }
       }else{
         if(lastRecords.head == "["){
@@ -237,13 +237,13 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         }
         val (first: String, score: Int, time: String, duracion: Long) = parsearJson(lastRecords.head)
         if (score > puntuacion) {
-          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+first+"\",\"puntuacion\":"+score+",\"tiempo\":\""+time+"\",\"duracion\":"+duracion+"} \n"
+          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+first+"\",\"puntuacion\":"+score+",\"fecha\":\""+time+"\",\"duracion\":"+duracion+"} \n"
           guardarPuntuacionesJsonAux(filename, lastRecords.tail, nombre, puntuacion, horaFin, duracionPartida, cadena, mejorPuntuacion)
         } else { //Superé la puntuación
           if (puntuacion > mejorPuntuacion && mejorPuntuacion != -1) { //Si haces nuevo record
             println("Nuevo Record!!🏆")
           }
-          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"tiempo\":\""+horaFin+"\",\"duracion\":"+duracionPartida+"} \n"
+          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"fecha\":\""+horaFin+"\",\"duracion\":"+duracionPartida+"} \n"
           guardarPuntuacionesJsonAux(filename, lastRecords, "-1", -1, horaFin, duracionPartida, cadena, mejorPuntuacion)
         }
       }
@@ -254,7 +254,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
       val nombreInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("nombre")) +2 //Es más dos porque tiene comillas después del :
       val puntuacionInicio = cadenaJson.indexOf(':', cadenaJson.indexOf("puntuacion")) + 1
-      val fechaInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("tiempo")) + 2
+      val fechaInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("fecha")) + 2
       val duracionInicio = cadenaJson.indexOf(':', cadenaJson.indexOf("duracion")) + 1
 
 
@@ -473,7 +473,8 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val endTime = System.nanoTime()
       val duracion = (endTime - startTime).nanos
       val endDateTime = Calendar.getInstance().getTime
-      val formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+      //val formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+      val formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
       //      println("Duración de la partida: " + duracion.toSeconds + " segundos")
       //      println("Fin de la partida: " + formatter.format(endDateTime))
       (formatter.format(endDateTime), duracion.toSeconds)

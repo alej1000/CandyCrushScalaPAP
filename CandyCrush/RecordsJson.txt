@@ -1,4 +1,5 @@
 [
-{"nombre":"mi super nombre","puntuacion":6,"tiempo":"2023-05-06 22:59:34","duracion":15} 
-{"nombre":"jeje","puntuacion":0,"tiempo":"2023-05-06 22:59:00","duracion":7} 
+{"nombre":"pepe","puntuacion":0,"fecha":"2023-05-10T20:08:19","duracion":9} 
+{"nombre":"poyututoiy","puntuacion":0,"fecha":"2023-05-08 14:06:25","duracion":43} 
+{"nombre":"klg","puntuacion":0,"fecha":"2023-05-06 23:26:11","duracion":15} 
 ]
