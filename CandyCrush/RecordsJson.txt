@@ -1,0 +1,4 @@
+[
+{"nombre":"mi super nombre","puntuacion":6,"tiempo":"2023-05-06 22:59:34","duracion":15} 
+{"nombre":"jeje","puntuacion":0,"tiempo":"2023-05-06 22:59:00","duracion":7} 
+]
