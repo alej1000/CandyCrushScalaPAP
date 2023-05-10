@@ -1,12 +1,12 @@
 # Ignorar todo
-# *
+*
 *.pyc
 
 # Excepto directorios
-# !*/
+ !*/
 
 # Excepto archivos de scala
-# !*.scala
+ !*.scala
 
 CandyCrush/src/web/env/
 

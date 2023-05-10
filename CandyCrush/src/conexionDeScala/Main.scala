@@ -15,15 +15,13 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     //    val miPrueba = new Prueba(6,10,miMat)
     //    miPrueba.imprimir()
 
-
     val startTime = System.nanoTime()
-
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
     val puntosIniciales: Int = 0
     if (args.length > 3) { //Si se pasan los argumentos por consola //filas,columnas,aleatorio-manual,dificultad: 1-2
       val filas = args(0).toInt
       val columnas = args(1).toInt
-      val modoDeJuego = args(2).charAt(0)
+      val modoDeJuego = charAtRecursive(args(2), 0)
       val dificultad = args(3).toInt
       if (dificultad == 2 || dificultad == 1) {
         val tablero = new Matrix(filas, columnas, dificultad)
@@ -90,13 +88,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    def strLength(str: String): Int = {
-      if (str == "") {
-        0
-      } else {
-        1 + strLength(str.tail)
-      }
-    }
+
 
     def modoAutomatico(tablero: Matrix, vidas: Int, puntosTotales: Int, dificultad: Int): (Matrix, Int, Int) = {
       val (fila: Int, columna: Int) = consultarMejorOpcion(tablero)
@@ -248,25 +240,25 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         }
       }
     }
-    //TODO: Funciones indexOf, substring , charAt recursivas
+    
     def parsearJson(cadenaJson: String): (String, Int, String, Long) = {
       //if (cadenaJson == "" || cadenaJson == "[]" || cadenaJson == "[" || cadenaJson == "]") return (cadenaJson, -1, cadenaJson, -1) //Si no hay nada
 
-      val nombreInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("nombre")) +2 //Es más dos porque tiene comillas después del :
-      val puntuacionInicio = cadenaJson.indexOf(':', cadenaJson.indexOf("puntuacion")) + 1
-      val fechaInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("fecha")) + 2
-      val duracionInicio = cadenaJson.indexOf(':', cadenaJson.indexOf("duracion")) + 1
+      val nombreInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"nombre")) +2 //Es más dos porque tiene comillas después del :
+      val puntuacionInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"puntuacion")) + 1
+      val fechaInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"fecha")) + 2
+      val duracionInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"duracion")) + 1
 
 
-      val nombreFin = cadenaJson.indexOf('"', nombreInicio+2)
-      val puntuacionFin = cadenaJson.indexOf(',', puntuacionInicio)
-      val fechaFin = cadenaJson.indexOf('"', fechaInicio+2)
-      val duracionFin = cadenaJson.indexOf('}', duracionInicio)
+      val nombreFin = indexOfRecursive(cadenaJson,'"', nombreInicio+2)
+      val puntuacionFin = indexOfRecursive(cadenaJson,',', puntuacionInicio)
+      val fechaFin = indexOfRecursive(cadenaJson,'"', fechaInicio+2)
+      val duracionFin = indexOfRecursive(cadenaJson,'}', duracionInicio)
 
-      val nombre = cadenaJson.substring(nombreInicio, nombreFin)
-      val puntuacion = cadenaJson.substring(puntuacionInicio, puntuacionFin).toInt
-      val fecha = cadenaJson.substring(fechaInicio, fechaFin)
-      val duracion = cadenaJson.substring(duracionInicio, duracionFin).toLong
+      val nombre = substringRecursive(cadenaJson,nombreInicio, nombreFin)
+      val puntuacion = substringRecursive(cadenaJson,puntuacionInicio, puntuacionFin).toInt
+      val fecha = substringRecursive(cadenaJson,fechaInicio, fechaFin)
+      val duracion = substringRecursive(cadenaJson,duracionInicio, duracionFin).toLong
 
       (nombre, puntuacion, fecha, duracion)
     }
@@ -280,25 +272,25 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
         if (i >= strLength(str)) {
           throw new IllegalArgumentException("No se encontró el carácter ':' en el String.")
-        } else if (str.charAt(i) == ':') {
-          val key = str.substring(0, i).trim
-          val value = str.substring(i + 1).trim
+        } else if (charAtRecursive(str,i) == ':') {
+          val key = substringRecursive(str,0, i).trim
+          val value = substringRecursive(str,i + 1).trim
 
           def buscarClaveValorRecAux(str: String, i: Int): (Int, String, Long) = { //Busca puntuacion@resto -> resto = tiempo&duracion
 
             if (i >= strLength(str)) {
               throw new IllegalArgumentException("No se encontró el carácter '@' en el String.")
-            } else if (str.charAt(i) == '@') {
-              val scoreValue = str.substring(0, i).trim.toInt
-              val time = str.substring(i + 1).trim
+            } else if (charAtRecursive(str,i) == '@') {
+              val scoreValue = substringRecursive(str,0, i).trim.toInt
+              val time = substringRecursive(str,i + 1).trim
 
               def buscarClaveValorRecAux2(str: String, i: Int): (String, Long) = { //Busca tiempo&duracion
 
                 if (i >= strLength(str)) {
                   throw new IllegalArgumentException("No se encontró el carácter '&' en el String.")
-                } else if (str.charAt(i) == '&') {
-                  val timeValue = str.substring(0, i).trim
-                  val durationValue = str.substring(i + 1).trim.toLong
+                } else if (charAtRecursive(str,i) == '&') {
+                  val timeValue = substringRecursive(str,0, i).trim
+                  val durationValue = substringRecursive(str,i + 1).trim.toLong
                   (timeValue, durationValue)
                 } else {
                   buscarClaveValorRecAux2(str, i + 1)
@@ -467,7 +459,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
 
 
-
     def obtenerTiempos(): (String, Long) = {
       //Miro cuanto ha durado el programa y la fecha y hora de finalización
       val endTime = System.nanoTime()
@@ -482,6 +473,65 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
     //Fin de la ejecucion (Fin del main)
   }
+
+  def strLength(str: String): Int = {
+    if (str == "") {
+      0
+    } else {
+      1 + strLength(str.tail)
+    }
+  }
+
+  def charAtRecursive(str: String, index: Int): Char = {
+    if (index < 0 || index >= strLength(str))
+      throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for string " + str)
+    if (index == 0)
+      str.head
+    else {
+      charAtRecursive(str.tail, index - 1)
+    }
+
+  }
+
+  def indexOfRecursive(str:String,search:String): Int ={ //No me deja tener las dos funciones sobrecargadas si están inicializadas a algún valor
+    indexOfRecursive(str,search,0)
+  }
+  def indexOfRecursive(str:String,searchChar:Char,index:Int = 0): Int ={ //Sirve solo para el indice de un caracter
+    if(index>=strLength(str))
+      -1
+    else if(charAtRecursive(str,index) == searchChar)
+      index
+    else
+      indexOfRecursive(str,searchChar,index+1)
+  }
+
+  def indexOfRecursive(str: String, search: String, index: Int): Int = {
+    if (index > str.length - search.length)
+      -1
+    else if (substringRecursive(str,index, index + strLength(search)) == search)
+      index
+    else
+      indexOfRecursive(str, search, index + 1)
+  }
+
+  def substringRecursive(str:String,start:Int,end:Int):String={
+    if(start<0 || end>strLength(str) || start>end)
+      throw new IndexOutOfBoundsException("Index out of bounds")
+    else if(start>=end)
+      ""
+    else
+      charAtRecursive(str,start)+substringRecursive(str,start+1,end)
+  }
+
+  def substringRecursive(str:String,start:Int):String ={
+    if(start<0 || start>strLength(str))
+      throw new IndexOutOfBoundsException("Index out of bounds")
+    else if(start>=strLength(str))
+      ""
+    else
+      charAtRecursive(str,start)+substringRecursive(str,start+1)
+  }
+
 
   def sumarPuntos(puntos: Int, contadorEliminados: Int, elementoEliminado: Int, dificultad: Int): Int = {
     elementoEliminado match {
