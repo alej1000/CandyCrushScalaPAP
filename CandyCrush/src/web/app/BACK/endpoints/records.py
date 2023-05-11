@@ -23,7 +23,7 @@ async def get_records():
     """
     Devuelve todos los records listos para mostrarse en el arcade
     """
-    records = logica.obtener_records_orden_puntos()
+    records = logica.obtener_records(1)
     stringReturn = ""
     for record in records:
         record["fecha"] = str(record["fecha"])
