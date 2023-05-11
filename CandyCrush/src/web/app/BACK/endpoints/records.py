@@ -38,6 +38,8 @@ async def get_records():
     
     #remove every space
     stringReturn = stringReturn.replace(" ", '')
+    #remove the last character
+    stringReturn = stringReturn[:-1]
 
     return stringReturn
 
