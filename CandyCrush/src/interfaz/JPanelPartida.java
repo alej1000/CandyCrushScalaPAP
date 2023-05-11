@@ -4,10 +4,9 @@
  */
 package interfaz;
 
-import java.awt.Color;
+import java.awt.*;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
-import java.awt.Image;
 
 /**
  *
@@ -31,7 +30,13 @@ public class JPanelPartida extends javax.swing.JPanel {
 
     private int puntos = 0;
 
+    //Label con el número de vidas
+    private JLabel labelVidas = new JLabel();
+    private JLabel labelFotoVidas = new JLabel();
 
+    //Label con el número de puntos
+    JLabel labelPuntos = new JLabel();
+    private  JLabel labelFotoPuntos = new JLabel();
     public JPanelPartida(jPanelInicio pnlAnterior, MiPanel panelPartida, Main jFrameMain) {
         this.pnlAnterior = pnlAnterior;
         this.jFrameMain = jFrameMain;
@@ -40,17 +45,32 @@ public class JPanelPartida extends javax.swing.JPanel {
 
         this.setBackground(Color.decode("#292930"));
 
-        JLabel labelVidas = new JLabel();
-        labelVidas.setText("Vidas: " + numeroVidas);
-        labelVidas.setBounds(100, 200, 100, 20);
+        //Numero de Vidas
+        labelVidas.setText("" + numeroVidas);
+        labelVidas.setBounds((int)(((1183*0.2)/2)-50), 150, 100, 20);
         labelVidas.setVisible(true);
+        labelVidas.setFont(new Font("Dialog", Font.BOLD, 20));
         this.add(labelVidas);
 
-        JLabel labelPuntos = new JLabel();
-        labelPuntos.setText("Puntos: " + puntos);
-        labelPuntos.setBounds(100, 250, 100, 20);
+        //Dimensiones ventana: 1183, 750
+        //Foto de vidas
+        labelFotoVidas.setBounds((int)(((1183*0.1)/2)-50), 100, 100, 50);
+        MetodosGUI.ponerImagenLabel(labelFotoVidas, new ImageIcon("src/assets/vidas.png"));
+        labelFotoVidas.setVisible(true);
+        this.add(labelFotoVidas);
+        //Numero de puntos
+        labelPuntos.setText("" + puntos);
+        labelPuntos.setBounds((int)((1183*0.94)), 150, 100, 20);
         labelPuntos.setVisible(true);
+        labelPuntos.setFont(new Font("Dialog", Font.BOLD, 20));
         this.add(labelPuntos);
+
+        //Dimensiones ventana: 1183, 750
+        //Foto de puntos
+        labelFotoPuntos.setBounds((int)((1183*0.94))-50, 100, 100, 50);
+        MetodosGUI.ponerImagenLabel(labelFotoPuntos, new ImageIcon("src/assets/puntos.png"));
+        labelFotoPuntos.setVisible(true);
+        this.add(labelFotoPuntos);
 
         pnlInput.setBackground(new Color(0, 0, 0, 220));
 
@@ -96,11 +116,14 @@ public class JPanelPartida extends javax.swing.JPanel {
         int anchura = Math.round((float)(anchuraReal*0.8));
         double aspectRatioPanel = anchura / (altura+0.0);
         System.out.println("aspectRatioPanel: " + aspectRatioPanel);
-        if (aspectRatio > aspectRatioPanel) {
+        if (aspectRatio > aspectRatioPanel) { //Si es más ancho que alto
             panelPartida.setSize(anchura, Math.round((float)(anchura / aspectRatio)));
             panelPartida.setDimX(anchura);
             panelPartida.setDimY(Math.round((float)(anchura / aspectRatio)));
-        } else {
+
+
+
+        } else { //Si es más alto que ancho
             panelPartida.setSize((int) (altura * aspectRatio),altura);
             panelPartida.setDimX((int) (altura * aspectRatio));
             panelPartida.setDimY(altura);
