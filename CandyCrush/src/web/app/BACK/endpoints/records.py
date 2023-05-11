@@ -21,11 +21,11 @@ async def get_records():
     Este endpoint devuelve todos los records
     """
     records = logica.obtener_records()
-    stringReturn = "[\n"
+    stringReturn = "[\"\n\""
     print("\n\n")
 
     for record in records:
-        stringReturn += str(record) + "\n"
+        stringReturn += str(record) + "\"\n\""
     
     stringReturn += "]"
     print(stringReturn)
