@@ -47,7 +47,7 @@ function cargarDatos(){
       document.getElementById('date').innerHTML = "El día "+formattedDate;
       document.getElementById('time').innerHTML = "A las "+formattedTime;
       document.getElementById('duration').innerHTML = "Jugó durante "+duracion+" segundos";
-      if (imagen != null){
+      if (imagen != null && imagen != ""){
         document.getElementById('img').src = imagen;
       }
     }

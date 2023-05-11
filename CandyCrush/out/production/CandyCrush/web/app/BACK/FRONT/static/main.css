@@ -80,7 +80,7 @@ main {
     display: flex;
     flex-flow: column wrap;
     width: 90rem;
-    max-width: 70%;
+    max-width: 90%;
     border-radius: 2rem;
     background: var(--menu-bg);
     padding: 2rem;

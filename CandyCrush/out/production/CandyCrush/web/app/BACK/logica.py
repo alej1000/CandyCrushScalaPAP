@@ -144,7 +144,12 @@ def insertar_datos_conexion(conn,sql, params=None):
 
 
 def obtener_records():
-    query = "SELECT * FROM scores ORDER BY fecha DESC LIMIT 10"
+    query = "SELECT * FROM scores ORDER BY fecha DESC "
+    records = db.realizar_consulta(query)
+    return records
+
+def obtener_records_orden_puntos():
+    query = "SELECT * FROM scores ORDER BY puntuacion DESC"
     records = db.realizar_consulta(query)
     return records
 
