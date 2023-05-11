@@ -579,7 +579,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
     (matriz, elementosVisitados, contador)
   }
-  
+
   def activarGravedad(indiceColumna:Int, datos:List[Int]): List[Int] = {
     if (indiceColumna < 0 || indiceColumna >= cols) {
       datos

@@ -37,7 +37,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val filas = introducirInt("Introduce cuantas filas quieres")
       val columnas = introducirInt("Introduce cuantas columnas quieres")
 
-      println("Intruce el modo de juego(a o m): ")
+      println("Intruce el modo de juego(a o m o r): ") //Automatico/MAnual/Random
       val modoDeJuego = scala.io.StdIn.readChar()
 
       val dificultad = introducirInt("Introduce la dificultad (1 o 2):")
@@ -69,10 +69,19 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int,matriz0:Matrix) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
         val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado, dificultad)
         partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
-      } else { //Es automático
+      } else if(modoDeJuego == 'a'){ //Es automático
         val (tableroNew: Matrix, vidasNew: Int, puntosSumados: Int) = modoAutomatico(tablero, vidas, puntosTotales, dificultad: Int)
         partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
+      }else{ //Es aleatorio
+        val rand = new scala.util.Random()
+        val fila = rand.nextInt(tablero.getNumFilas())
+        val columna = rand.nextInt(tablero.getNumColumnas())
+        val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int, matriz0: Matrix) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
+        val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado, dificultad)
+        partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
       }
+
+
     }
 
     def introducirInt(cadena: String): Int = {
@@ -157,7 +166,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
         println("\nRecords:")
         mostrarPuntuaciones(nuevasPuntuaciones)
-      } else { // Es automatico
+      } else if(modoDeJuego == 'a'){ // Es automatico
         println("La puntuacion final es: " + puntuacionFinal)
         println("El Robotito duró: " + duracionPartida + " segundos jugando")
         val nombre: String = "AutoGod"
@@ -178,6 +187,23 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 //        guardarPuntuacionesJson("RecordsJson.txt",nombre, puntuacionFinal, horaFin, duracionPartida,url)
 //        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
 //        mostrarPuntuaciones(nuevasPuntuaciones)
+      }else{ //Es aleatorio
+        println("La puntuacion final es: " + puntuacionFinal)
+        println("El Manquito duró: " + duracionPartida + " segundos jugando")
+        val nombre: String = "RandomManco"
+        //guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
+        val url: String = "https://media.istockphoto.com/id/1098146198/es/vector/robot-roto-la-fijaci%C3%B3n-s%C3%AD-mismo-de-la-historieta.jpg?s=1024x1024&w=is&k=20&c=ZDCw1aAysbZhp1dEEC2gMLE9f_62nQJJSYOVoc1EQTI="
+
+        //Subir a la base de datos
+        val cadenaJson: String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida, url)
+        println("CadenaJson: " + cadenaJson)
+        HttpRequest.post(cadenaJson, "http://cundycrosh.uah:8000/records")
+
+        //Cargar de la base de la api
+        val nuevasPuntuaciones: List[String] = HttpRequest.get("http://cundycrosh.uah:8000/records/arcade")
+
+        println("\nRecords:")
+        mostrarPuntuaciones(nuevasPuntuaciones)
       }
     }
 
