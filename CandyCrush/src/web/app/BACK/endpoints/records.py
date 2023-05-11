@@ -33,7 +33,7 @@ async def get_records():
         record["duracion"] = int(record["duracion"])
         stringReturn += str(record) + "@"
     #remove every space
-    stringReturn = stringReturn.replace(" ", '')
+    # stringReturn = stringReturn.replace(" ", '')
     #remove the last character
     stringReturn = stringReturn[:-1]
 
