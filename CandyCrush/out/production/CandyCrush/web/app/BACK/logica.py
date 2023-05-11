@@ -148,6 +148,11 @@ def obtener_records():
     records = db.realizar_consulta(query)
     return records
 
+def obtener_records_orden_puntos():
+    query = "SELECT * FROM scores ORDER BY puntuacion DESC LIMIT 10"
+    records = db.realizar_consulta(query)
+    return records
+
 def obtener_record(id: int):
     query = "SELECT * FROM scores WHERE id_player = %s"
     parameters = ([id])
