@@ -16,7 +16,7 @@ async def get_records(order: int = Query(default=1)):
     #si se recibe query param con order = 1, se ordena por fecha
     #si no se recibe query param, se ordena por fecha
 
-    if order == 2:
+    if order == 1:
         records = logica.obtener_records_orden_puntos()
     else:
         records = logica.obtener_records()
