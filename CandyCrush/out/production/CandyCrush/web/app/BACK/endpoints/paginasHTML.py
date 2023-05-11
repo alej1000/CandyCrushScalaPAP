@@ -7,37 +7,20 @@ router = APIRouter()
 
 @router.get("/")
 def index():
+    """
+    Devuelve el index.html
+    La página principal donde se encuentran todos los records
+    """
+
     with open("FRONT/index.html", "r", encoding="utf-8") as f:
         html = f.read()
     return HTMLResponse(html)
 
 @router.get("/puntuacion/{id}")
 def puntuacion(id: int):
+    """
+    Devuelve un html con la puntuacion del jugador con el id dado
+    """
     with open("FRONT/puntos.html", "r", encoding="utf-8") as f:
         html = f.read()
     return HTMLResponse(html)
-
-@router.get("/registrarse")
-def registrarse():
-    with open("FRONT/registrarse.html", "r", encoding="utf-8") as f:
-        html = f.read()
-    return HTMLResponse(html)
-
-@router.get("/menu")
-def registrarse():
-    with open("FRONT/bienvenida.html", "r", encoding="utf-8") as f:
-        html = f.read()
-    return HTMLResponse(html)
-
-@router.get("/cafeteria")
-def registrarse():
-    with open("FRONT/cafeteria.html", "r", encoding="utf-8") as f:
-        html = f.read()
-    return HTMLResponse(html)
-
-@router.get("/cafeteria/pedido")
-def registrarse():
-    with open("FRONT/cafeteria_pedido.html", "r", encoding="utf-8") as f:
-        html = f.read()
-    return HTMLResponse(html)
-

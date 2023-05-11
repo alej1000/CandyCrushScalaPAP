@@ -25,7 +25,7 @@ async def get_records(order: int = Query(default=1)):
 @router.get("/records/arcade")
 async def get_records():
     """
-    Devuelve todos los listos para mostrarse en el arcade
+    Devuelve todos los records listos para mostrarse en el arcade
     """
     records = logica.obtener_records_orden_puntos()
     stringReturn = ""

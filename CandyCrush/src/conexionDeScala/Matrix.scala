@@ -269,7 +269,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
      *         elemento: el elemento que se ha eliminado
      *         matriz: la matriz antes de aplicar la gravedad
      */
-    this.toString()
+//    this.toString()
     println("fila:",fila)
     println("columna:",columna)
     val elemento = getElem(fila, columna)
@@ -579,8 +579,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
     (matriz, elementosVisitados, contador)
   }
-
-
+  
   def activarGravedad(indiceColumna:Int, datos:List[Int]): List[Int] = {
     if (indiceColumna < 0 || indiceColumna >= cols) {
       datos
@@ -592,8 +591,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
       activarGravedad(indiceColumna+1,reemplazarColumna(indiceColumna, columnaRandomizada,datos))
     }
   }
-
-
 
   def activarGravedadAux(columna:List[Int],indice:Int,contador:Int): (List[Int],Int) = {
     //indice se irá disminuyendo con las recursiones hasta llegar a 0. Empezamos por la última fila
