@@ -11,7 +11,6 @@ import conexionDeScala.Matrix;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Arrays;
-import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -311,7 +310,7 @@ public class MiPanel extends JPanel implements ActionListener {
 //
 //        }
 //    }
-    public void test(int fila, int columna) {
+    public void accionarBoton(int fila, int columna) {
         // realiza la acción deseada con las coordenadas x e y
         if (vidas>0 && botonesActivos){
             botonesActivos = false;
@@ -348,7 +347,7 @@ public class MiPanel extends JPanel implements ActionListener {
         int y = Integer.parseInt(coordenada.split(",")[1]);
 
         MetodosGUI.reproducirSonido(ruta + "sonidoClick2.wav");
-        test(x, y); // llama al método test con las coordenadas del botón pulsado
+        accionarBoton(x, y); // llama al método test con las coordenadas del botón pulsado
     }
 
 
