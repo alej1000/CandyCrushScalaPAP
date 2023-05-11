@@ -15,6 +15,33 @@ async def get_records():
     records = logica.obtener_records()
     return logica.respuesta_exitosa(records)
 
+@router.get("/records/arcade")
+async def get_records():
+    """
+    Este endpoint devuelve todos los records
+    """
+    records = logica.obtener_records()
+    # stringReturn = "[\"\n\""
+    stringReturn = ""
+    print("\n\n")
+    for record in records:
+        record["fecha"] = str(record["fecha"])
+        record["puntuacion"] = int(record["puntuacion"])
+        record["duracion"] = int(record["duracion"])
+        stringReturn += str(record) + "@"
+    
+    # stringReturn += "]"
+    # print(stringReturn)
+    print("\n\n")
+    #replace all single quotes with double quotes
+    # stringReturn = stringReturn.replace("'", '')
+    
+    #remove every space
+    stringReturn = stringReturn.replace(" ", '')
+    #remove the last character
+    stringReturn = stringReturn[:-1]
+
+    return stringReturn
 
 
 @router.get("/records/{id}")

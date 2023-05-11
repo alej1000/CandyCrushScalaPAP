@@ -41,7 +41,6 @@ object HttpRequest {
       val respuesta = readAll(br)
       conn.disconnect()
       val array = respuesta.split("@")
-      println("Array: " + array.toString)
       javaArrayToScalaList(array)
     } catch {
       case e: Exception =>
