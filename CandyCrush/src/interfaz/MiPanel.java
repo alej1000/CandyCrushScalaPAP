@@ -3,34 +3,7 @@
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
 // */
 package interfaz;
-//
-///**
-// *
-// * @author César
-// */
-//import java.awt.Color;
-//import java.awt.Dimension;
-//import java.awt.GridLayout;
-//import javax.swing.JButton;
-//import javax.swing.JPanel;
-//
-//public class MiPanel extends JPanel {
-//
-//    private static final long serialVersionUID = 1L;
-//    private final int BOTON_SIZE;
-//
-//    public MiPanel(int botonesX, int botonesY) {
-//        BOTON_SIZE = 500 / Math.max(botonesX, botonesY); // Tamaño máximo de botón que se ajusta al panel
-//        this.setPreferredSize(new Dimension(500, 500)); // Establece el tamaño del panel
-//        this.setLayout(new GridLayout(botonesY, botonesX)); // Establece el layout de la grilla
-//        for (int i = 0; i < botonesX * botonesY; i++) {
-//            JButton boton = new JButton(); // Crea un nuevo botón
-//            boton.setPreferredSize(new Dimension(BOTON_SIZE, BOTON_SIZE)); // Establece el tamaño del botón
-//            boton.setBackground(Color.WHITE); // Establece el fondo blanco del botón
-//            this.add(boton); // Agrega el botón al panel
-//        }
-//    }
-//}
+
 
 import conexionDeScala.Main;
 import conexionDeScala.Matrix;
@@ -64,7 +37,6 @@ public class MiPanel extends JPanel implements ActionListener {
     private JLabel fondo = new JLabel();
     private int dificultad=2;
     private Matrix matriz;
-//    private String ruta = "src/main/java/assets/";
 
     private boolean botonesActivos = false;
     private String ruta = "src/assets/";
@@ -137,11 +109,7 @@ public class MiPanel extends JPanel implements ActionListener {
                 botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setBounds(j * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
-//                botones[i][j].addMouseListener(mouseListener);
-
                 botones[i][j].setIcon(imagenesReescaladas[lista[indice]]);
-                //MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
-                //botones[i][j].setText(""+lista[indice]);
 
                 add(botones[i][j]);
             }
@@ -149,8 +117,6 @@ public class MiPanel extends JPanel implements ActionListener {
         fondo.setBounds(0,0, dimX, dimY);
         MetodosGUI.ponerImagenLabel(fondo, imgFondo);
         add(fondo);
-
-        //animacionCarga();
     }
 
     public MiPanel(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos) {
@@ -204,12 +170,7 @@ public class MiPanel extends JPanel implements ActionListener {
                 botones[i][j].setActionCommand(i + "," + j); // almacenamos la coordenada del botón en la propiedad actionCommand
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setBounds(j * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
-//                botones[i][j].addMouseListener(mouseListener);
-
                 botones[i][j].setIcon(imagenesReescaladas[lista[indice]]);
-                //MetodosGUI.ponerImagenbutton(botones[i][j], imagenes[lista[indice]]);
-                //botones[i][j].setText(""+lista[indice]);
-
                 add(botones[i][j]);
             }
         }
@@ -299,7 +260,6 @@ public class MiPanel extends JPanel implements ActionListener {
                 int finalJ = j;
                 new Thread(() -> {
                    botones[finalI][finalJ].setIcon(imagenesReescaladas[lista[indice]]);
-                   //botones[finalI][finalJ].setText(""+lista[indice]);
                 }).start();
 
             }
@@ -322,7 +282,6 @@ public class MiPanel extends JPanel implements ActionListener {
                 int finalJ = j;
                 new Thread(() -> {
                     botones[finalI][finalJ].setIcon(imagenesReescaladas[listaNueva[indice]]);
-                    //botones[finalI][finalJ].setText(""+lista[indice]);
                 }).start();
 
             }
@@ -359,28 +318,12 @@ public class MiPanel extends JPanel implements ActionListener {
             scala.Tuple5<Matrix,Object,Object,Object,Matrix> tupla = matriz.consulta(fila,columna, vidas);
             matriz = tupla._1();
             Matrix matrizCeros = tupla._5();
-//            int contadorEliminados = (int) tupla._3();
-//            int elementoPulsado = (int) tupla._4();
             int[] listaCeros = convertirListaScalaAJava(matrizCeros.getData());
             int[] listaNueva = convertirListaScalaAJava(matriz.getData());
-//            animacionEspeciales(listaCeros,contadorEliminados,elementoPulsado,fila,columna);
-
-
-
 
             lista = listaCeros;
             actualizarLabels();
             this.gravedadFin = false;
-    //        new Thread(() -> {
-    //            try{
-    //                Thread.sleep(600);
-    //            }catch (Exception e){
-    //                e.printStackTrace();
-    //            }
-    //            actualizarLabels(listaNueva);
-    //            lista = listaNueva;
-    //            reescalar();
-    //        }).start();
 
             gravedad(listaNueva);
 
@@ -393,19 +336,6 @@ public class MiPanel extends JPanel implements ActionListener {
                 gameOver();
             }
         }
-
-
-
-        //Hacemos parar el programa durante 1000 milisegundos
-
-        //lista = listaNueva;
-        //reescalar();
-
-        //matriz.toString();
-//        ConexionScala$ instanciaScala = ConexionScala$.MODULE$; //Metodo Module$ de la clase objeto
-//        //MODULE$ en java apunta a la unica instancia del objeto singleton
-//
-//        instanciaScala.miFuncion("Hola desde Java");
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -422,30 +352,8 @@ public class MiPanel extends JPanel implements ActionListener {
     }
 
 
-//    def partida(tablero: Matrix, vidas: Int, modoDeJuego: Char, puntosTotales: Int, dificultad: Int): Unit = {
-//        if (vidas == 0) {
-//            println("Has perdido 😭")
-//            controlFinal("Records.txt", puntosTotales,modoDeJuego)
-//            return
-//        }
-//        print("Vidas restantes: ")
-//        mostrarVidas(vidas)
-//        println()
-//        println("Puntos: " + puntosTotales)
-//        tablero.toString()
-//        if(modoDeJuego == 'm'){ //Es manual
-//            val fila = introducirInt("Introduce la fila")
-//            val columna = introducirInt("Introduce la columna")
-//            val (tableroNew: Matrix, vidasNew: Int, contadorEliminados: Int, elementoEliminado: Int) = tablero.consulta(fila, columna, vidas) //consulta es el eliminarPosicion
-//            val puntosSumados: Int = sumarPuntos(puntosTotales, contadorEliminados, elementoEliminado,dificultad)
-//            partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
-//        } else { //Es automático
-//            val (tableroNew: Matrix, vidasNew: Int, puntosSumados: Int) = modoAutomatico(tablero, vidas, puntosTotales, dificultad: Int)
-//            partida(tableroNew, vidasNew, modoDeJuego, puntosSumados, dificultad)
-//        }
-//    }
+
     public void animacionCarga() {
-//        CountDownLatch latch = new CountDownLatch(botonesX * botonesY);
         AtomicInteger contador = new AtomicInteger(botonesColumnas * botonesFilas);
 
         int delay = 45;
@@ -597,6 +505,14 @@ public class MiPanel extends JPanel implements ActionListener {
 
     public void setDimY(int dimY) {
         this.dimY = dimY;
+    }
+
+    public int getDimX() {
+        return dimX;
+    }
+
+    public int getDimY() {
+        return dimY;
     }
 
     public int getBotonesColumnas() {

@@ -37,6 +37,8 @@ public class JPanelPartida extends javax.swing.JPanel {
     //Label con el número de puntos
     JLabel labelPuntos = new JLabel();
     private  JLabel labelFotoPuntos = new JLabel();
+
+    private JLabel jLabelFondo = new javax.swing.JLabel();
     public JPanelPartida(jPanelInicio pnlAnterior, MiPanel panelPartida, Main jFrameMain) {
         this.pnlAnterior = pnlAnterior;
         this.jFrameMain = jFrameMain;
@@ -76,17 +78,11 @@ public class JPanelPartida extends javax.swing.JPanel {
 
         int centroX = (int) (this.getWidth() / 2 );
         int centroY = (int) (this.getHeight() / 2 );
-        //MiPanel miPanel = new MiPanel(columnas, filas,700,400,matrix);
         this.panelPartida.setLabelPuntos(labelPuntos);
         this.panelPartida.setLabelVidas(labelVidas);
-//        panelPartida.setSize(panelPartida.getPreferredSize());
-//        panelPartida.setLocation(200, 100);
-//        panelPartida.setLocation(centroX - panelPartida.getWidth() / 2, centroY - panelPartida.getHeight() / 2);
         reajustarPanel();
         panelPartida.animacionCarga();
         this.add(this.panelPartida);
-//        panelPartida.setBounds(360, 1700,700,400);
-//        jPanel1.establecerDimension();
         iniciarTransicion();
         hiloMusica = new Thread(() -> {
             Clip miClip = null;
@@ -97,18 +93,15 @@ public class JPanelPartida extends javax.swing.JPanel {
                 }
             } catch (InterruptedException e) {
                 miClip.stop();
-//                e.printStackTrace();
             }
         });
         hiloMusica.start();
-        JLabel jLabelFondo = new javax.swing.JLabel();
         jLabelFondo.setBounds(0,  0, this.getPreferredSize().width, this.getPreferredSize().height);
         MetodosGUI.ponerImagenLabel(jLabelFondo, new ImageIcon(ruta+ "fondo.png"));
         add(jLabelFondo);
     }
 
     public void reajustarPanel(){
-//        1183, 750
         double aspectRatio = panelPartida.getBotonesColumnas() / (panelPartida.getBotonesFilas()+0.0);
         System.out.println("aspectRatio: " + aspectRatio);
         int anchuraReal = getPreferredSize().width;
@@ -213,6 +206,10 @@ public class JPanelPartida extends javax.swing.JPanel {
             @Override
             public void run() {
                 try {
+                    Thread.sleep(100);
+
+                   new HiloAnimacion(panelPartida, panelPartida.getX(), -2*panelPartida.getDimY(), 1.3).start();
+                new HiloAnimacion(jLabelFondo, jLabelFondo.getX(), -2*panelPartida.getDimY(), 1.3).start();
 //                    new HiloAnimacion(jLabelCadena1, 182, -200, 1.3).start();
 //
 //                    Thread.sleep(80);
@@ -234,7 +231,7 @@ public class JPanelPartida extends javax.swing.JPanel {
 //                    Thread.sleep(90);
 //
 //                    new HiloAnimacion(btnNuevaCadena, 381, -200, 1.2).start();
-                    Thread.sleep(130);
+                    Thread.sleep(230);
 
                     pnlAnterior.regresar();
 

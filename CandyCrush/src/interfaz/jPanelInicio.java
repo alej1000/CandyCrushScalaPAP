@@ -385,16 +385,11 @@ public class jPanelInicio extends JPanel {
         pnlEjercicios.setLocation(1500, 0);
         new HiloAnimacion(pnlColor,-pnlColor.getWidth(),0,1.14).start();
         new HiloAnimacion(lblLogo,0,0,1.14).start();
-
-//        new HiloAnimacion(pnlColor, lblLogo, 0).start();
-
     }//GEN-LAST:event_btnContinuarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         // TODO add your handling code here:
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
-
-//        new HiloAnimacion(pnlEjercicios, 1183, 0, 1.14).start();
         if (hiloAnimacion != null) {
             hiloAnimacion.interrupt();
         }
@@ -422,27 +417,6 @@ public class jPanelInicio extends JPanel {
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
         dificultad = dificultad % 2+1;
         btnCambiarModo.setText(dificultad == 1 ? "MODO FÁCIL" : "MODO DIFÍCIL");
-//        new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();
-//        jPanelInicio estePanel = this;
-//        new HiloTransicion(frame, this).start();
-//        try {
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        Thread.sleep(300);                 //esperamos a que termine la animación del pnlTransicion
-//
-////                        frame.mostrarPanel(new JPanelEj3(estePanel, frame), TOOL_TIP_TEXT_KEY);
-//
-////                        new JPanelEj1(estePanel, frame);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }).start();
-//        } catch (Exception e) {
-//        }
-
 
     }//GEN-LAST:event_btnCambiarModoActionPerformed
 
@@ -507,7 +481,6 @@ public class jPanelInicio extends JPanel {
 
         MiPanel panelPartida = new MiPanel(columnas, filas,columnas*20,filas*20,matrix,null,null);
 
-//        new HiloTransicion(frame, this).start();
         try {
             new Thread(new Runnable() {
                 @Override
@@ -545,20 +518,7 @@ public class jPanelInicio extends JPanel {
 
         new HiloAnimacion(pnlTransicion, 0, -750, 1.4).start();
         JPanel panelActual = this;
-//        try {
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        Thread.sleep(300);                 //esperamos 6 segundos por la primera imagen
-//
-////                        frame.mostrarPanel(new JPanelEj1(estePanel, frame,this), "");
-//                    } catch (Exception e) {
-//                    }
-//                }
-//            }).start();
-//        }catch (Exception e) {
-//                    }
+
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAjustesDeTablero;
