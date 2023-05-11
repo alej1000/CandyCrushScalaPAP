@@ -143,16 +143,16 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         guardarPuntuacionesJson(fileJson,nombre, puntuacionFinal, horaFin, duracionPartida,url)
         val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
 
-        //val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida)
-        //HttpRequest.post("http://localhost:8080/records").header("Content-Type", "application/json").send(cadenaJson)
+//        val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida,url)
+//        HttpRequest.post(cadenaJson,"http://localhost:8000/records")
+//        val puntuacionesActualizadas:String = HttpRequest.get("http://localhost:8000/records")
+//        println("Puntuaciones del get: "+puntuacionesActualizadas)
+
         //println("Se ha enviado la puntuacion a la base de datos")
         //val peticion:List[String] = HttpRequest.get("http://localhost:8080/records")
 
 
-
         println("\nRecords:")
-        //println("Nombre\t\tPuntuacion\t\tDuracion\t\tFecha")
-        //printf("%s %20s %20s %20s\n", "Nombre", "Puntuacion", "Duracion", "Fecha")
 
         mostrarPuntuaciones(nuevasPuntuaciones)
       } else { // Es automatico
