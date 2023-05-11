@@ -21,6 +21,7 @@ async def get_records():
     Este endpoint devuelve todos los records
     """
     records = logica.obtener_records_orden_puntos()
+
     # stringReturn = "[\"\n\""
     stringReturn = ""
     print("\n\n")

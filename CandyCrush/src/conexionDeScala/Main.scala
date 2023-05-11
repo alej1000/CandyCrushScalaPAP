@@ -147,9 +147,9 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
 
         //Subir a la base de datos
-        val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida,url)
-        println("CadenaJson: "+cadenaJson)
-        HttpRequest.post(cadenaJson,"http://cundycrosh.uah:8000/records")
+//        val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida,url)
+//        println("CadenaJson: "+cadenaJson)
+//        HttpRequest.post(cadenaJson,"http://cundycrosh.uah:8000/records")
 
 //        val string:String ="{\"nombre\":\"jojo\",\"puntuacion\":0,\"fecha\":\"2023-05-11T02:12:55\",\"duracion\":8,\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU\"}\n{\"nombre\":\"jojo\",\"puntuacion\":0,\"fecha\":\"2023-05-11T02:12:55\",\"duracion\":8,\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU\"}"
 //        println("String: "+string)
@@ -280,16 +280,16 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       //if (cadenaJson == "" || cadenaJson == "[]" || cadenaJson == "[" || cadenaJson == "]") return (cadenaJson, -1, cadenaJson, -1) //Si no hay nada
 
       val nombreInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"nombre")) +2 //Es más dos porque tiene comillas después del :
-      val puntuacionInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"puntuacion")) + 1
+      val puntuacionInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"puntuacion")) + 1
       val fechaInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"fecha")) + 2
-      val duracionInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"duracion")) + 1
+      val duracionInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"duracion")) + 1
 //      val imageInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"picture")) + 2
 
 
       val nombreFin = indexOfRecursive(cadenaJson,"'", nombreInicio+2)
-      val puntuacionFin = indexOfRecursive(cadenaJson,',', puntuacionInicio)
+      val puntuacionFin = indexOfRecursive(cadenaJson,",", puntuacionInicio)
       val fechaFin = indexOfRecursive(cadenaJson,"'", fechaInicio+2)
-      val duracionFin = indexOfRecursive(cadenaJson,',', duracionInicio)
+      val duracionFin = indexOfRecursive(cadenaJson,",", duracionInicio)
 //      val imageFin = indexOfRecursive(cadenaJson,"}", imageInicio+2)
 
       val nombre = substringRecursive(cadenaJson,nombreInicio, nombreFin)
@@ -514,21 +514,27 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
   }
 
   def strLength(str: String): Int = {
-    if (str == "") {
-      0
-    } else {
-      1 + strLength(str.tail)
+    def strLength(str:String, index:Int = 0): Int ={
+      if(str == "")
+        index
+      else
+        strLength(str.tail,index+1)
     }
+    strLength(str,0)
   }
 
   def charAtRecursive(str: String, index: Int): Char = {
-    if (index < 0 || index >= strLength(str))
-      throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for string " + str)
-    if (index == 0)
-      str.head
-    else {
-      charAtRecursive(str.tail, index - 1)
+
+
+    def charAtRecursiveAux(str:String,index:Int,longitud:Int):Char={
+      if(index<0 || index>=longitud)
+        throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for string " + str)
+      if(index == 0)
+        str.head
+      else
+        charAtRecursiveAux(str.tail,index-1,longitud-1)
     }
+    charAtRecursiveAux(str,index,strLength(str))
 
   }
 
