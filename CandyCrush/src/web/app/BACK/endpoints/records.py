@@ -24,12 +24,14 @@ async def get_records():
     # stringReturn = "[\"\n\""
     stringReturn = ""
     print("\n\n")
-
     for record in records:
+        record["fecha"] = str(record["fecha"])
+        record["puntuacion"] = str(record["puntuacion"])
+        record["duracion"] = str(record["duracion"])
         stringReturn += str(record) + "@"
     
     # stringReturn += "]"
-    print(stringReturn)
+    # print(stringReturn)
     print("\n\n")
     #replace all single quotes with double quotes
     # stringReturn = stringReturn.replace("'", '')
