@@ -524,13 +524,17 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
   }
 
   def charAtRecursive(str: String, index: Int): Char = {
-    if (index < 0 || index >= strLength(str))
-      throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for string " + str)
-    if (index == 0)
-      str.head
-    else {
-      charAtRecursive(str.tail, index - 1)
+
+
+    def charAtRecursiveAux(str:String,index:Int,longitud:Int):Char={
+      if(index<0 || index>=longitud)
+        throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for string " + str)
+      if(index == 0)
+        str.head
+      else
+        charAtRecursiveAux(str.tail,index-1,longitud-1)
     }
+    charAtRecursiveAux(str,index,strLength(str))
 
   }
 
