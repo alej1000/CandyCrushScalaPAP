@@ -382,9 +382,9 @@ public class MiPanel extends JPanel implements ActionListener {
             gravedad(listaNueva);
 
             this.vidas = (int) tupla._2();
-            this.labelVidas.setText("Vidas: "+this.vidas);
+            this.labelVidas.setText(""+this.vidas);
             this.numeroPuntos = Main.sumarPuntos(numeroPuntos,(int) tupla._3(),(int) tupla._4(), dificultad); //tupla._3 -> contadorEliminados; tupla._4 -> elementoEliminado
-            this.labelPuntos.setText("Puntos: "+this.numeroPuntos);
+            this.labelPuntos.setText(""+this.numeroPuntos);
 
             if(this.vidas == 0){
                 gameOver();
