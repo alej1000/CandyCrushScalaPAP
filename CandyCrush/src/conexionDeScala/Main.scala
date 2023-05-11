@@ -145,26 +145,34 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 //        println("Despues de guardar")
 //        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
 
+
+        //Subir a la base de datos
         val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida,url)
         println("CadenaJson: "+cadenaJson)
         HttpRequest.post(cadenaJson,"http://cundycrosh.uah:8000/records")
+
+//        val string:String ="{\"nombre\":\"jojo\",\"puntuacion\":0,\"fecha\":\"2023-05-11T02:12:55\",\"duracion\":8,\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU\"}\n{\"nombre\":\"jojo\",\"puntuacion\":0,\"fecha\":\"2023-05-11T02:12:55\",\"duracion\":8,\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU\"}"
+//        println("String: "+string)
+//        mostrarPuntuaciones(List(string))
+
 //        val puntuacionesActualizadas:String = HttpRequest.get("http://localhost:8000/records")
 //        println("Puntuaciones del get: "+puntuacionesActualizadas)
 
-        //println("Se ha enviado la puntuacion a la base de datos")
-        //val peticion:List[String] = HttpRequest.get("http://localhost:8080/records")
+//        println("Se ha enviado la puntuacion a la base de datos")
+//        val peticion:List[String] = HttpRequest.get("http://localhost:8080/records")
 
 
         println("\nRecords:")
+        //Cargar de la base de la api
+        val nuevasPuntuaciones: List[String] = HttpRequest.get("http://cundycrosh.uah:8000/records/arcade")
+        println("Nuevas puntuaciones: "+nuevasPuntuaciones)
 
-        //val nuevasPuntuaciones:String = HttpRequest.get("http://cundycrosh.uah:8000/records/arcade")
-
-        //mostrarPuntuaciones(nuevasPuntuaciones)
+        mostrarPuntuaciones(nuevasPuntuaciones)
       } else { // Es automatico
         println("La puntuacion final es: " + puntuacionFinal)
         println("El Robotito duró: " + duracionPartida + " segundos jugando")
         val nombre: String = "AutoGod"
-        guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
+        //guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
         val url:String = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU"
         val cadenaJson: String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida, url)
         println("CadenaJson: " + cadenaJson)
@@ -177,120 +185,120 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    def guardarPuntuaciones(filename: String, nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long): Unit = {
-      val file = new File(filename)
-      if (!file.exists()) {
-        file.createNewFile()
-      }
-      val lastRecords: List[String] = cargarPuntuaciones(filename)
-
-      def getBestScore(lastRecords: List[String]): Int = {
-        if (Matrix.isEmpty(lastRecords) || lastRecords.head == "") return -1
-        val (_, mejorPuntuacion: Int, _, _) = buscarClaveValor(lastRecords.head)
-        mejorPuntuacion
-      }
-
-      val mejorPuntuacion = getBestScore(lastRecords)
-      val puntuacionesActualizadas: String = guardarPuntuacionesAux(filename, lastRecords, nombre, puntuacion, horaFin, duracionPartida, "", mejorPuntuacion)
-      val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
-      writer.write(puntuacionesActualizadas)
-      writer.close()
-    }
-
-    def guardarPuntuacionesAux(filename: String, lastRecords: List[String], nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long, puntuacionesAcum: String, mejorPuntuacion: Int): String = {
-      if (Matrix.isEmpty(lastRecords) || lastRecords.head == "") { //Si he acabado
-        if (puntuacion == -1) { //Si puse mi ultima puntuacion acabo
-          return puntuacionesAcum
-        } else { //Si no he puesto mi ultima puntuacion
-          return puntuacionesAcum + (nombre + ": " + puntuacion + " @" + horaFin + " &" + duracionPartida + "\n")
-        }
-      }
-      val (first: String, score: Int, time: String, duracion: Long) = buscarClaveValor(lastRecords.head)
-      if (score > puntuacion) {
-        val cadena: String = puntuacionesAcum + (first + ": " + score + " @" + time + " &" + duracion + "\n")
-        guardarPuntuacionesAux(filename, lastRecords.tail, nombre, puntuacion, horaFin, duracionPartida, cadena, mejorPuntuacion)
-      } else { //Superé la puntuación
-        if (puntuacion > mejorPuntuacion && mejorPuntuacion != -1) { //Si haces nuevo record
-          println("Nuevo Record!!🏆")
-        }
-        val cadena: String = puntuacionesAcum + (nombre + ": " + puntuacion + " @" + horaFin + " &" + duracionPartida + " \n")
-        guardarPuntuacionesAux(filename, lastRecords, "-1", -1, horaFin, duracionPartida, cadena, mejorPuntuacion)
-      }
-    }
-
-    def guardarPuntuacionesJson(filename:String, nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long,url:String): Unit ={
-      val file = new File(filename)
-      if (!file.exists()) {
-        file.createNewFile()
-      }
-      val lastRecords: List[String] = cargarPuntuaciones(filename)
-
-      def getBestScore(lastRecords: List[String]): Int = {
-        if (Matrix.isEmpty(lastRecords) || lastRecords.head == "" || lastRecords.head == "[" || lastRecords.head == "]") return -1
-        val (_, mejorPuntuacion: Int, _, _,_) = parsearJson(lastRecords.head)
-        mejorPuntuacion
-      }
-
-      val mejorPuntuacion = getBestScore(lastRecords)
-      val puntuaciones: String = guardarPuntuacionesJsonAux(filename, lastRecords, nombre, puntuacion, horaFin, duracionPartida,url, "", mejorPuntuacion)
-      val listaPuntuaciones: String = "[\n" + puntuaciones + "]\n"
-      val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
-      writer.write(listaPuntuaciones)
-      writer.close()
-    }
-
-    def guardarPuntuacionesJsonAux(filename: String, lastRecords: List[String], nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long,url:String, puntuacionesAcum: String, mejorPuntuacion: Int): String ={
-      if(Matrix.isEmpty(lastRecords) || lastRecords.head == "" || lastRecords.head == "]"){
-        if (puntuacion == -1) { //Si puse mi ultima puntuacion acabo
-          return puntuacionesAcum
-        } else { //Si no he puesto mi ultima puntuacion
-          return puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"fecha\":\""+horaFin+"\",\"duracion\":"+duracionPartida+",\"picture\":\""+url+"\"} \n"
-        }
-      }else{
-        if(lastRecords.head == "["){
-          return guardarPuntuacionesJsonAux(filename,lastRecords.tail,nombre,puntuacion,horaFin,duracionPartida,url,puntuacionesAcum,mejorPuntuacion)
-        }
-        val (first: String, score: Int, time: String, duracion: Long,image:String) = parsearJson(lastRecords.head)
-        if (score > puntuacion) {
-          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+first+"\",\"puntuacion\":"+score+",\"fecha\":\""+time+"\",\"duracion\":"+duracion+",\"picutre\":\""+image+"\"} \n"
-          guardarPuntuacionesJsonAux(filename, lastRecords.tail, nombre, puntuacion, horaFin, duracionPartida,url, cadena, mejorPuntuacion)
-        } else { //Superé la puntuación
-          if (puntuacion > mejorPuntuacion && mejorPuntuacion != -1) { //Si haces nuevo record
-            println("Nuevo Record!!🏆")
-          }
-          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"fecha\":\""+horaFin+"\",\"duracion\":"+duracionPartida+",\"picture\":\""+url+"\"} \n"
-          guardarPuntuacionesJsonAux(filename, lastRecords, "-1", -1, horaFin, duracionPartida,url, cadena, mejorPuntuacion)
-        }
-      }
-    }
+//    def guardarPuntuaciones(filename: String, nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long): Unit = {
+//      val file = new File(filename)
+//      if (!file.exists()) {
+//        file.createNewFile()
+//      }
+//      val lastRecords: List[String] = cargarPuntuaciones(filename)
+//
+//      def getBestScore(lastRecords: List[String]): Int = {
+//        if (Matrix.isEmpty(lastRecords) || lastRecords.head == "") return -1
+//        val (_, mejorPuntuacion: Int, _, _) = buscarClaveValor(lastRecords.head)
+//        mejorPuntuacion
+//      }
+//
+//      val mejorPuntuacion = getBestScore(lastRecords)
+//      val puntuacionesActualizadas: String = guardarPuntuacionesAux(filename, lastRecords, nombre, puntuacion, horaFin, duracionPartida, "", mejorPuntuacion)
+//      val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
+//      writer.write(puntuacionesActualizadas)
+//      writer.close()
+//    }
+//
+//    def guardarPuntuacionesAux(filename: String, lastRecords: List[String], nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long, puntuacionesAcum: String, mejorPuntuacion: Int): String = {
+//      if (Matrix.isEmpty(lastRecords) || lastRecords.head == "") { //Si he acabado
+//        if (puntuacion == -1) { //Si puse mi ultima puntuacion acabo
+//          return puntuacionesAcum
+//        } else { //Si no he puesto mi ultima puntuacion
+//          return puntuacionesAcum + (nombre + ": " + puntuacion + " @" + horaFin + " &" + duracionPartida + "\n")
+//        }
+//      }
+//      val (first: String, score: Int, time: String, duracion: Long) = buscarClaveValor(lastRecords.head)
+//      if (score > puntuacion) {
+//        val cadena: String = puntuacionesAcum + (first + ": " + score + " @" + time + " &" + duracion + "\n")
+//        guardarPuntuacionesAux(filename, lastRecords.tail, nombre, puntuacion, horaFin, duracionPartida, cadena, mejorPuntuacion)
+//      } else { //Superé la puntuación
+//        if (puntuacion > mejorPuntuacion && mejorPuntuacion != -1) { //Si haces nuevo record
+//          println("Nuevo Record!!🏆")
+//        }
+//        val cadena: String = puntuacionesAcum + (nombre + ": " + puntuacion + " @" + horaFin + " &" + duracionPartida + " \n")
+//        guardarPuntuacionesAux(filename, lastRecords, "-1", -1, horaFin, duracionPartida, cadena, mejorPuntuacion)
+//      }
+//    }
+//
+//    def guardarPuntuacionesJson(filename:String, nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long,url:String): Unit ={
+//      val file = new File(filename)
+//      if (!file.exists()) {
+//        file.createNewFile()
+//      }
+//      val lastRecords: List[String] = cargarPuntuaciones(filename)
+//
+//      def getBestScore(lastRecords: List[String]): Int = {
+//        if (Matrix.isEmpty(lastRecords) || lastRecords.head == "" || lastRecords.head == "[" || lastRecords.head == "]") return -1
+//        val (_, mejorPuntuacion: Int, _, _,_) = parsearJson(lastRecords.head)
+//        mejorPuntuacion
+//      }
+//
+//      val mejorPuntuacion = getBestScore(lastRecords)
+//      val puntuaciones: String = guardarPuntuacionesJsonAux(filename, lastRecords, nombre, puntuacion, horaFin, duracionPartida,url, "", mejorPuntuacion)
+//      val listaPuntuaciones: String = "[\n" + puntuaciones + "]\n"
+//      val writer = new FileWriter(new File(filename)) //True para que no borre lo que ya hay -> Append
+//      writer.write(listaPuntuaciones)
+//      writer.close()
+//    }
+//
+//    def guardarPuntuacionesJsonAux(filename: String, lastRecords: List[String], nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long,url:String, puntuacionesAcum: String, mejorPuntuacion: Int): String ={
+//      if(Matrix.isEmpty(lastRecords) || lastRecords.head == "" || lastRecords.head == "]"){
+//        if (puntuacion == -1) { //Si puse mi ultima puntuacion acabo
+//          return puntuacionesAcum
+//        } else { //Si no he puesto mi ultima puntuacion
+//          return puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"fecha\":\""+horaFin+"\",\"duracion\":"+duracionPartida+",\"picture\":\""+url+"\"} \n"
+//        }
+//      }else{
+//        if(lastRecords.head == "["){
+//          return guardarPuntuacionesJsonAux(filename,lastRecords.tail,nombre,puntuacion,horaFin,duracionPartida,url,puntuacionesAcum,mejorPuntuacion)
+//        }
+//        val (first: String, score: Int, time: String, duracion: Long,image:String) = parsearJson(lastRecords.head)
+//        if (score > puntuacion) {
+//          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+first+"\",\"puntuacion\":"+score+",\"fecha\":\""+time+"\",\"duracion\":"+duracion+",\"picutre\":\""+image+"\"} \n"
+//          guardarPuntuacionesJsonAux(filename, lastRecords.tail, nombre, puntuacion, horaFin, duracionPartida,url, cadena, mejorPuntuacion)
+//        } else { //Superé la puntuación
+//          if (puntuacion > mejorPuntuacion && mejorPuntuacion != -1) { //Si haces nuevo record
+//            println("Nuevo Record!!🏆")
+//          }
+//          val cadena: String = puntuacionesAcum + "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"fecha\":\""+horaFin+"\",\"duracion\":"+duracionPartida+",\"picture\":\""+url+"\"} \n"
+//          guardarPuntuacionesJsonAux(filename, lastRecords, "-1", -1, horaFin, duracionPartida,url, cadena, mejorPuntuacion)
+//        }
+//      }
+//    }
 
     def puntuacionJson(nombre: String, puntuacion: Int, horaFin: String, duracionPartida: Long,url:String):String={
       "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntuacion+",\"fecha\":\""+horaFin+"\",\"duracion\":"+duracionPartida+",\"picture\":\""+url+"\"} \n"
     }
 
-    def parsearJson(cadenaJson: String): (String, Int, String, Long,String) = {
+    def parsearJson(cadenaJson: String): (String, Int, String, Long) = {
       //if (cadenaJson == "" || cadenaJson == "[]" || cadenaJson == "[" || cadenaJson == "]") return (cadenaJson, -1, cadenaJson, -1) //Si no hay nada
 
       val nombreInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"nombre")) +2 //Es más dos porque tiene comillas después del :
       val puntuacionInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"puntuacion")) + 1
       val fechaInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"fecha")) + 2
       val duracionInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"duracion")) + 1
-      val imageInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"picture")) + 2
+//      val imageInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"picture")) + 2
 
 
-      val nombreFin = indexOfRecursive(cadenaJson,'"', nombreInicio+2)
+      val nombreFin = indexOfRecursive(cadenaJson,"'", nombreInicio+2)
       val puntuacionFin = indexOfRecursive(cadenaJson,',', puntuacionInicio)
-      val fechaFin = indexOfRecursive(cadenaJson,'"', fechaInicio+2)
-      val duracionFin = indexOfRecursive(cadenaJson,'}', duracionInicio)
-      val imageFin = indexOfRecursive(cadenaJson,'"', imageInicio+2)
+      val fechaFin = indexOfRecursive(cadenaJson,"'", fechaInicio+2)
+      val duracionFin = indexOfRecursive(cadenaJson,',', duracionInicio)
+//      val imageFin = indexOfRecursive(cadenaJson,"}", imageInicio+2)
 
       val nombre = substringRecursive(cadenaJson,nombreInicio, nombreFin)
       val puntuacion = substringRecursive(cadenaJson,puntuacionInicio, puntuacionFin).toInt
       val fecha = substringRecursive(cadenaJson,fechaInicio, fechaFin)
       val duracion = substringRecursive(cadenaJson,duracionInicio, duracionFin).toLong
-      val image = substringRecursive(cadenaJson,imageInicio, imageFin)
+//      val image = substringRecursive(cadenaJson,imageInicio, imageFin-1)
 
-      (nombre, puntuacion, fecha, duracion,image)
+      (nombre, puntuacion, fecha, duracion)
     }
 
 
@@ -403,7 +411,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         if (Matrix.isEmpty(listaRecords)) {
           maxValues
         } else {
-          val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(listaRecords.head)
+          val (nombre, puntuacion, fecha, duracion) = parsearJson(listaRecords.head)
           //val (nombre, puntuacion, fecha, duracion) = parsearJson(listaRecords.head)
           val newMaxValues = (
             Math.max(maxValues._1, strLength(nombre)),
@@ -462,7 +470,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
       def printRows(listaRecords: List[String], maxValues: (Int, Int, Int, Int)): Unit = {
         if (!Matrix.isEmpty(listaRecords)) {
-          val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(listaRecords.head)
+          val (nombre, puntuacion, fecha, duracion) = parsearJson(listaRecords.head)
 
           // Formatea cada columna para que tenga el tamaño correcto
           val nombreFormatted = nombre + repeat(" ", maxValues._1 - strLength(nombre))

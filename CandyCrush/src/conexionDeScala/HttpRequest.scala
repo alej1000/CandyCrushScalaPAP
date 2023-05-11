@@ -29,7 +29,7 @@ object HttpRequest {
     }
   }
 
-  def get(link: String): String = {
+  def get(link: String): List[String] = {
     try {
       val url = new URL(link)
       val conn = url.openConnection.asInstanceOf[HttpURLConnection]
@@ -40,11 +40,13 @@ object HttpRequest {
       val br = new BufferedReader(new InputStreamReader(conn.getInputStream))
       val respuesta = readAll(br)
       conn.disconnect()
-      respuesta
+      val array = respuesta.split("@")
+      println("Array: " + array.toString)
+      javaArrayToScalaList(array)
     } catch {
       case e: Exception =>
         e.printStackTrace()
-        "Error"
+        List("Error")
     }
   }
 
@@ -52,4 +54,10 @@ object HttpRequest {
     val line = br.readLine()
     if (line == null) "" else line + readAll(br)
   }
+
+  private def javaArrayToScalaList(array: Array[String]): List[String] = {
+    if (array.length == 0) return Nil
+    array(0) :: javaArrayToScalaList(array.drop(1))
+  }
+
 }
