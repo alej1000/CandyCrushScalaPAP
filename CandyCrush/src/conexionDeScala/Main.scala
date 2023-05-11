@@ -9,12 +9,6 @@ import java.text.SimpleDateFormat
 object Main { //Object, instancia unica que se utiliza en todo el programa
   def main(args: Array[String]): Unit = {
 
-    //val miMatriz = new Matrix(6,10)
-    //miMatriz.toString()
-    //    val miMat = generarMatriz(6,10)
-    //    val miPrueba = new Prueba(6,10,miMat)
-    //    miPrueba.imprimir()
-
     val startTime = System.nanoTime()
     println("Bienvenido a Cundy Crosh 2.0 🍬🍬🍬")
     val puntosIniciales: Int = 0
@@ -31,7 +25,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val tablero = new Matrix(filas, columnas, 2)
         partida(tablero, 5, modoDeJuego, puntosIniciales, 2)
       }
-
 
     } else { // Si no es por consola
       val filas = introducirInt("Introduce cuantas filas quieres")
@@ -96,8 +89,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         }
       }
     }
-
-
 
     def modoAutomatico(tablero: Matrix, vidas: Int, puntosTotales: Int, dificultad: Int): (Matrix, Int, Int) = {
       val (fila: Int, columna: Int) = consultarMejorOpcion(tablero)
@@ -305,20 +296,16 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val puntuacionInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"puntuacion")) + 1
       val fechaInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"fecha")) + 2
       val duracionInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"duracion")) + 1
-//      val imageInicio = indexOfRecursive(cadenaJson,':', indexOfRecursive(cadenaJson,"picture")) + 2
-
 
       val nombreFin = indexOfRecursive(cadenaJson,"'", nombreInicio+2)
       val puntuacionFin = indexOfRecursive(cadenaJson,",", puntuacionInicio)
       val fechaFin = indexOfRecursive(cadenaJson,"'", fechaInicio+2)
       val duracionFin = indexOfRecursive(cadenaJson,",", duracionInicio)
-//      val imageFin = indexOfRecursive(cadenaJson,"}", imageInicio+2)
 
       val nombre = substringRecursive(cadenaJson,nombreInicio, nombreFin)
       val puntuacion = substringRecursive(cadenaJson,puntuacionInicio, puntuacionFin).toInt
       val fecha = substringRecursive(cadenaJson,fechaInicio, fechaFin)
       val duracion = substringRecursive(cadenaJson,duracionInicio, duracionFin).toLong
-//      val image = substringRecursive(cadenaJson,imageInicio, imageFin-1)
 
       (nombre, puntuacion, fecha, duracion)
     }
@@ -391,19 +378,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    //    def mostrarPuntuaciones(puntuaciones: List[String]): Unit = {
-    //      if (!Matrix.isEmpty(puntuaciones)) {
-    //        //println(puntuaciones.head)
-    //        def mostrarPuntuacionesFormato(puntuacion:String): Unit ={
-    //          val (nombre:String,puntos:Int,fecha:String,duracion:Long) = buscarClaveValor(puntuacion)
-    //          //println(nombre + "\t\t" + puntos + "\t\t" + duracion + "\t\t" + fecha)
-    //          printf("%s %15d %15d %25s \n",nombre,puntos,duracion,fecha)
-    //        }
-    //        mostrarPuntuacionesFormato(puntuaciones.head)
-    //        mostrarPuntuaciones(puntuaciones.tail)
-    //      }
-    //    }
-
     def repeat(s: String, n: Int): String = {
       s * n
     }
@@ -415,19 +389,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val date: String = "Fecha"
       val duration: String = "Duración"
 
-      //    var maxLength: Int = 0
-
-
-      //    var maxValues: (Int, Int, Int, Int) = (name.length, score.length, date.length, duration.length)
-      //    for (llamada <- pilaLlamadas) {
-      //      val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(llamada)
-      //      maxValues = (
-      //        Math.max(maxValues._1, nombre.length),
-      //        Math.max(maxValues._2, puntuacion.toString.length),
-      //        Math.max(maxValues._3, fecha.length),
-      //        Math.max(maxValues._4, duracion.toString.length)
-      //      )
-      //    }
       // Busca el máximo valor de cada campo
       def maxValuesRec(listaRecords: List[String], maxValues: (Int, Int, Int, Int)): (Int, Int, Int, Int) = {
         if (Matrix.isEmpty(listaRecords)) {
@@ -469,27 +430,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
       printf("┣%s┫\n", repeat("━", totalRowSize))
 
-      // Imprime cada fila
-      //    //for (i <- pilaLlamadas.size - 1 to 0 by -1) { //Imprime de abajo a arriba (formato pila)
-      //    for(i <- 0 until pilaLlamadas.size) {
-      //      val (nombre, puntuacion, fecha, duracion) = buscarClaveValor(pilaLlamadas(i))
-      //
-      //      // Formatea cada columna para que tenga el tamaño correcto
-      //      val nombreFormatted = nombre + repeat(" ", maxValues._1 - nombre.length)
-      //      val puntuacionFormatted = puntuacion.toString + repeat(" ", maxValues._2 - puntuacion.toString.length)
-      //      val fechaFormatted = fecha + repeat(" ", maxValues._3 - fecha.length)
-      //      val duracionFormatted = duracion.toString + repeat(" ", maxValues._4 - duracion.toString.length)
-      //
-      //      // Imprime una línea con la fila centrada dentro de ella
-      //      printf("┃ %s │ %s │ %s │ %s   ┃\n", nombreFormatted, puntuacionFormatted, fechaFormatted, duracionFormatted)
-      //
-      ////      if (i > 0) { //Cuando era de abajo a arriba
-      //      if(i<pilaLlamadas.size-1) {
-      //        // Imprime una línea horizontal entre filas
-      //        printf("┣%s┫\n", repeat("━", totalRowSize))
-      //      }
-      //    }
-
       def printRows(listaRecords: List[String], maxValues: (Int, Int, Int, Int)): Unit = {
         if (!Matrix.isEmpty(listaRecords)) {
           val (nombre, puntuacion, fecha, duracion) = parsearJson(listaRecords.head)
@@ -507,7 +447,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
             // Imprime una línea horizontal entre filas
             printf("┣%s┫\n", repeat("━", totalRowSize))
           }
-
           printRows(listaRecords.tail, maxValues)
         }
       }
@@ -525,10 +464,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       val endTime = System.nanoTime()
       val duracion = (endTime - startTime).nanos
       val endDateTime = Calendar.getInstance().getTime
-      //val formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
       val formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-      //      println("Duración de la partida: " + duracion.toSeconds + " segundos")
-      //      println("Fin de la partida: " + formatter.format(endDateTime))
       (formatter.format(endDateTime), duracion.toSeconds)
     }
 
@@ -629,86 +565,3 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     }
   }
 }
-
-
-
-
-
-//Funcion principal del programa -> Si se ejecuta en terminal: scala Main.scala sino no hace falta llamarla
-//Aquí dentro podríamos ejectuar el bucle principal del programa -> Bucle while mirando las vidas
-
-//Inicializar semilla randoms
-
-//Inicializar tablero con numeros aleatorios
-// generarMatriz(10, 10, 0) //Genera la matriz con 0s
-// List l = generarMatriz(10, 10) //Genera la matriz con numeros aleatorios
-//generamos una magtriz y lo guardamos en una variable
-// val matriz:List[Int] = generarMatriz(6, 10)
-// imprimir(matriz,10) //Imprime la matriz
-// println(getElem(matriz, 34)) //Imprime el elemento de la posicion 0
-//Bucle principal del juego -> while(vida > 0) -> Se pueden bucles while? o tiene que ser recursivo?
-//Recursivo: funcion_principal(tablero,fila,columna,vidas)
-//Mostrar tablero
-
-//Solicitar al usuario que introduzca una fila y una columna
-
-//Llamo a la funcion principal que empieza el juego -> Si es con bucle se llamaría aqui sino, es la funcion recursiva
-
-
-/*def crearMatriz[T](filas: Int, columnas: Int, valor: T): Array[Array[T]] = { //No sé si están permitidos los array porque ya tienen el concat
-  if (filas == 0) {
-    Array.empty
-  } else {
-    val fila = Array.fill(columnas)(valor)
-    val resto = crearMatriz(filas - 1, columnas, valor)
-    Array.concat(Array(fila), resto)
-  }
-}*/
-
-
-// def eliminarPosicion(tablero:List[Int], fila:Int, columna:Int):List[Int] = {
-//   //Elimina (pone a 0) la posicion indicada
-//   buscarJuntos(tablero, fila, columna,0) //Puedo hacer que devuelva el contador despues de haberlas eliminado? -> Asi ya tengo el numero de fichas que he eliminado
-//   tablero
-// }
-
-// def activarGravedad(tablero:List[Int]):List[Int]= {
-//   //Baja las fichas que estén encima de una celda vacía
-//   tablero
-// }
-
-// def buscarJuntos(tablero:List[List[Int]], fila:Int, columna:Int,contador:Int):Int = {
-//   //Busca las fichas que estén juntas a la indicada y las elimina
-//   contador
-// }
-
-//
-//  def generarMatriz(filas: Int, columnas: Int): List[Int] = {
-//    if (filas == 0) Nil
-//    else {
-//      concatenar(generarColumnas(columnas), generarMatriz(filas - 1, columnas))
-//    }
-//  }
-//
-//  // Method to generate a list of random integers with given length
-//  def generarColumnas(n: Int): List[Int] = {
-//    val rand = new scala.util.Random()
-//    if (n == 0) Nil
-//    else rand.nextInt(100) :: generarColumnas(n - 1) //Genero un número aleatorio entre 0 y 99
-//  }
-//
-//  def concatenar(x: List[Int], y: List[Int]): List[Int] = {
-//    x match {
-//      case Nil => y
-//      case head :: tail => head :: concatenar(tail, y)
-//    }
-//  }
-//
-//  def longitud[T](l: List[T]): Int = {
-//    l match {
-//      case Nil => 0 //Si la lista está vacía la longitud es 0
-//      case _ :: tail => 1 + longitud(tail) //Si no está vacía la longitud es 1 + la longitud de la cola
-//    }
-//  }
-//
-//}

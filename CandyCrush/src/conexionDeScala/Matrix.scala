@@ -159,7 +159,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
      *         elemento: el elemento que se ha eliminado
      *         matriz: la matriz antes de aplicar la gravedad
      */
-//    this.toString()
+
     println("fila:",fila)
     println("columna:",columna)
     val elemento = getElem(fila, columna)
@@ -301,15 +301,14 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     else {
       val elementoActual: Int = matriz.head
       if (elementoActual == elemento % 10) {
-        //reemplazarElemento(fila, columna, 0, matriz) :: eliminarRompecabezas(fila,columna,matriz.tail,elemento)
-        //(0 :: eliminarRompecabezasAux(fila, columna, matriz.tail, elemento,contador+1)._1,contador+1) //Si elimino el elemento sumo 1 al contador
+        //Si elimino el elemento sumo 1 al contador
         val (lista:List[Int],contadorRecur:Int) = eliminarRompecabezasAux(fila,columna,matriz.tail,elemento,contador+1)
         val listaNueva:List[Int] = 0 :: lista
         val nuevoContador:Int = contadorRecur
         return (listaNueva,nuevoContador)
       }
       else {
-        //(elementoActual :: eliminarRompecabezasAux(fila, columna, matriz.tail, elemento,contador)._1,contador) //Si no elimino el elemento el contador no cambia
+        //Si no elimino el elemento el contador no cambia
         val (lista: List[Int], contadorRecur: Int) = eliminarRompecabezasAux(fila, columna, matriz.tail, elemento, contador)
         val listaNueva: List[Int] = elementoActual :: lista
         return (listaNueva, contadorRecur)
@@ -455,7 +454,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   //Fin de la clase Matrix
 }
 
-//En este objeto se guardan las funciones para usar dentro de la clase ->
+//En este objeto se guardan las funciones para usar dentro de la clase
 object Matrix {
 
   def longitud[T](l: List[T]): Int = {
