@@ -1,4 +1,6 @@
 [
+{"nombre":"AutoGod","puntuacion":151604,"fecha":"2023-05-10T23:53:56","duracion":21}
+{"nombre":"ñlassdjkfñlajdfñl","puntuacion":14,"fecha":"2023-05-10T23:48:15","duracion":19} 
 {"nombre":"jejejeJojO ajsd","puntuacion":10,"fecha":"2023-05-10T22:03:21","duracion":11} 
 {"nombre":"juujuuuju","puntuacion":4,"fecha":"2023-05-10T22:59:34","duracion":12} 
 {"nombre":"Uoooolaa","puntuacion":4,"fecha":"2023-05-10T21:37:43","duracion":27} 
