@@ -36,7 +36,7 @@ function cargarDatos(){
 
         console.log(formattedDate); // Outputs: '10-05-2023'
         console.log(formattedTime); // Outputs: '19:47:05'
-        html += `<button class="btn btn-primary" onclick="window.location.href = 'puntuacion/${records[i].id_player}'">${nombre} ${puntos} ${formattedDate}</button><br>`;
+        html += `<button class="btn btn-primary" onclick="window.location.href = 'puntuacion/${records[i].id_player}'">${nombre}  |  ${puntos}  |  ${formattedDate}</button><br>`;
       }
       document.getElementById('records').innerHTML = html;
     }
