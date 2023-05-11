@@ -1,9 +1,26 @@
 // Define una variable global baseUrl que contiene el inicio de la URL
 const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
-function cargarDatos(cadena){
+var orden = 0;
+var filtro = "";
+
+function cambioOrden(){
+  orden = ((orden + 1) % 2);
+
+  if (orden == 1){
+    document.getElementById("orderChange").innerHTML = "Ordenar por fecha";
+  }
+  else{
+    document.getElementById("orderChange").innerHTML = "Ordenar por puntuacion";
+  }
+}
+function cargarDatos(){
   //obtiene los valores de los records generando un boton con la informacion de cada uno
-  fetch(`${baseUrl}/records${cadena}`)
+  filtro = document.getElementById("input").value;
+  if (filtro == undefined) filtro = "";
+  ruta= `${baseUrl}/records?order=${orden}&filtro=${filtro}`;
+  console.log(ruta);
+  fetch(ruta)
     .then(response => response.json())
     .then(data => {
       console.log(data);
@@ -14,7 +31,7 @@ function cargarDatos(cadena){
 }
 
 //llamamos a cargarDatos al cargar la pagina
-window.onload = cargarDatos("");
+window.onload = cargarDatos();
 
 //funcion que recibe el json y lo muestra en la pagina
 function mostrarDatos(data){

@@ -14,8 +14,15 @@
 <body>
 <main>
     <img class="logo" src="https://i.imgur.com/IIFXcF1.png" alt="Cundy Crosh Logo">
-    <!-- <button class="btn btn-primary">Cambiar orden</button><br>`; -->
-
+    <div class="filterDiv">
+        <button class="btn" id="orderChange" onclick="cambioOrden()">Ordenar por puntuacion</button>
+        <form id="form" onsubmit="cargarDatos(); return false;">
+            <input type="text" id="input" name="input" placeholder="Filtrar por nombre">
+            <button class="btn" id="btn" type="submit">Enviar</button>
+            </form>
+    </div>
+      
+      
 <div class="menu">
     <h1>PUNTUACIONES</h1>
     <div id="records">
