@@ -424,7 +424,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
 
       // Uso:
-      val maxValues = maxValuesRec(listaRecords, (name.length, score.length, date.length, duration.length))
+      val maxValues = maxValuesRec(listaRecords, (strLength(name), strLength(score), strLength(date), strLength(duration)))
 
 
       // Calcula el tamaño de cada columna y el tamaño total de cada fila
@@ -525,7 +525,6 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
   def charAtRecursive(str: String, index: Int): Char = {
 
-
     def charAtRecursiveAux(str:String,index:Int,longitud:Int):Char={
       if(index<0 || index>=longitud)
         throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for string " + str)
@@ -542,39 +541,54 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     indexOfRecursive(str,search,0)
   }
   def indexOfRecursive(str:String,searchChar:Char,index:Int = 0): Int ={ //Sirve solo para el indice de un caracter
-    if(index>=strLength(str))
-      -1
-    else if(charAtRecursive(str,index) == searchChar)
-      index
-    else
-      indexOfRecursive(str,searchChar,index+1)
+
+    def indexOfRecursiveAux(str:String,searchChar:Char,index:Int,longitud:Int):Int = {
+      if(index>=longitud)
+        -1
+      else if(charAtRecursive(str,index) == searchChar)
+        index
+      else
+        indexOfRecursiveAux(str,searchChar,index+1,longitud)
+    }
+    indexOfRecursiveAux(str,searchChar,index,strLength(str))
   }
 
   def indexOfRecursive(str: String, search: String, index: Int): Int = {
-    if (index > str.length - search.length)
-      -1
-    else if (substringRecursive(str,index, index + strLength(search)) == search)
-      index
-    else
-      indexOfRecursive(str, search, index + 1)
+
+    def indexOfRecursiveAux(str:String,search:String,index:Int,longitud:Int,longitudSearch:Int):Int ={
+      if(index > longitud - longitudSearch)
+        -1
+      else if(substringRecursive(str,index,index+longitudSearch) == search)
+        index
+      else
+        indexOfRecursiveAux(str,search,index+1,longitud,longitudSearch)
+    }
+    indexOfRecursiveAux(str,search,index,strLength(str),strLength(search))
   }
 
   def substringRecursive(str:String,start:Int,end:Int):String={
-    if(start<0 || end>strLength(str) || start>end)
-      throw new IndexOutOfBoundsException("Index out of bounds")
-    else if(start>=end)
-      ""
-    else
-      charAtRecursive(str,start)+substringRecursive(str,start+1,end)
+
+    def substringRecursiveAux(str:String,start:Int,end:Int,longitud:Int):String={
+      if(start<0 || end>longitud || start>end)
+        throw new IndexOutOfBoundsException("Index out of bounds")
+      else if(start>=end)
+        ""
+      else
+        charAtRecursive(str,start)+substringRecursiveAux(str,start+1,end,longitud)
+    }
+    substringRecursiveAux(str,start,end,strLength(str))
   }
 
   def substringRecursive(str:String,start:Int):String ={
-    if(start<0 || start>strLength(str))
-      throw new IndexOutOfBoundsException("Index out of bounds")
-    else if(start>=strLength(str))
-      ""
-    else
-      charAtRecursive(str,start)+substringRecursive(str,start+1)
+    def substringRecursiveAux(str:String,start:Int,longitud:Int):String={
+      if(start<0 || start>longitud)
+        throw new IndexOutOfBoundsException("Index out of bounds")
+      else if(start>=longitud)
+        ""
+      else
+        charAtRecursive(str,start)+substringRecursiveAux(str,start+1,longitud)
+    }
+    substringRecursiveAux(str,start,strLength(str))
   }
 
   def sumRecursive(lst: List[Int]): Int = {
