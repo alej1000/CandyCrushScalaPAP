@@ -8,18 +8,14 @@ router = APIRouter()
 
 
 @router.get("/records")
-async def get_records(order: int = Query(default=1)):
+async def get_records(order: int = Query(default=1),filtro: str = Query(default="")):
     """
     Devuelve todos los records en formato json
     """
     #si se recibe query param con order = 2, se ordena por puntos
     #si se recibe query param con order = 1, se ordena por fecha
     #si no se recibe query param, se ordena por fecha
-
-    if order == 2:
-        records = logica.obtener_records_orden_puntos()
-    else:
-        records = logica.obtener_records()
+    records = logica.obtener_records(order, filtro)
     return logica.respuesta_exitosa(records)
 
 @router.get("/records/arcade")
