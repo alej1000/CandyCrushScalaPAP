@@ -53,7 +53,7 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cundy Crosh");
-        setIconImage(new ImageIcon("src/assets/candy1.png").getImage());
+        setIconImage(new ImageIcon("src/assets/favicon.png").getImage());
         setPreferredSize(new java.awt.Dimension(1183, 750));
         setResizable(false);
         getContentPane().setLayout(new CardLayout());
