@@ -148,6 +148,15 @@ def obtener_records():
     records = db.realizar_consulta(query)
     return records
 
+def obtener_record(id: int):
+    query = "SELECT * FROM scores WHERE id_player = %s"
+    parameters = ([id])
+    record = db.realizar_consulta(query, params=parameters)
+    if len(record) == 0:
+        raise HTTPException(status_code=404, detail="El record no existe")
+    record = record[0]
+    return record
+
 def insertar_record(data: dict):
     nombre_tabla = "scores"
     record = db.realizar_insercion(nombre_tabla, data)
