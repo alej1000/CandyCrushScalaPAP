@@ -2,16 +2,29 @@
 const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
 var orden = 0;
+var filtro = "";
+
+function cambioOrden(){
+  orden = ((orden + 1) % 2);
+
+  if (orden == 1){
+    document.getElementById("orderChange").innerHTML = "Ordenar por fecha";
+  }
+  else{
+    document.getElementById("orderChange").innerHTML = "Ordenar por puntuacion";
+  }
+}
 function cargarDatos(){
   //obtiene los valores de los records generando un boton con la informacion de cada uno
-  ruta= `${baseUrl}/records?order=${orden}`;
+  filtro = document.getElementById("input").value;
+  if (filtro == undefined) filtro = "";
+  ruta= `${baseUrl}/records?order=${orden}&filtro=${filtro}`;
   console.log(ruta);
   fetch(ruta)
     .then(response => response.json())
     .then(data => {
       console.log(data);
       mostrarDatos(data);
-      orden = ((orden + 1) % 2);
       
     }
     )

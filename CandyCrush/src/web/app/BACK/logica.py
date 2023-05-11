@@ -143,15 +143,26 @@ def insertar_datos_conexion(conn,sql, params=None):
 #endregion
 
 
-def obtener_records():
-    query = "SELECT * FROM scores ORDER BY fecha DESC "
-    records = db.realizar_consulta(query)
+def obtener_records(orden=0, filtro=""):
+    query = "SELECT * FROM scores"
+
+    params = []
+    if filtro != "":
+        query += " WHERE nombre LIKE %s"
+        params.append(f"%{filtro}%")
+    if orden == 0:
+        query += " ORDER BY fecha DESC"
+    elif orden == 1:
+        query += " ORDER BY puntuacion DESC"
+
+    records = db.realizar_consulta(query, params)
     return records
 
-def obtener_records_orden_puntos():
-    query = "SELECT * FROM scores ORDER BY puntuacion DESC"
-    records = db.realizar_consulta(query)
-    return records
+
+# def obtener_records_orden_puntos():
+#     query = "SELECT * FROM scores ORDER BY puntuacion DESC"
+#     records = db.realizar_consulta(query)
+#     return records
 
 def obtener_record(id: int):
     query = "SELECT * FROM scores WHERE id_player = %s"
