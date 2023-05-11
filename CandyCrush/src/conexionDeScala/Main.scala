@@ -137,14 +137,17 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val nombre: String = scala.io.StdIn.readLine()
         println("Introduce una url de tu imagen de perfil, pulsa enter si no quieres poner ninguna")
         val url: String = scala.io.StdIn.readLine()
-        guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
-        val file:String = substringRecursive(filename,0,indexOfRecursive(filename,'.'))
-        val fileJson:String = file + "Json.txt"
-        guardarPuntuacionesJson(fileJson,nombre, puntuacionFinal, horaFin, duracionPartida,url)
-        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
+//        guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
+//        val file:String = substringRecursive(filename,0,indexOfRecursive(filename,'.'))
+//        val fileJson:String = file + "Json.txt"
+//        println("Antes de guardar")
+//        guardarPuntuacionesJson(fileJson,nombre, puntuacionFinal, horaFin, duracionPartida,url)
+//        println("Despues de guardar")
+//        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename)
 
-//        val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida,url)
-//        HttpRequest.post(cadenaJson,"http://localhost:8000/records")
+        val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida,url)
+        println("CadenaJson: "+cadenaJson)
+        HttpRequest.post(cadenaJson,"http://cundycrosh.uah:8000/records")
 //        val puntuacionesActualizadas:String = HttpRequest.get("http://localhost:8000/records")
 //        println("Puntuaciones del get: "+puntuacionesActualizadas)
 
@@ -154,16 +157,23 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
         println("\nRecords:")
 
-        mostrarPuntuaciones(nuevasPuntuaciones)
+        //val nuevasPuntuaciones:String = HttpRequest.get("http://cundycrosh.uah:8000/records/arcade")
+
+        //mostrarPuntuaciones(nuevasPuntuaciones)
       } else { // Es automatico
         println("La puntuacion final es: " + puntuacionFinal)
         println("El Robotito duró: " + duracionPartida + " segundos jugando")
         val nombre: String = "AutoGod"
         guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
         val url:String = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU"
-        guardarPuntuacionesJson("RecordsJson.txt",nombre, puntuacionFinal, horaFin, duracionPartida,url)
-        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
-        mostrarPuntuaciones(nuevasPuntuaciones)
+        val cadenaJson: String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida, url)
+        println("CadenaJson: " + cadenaJson)
+        HttpRequest.post(cadenaJson, "http://cundycrosh.uah:8000/records")
+
+
+//        guardarPuntuacionesJson("RecordsJson.txt",nombre, puntuacionFinal, horaFin, duracionPartida,url)
+//        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
+//        mostrarPuntuaciones(nuevasPuntuaciones)
       }
     }
 

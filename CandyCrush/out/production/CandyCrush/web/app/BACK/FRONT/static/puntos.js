@@ -12,11 +12,44 @@ function cargarDatos(){
   fetch(`${baseUrl}/records/${puntuacion}`)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+      // console.log(data);
       records = data.data;
+      console.log(records);
       nombre = records['nombre'];
+      puntos = records.puntuacion;
+      fecha = records.fecha;
+      duracion = records.duracion;
+      imagen = records.picture;
+
+      // Convert the date string to a Date object
+      const date = new Date(fecha);
+
+      // Get the day, month and year components
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+
+      // Format the date components as a string in the DD-MM-YYYY format
+      const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`;
+
+      // Get the hour, minute and second components
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+      const second = date.getSeconds();
+
+      // Format the time components as a string in the HH:MM:SS format
+      const formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`;
       //añadimos el nombre del usuario a el elemento con id "header"
-      document.getElementById('header').innerHTML = `Hola ${records[0].nombre}!`;
+      // document.getElementById('header').innerHTML = document.getElementById('header').innerHTML + " "+nombre;
+      //añadimos la puntuacion a el elemento con id "puntuacion"
+      document.getElementById('name').innerHTML = "El jugador/a "+nombre;
+      document.getElementById('points').innerHTML = "Obtuvo una puntuación de "+puntos;
+      document.getElementById('date').innerHTML = "El día "+formattedDate;
+      document.getElementById('time').innerHTML = "A las "+formattedTime;
+      document.getElementById('duration').innerHTML = "Jugó durante "+duracion+" segundos";
+      if (imagen != null){
+        document.getElementById('img').src = imagen;
+      }
     }
     )
 }
