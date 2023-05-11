@@ -31,6 +31,8 @@ async def get_records():
     # stringReturn += "]"
     print(stringReturn)
     print("\n\n")
+    #replace all single quotes with double quotes
+    stringReturn = stringReturn.replace("'", "\"")
     return stringReturn
 
 
