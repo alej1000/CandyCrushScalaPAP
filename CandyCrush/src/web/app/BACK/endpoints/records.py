@@ -28,12 +28,12 @@ async def get_records():
     records = logica.obtener_records(1)
     stringReturn = ""
     for record in records:
-        record["fecha"] = str(record["fecha"])
+        record["fecha"] = str(record["fecha"]).replace(" ", 'T')
         record["puntuacion"] = int(record["puntuacion"])
         record["duracion"] = int(record["duracion"])
         stringReturn += str(record) + "@"
     #remove every space
-    # stringReturn = stringReturn.replace(" ", '')
+    stringReturn = stringReturn.replace(" ", '')
     #remove the last character
     stringReturn = stringReturn[:-1]
 
