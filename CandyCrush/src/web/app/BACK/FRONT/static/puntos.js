@@ -40,7 +40,6 @@ function cargarDatos(){
       // Format the time components as a string in the HH:MM:SS format
       const formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`;
       //añadimos el nombre del usuario a el elemento con id "header"
-      // document.getElementById('header').innerHTML = document.getElementById('header').innerHTML + " "+nombre;
       //añadimos la puntuacion a el elemento con id "puntuacion"
       document.getElementById('name').innerHTML = "El jugador/a "+nombre;
       document.getElementById('points').innerHTML = "Obtuvo una puntuación de "+puntos;
