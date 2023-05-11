@@ -35,6 +35,10 @@ async def get_records():
     print("\n\n")
     #replace all single quotes with double quotes
     # stringReturn = stringReturn.replace("'", '')
+    
+    #remove every space
+    stringReturn = stringReturn.replace(" ", '')
+
     return stringReturn
 
 
