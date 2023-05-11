@@ -1,3 +1,0 @@
-[
-{"nombre":"jojo","puntuacion":0,"fecha":"2023-05-11T02:12:55","duracion":8,"picture":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU"}
-]

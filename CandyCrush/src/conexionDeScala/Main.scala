@@ -48,7 +48,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     def partida(tablero: Matrix, vidas: Int, modoDeJuego: Char, puntosTotales: Int, dificultad: Int): Unit = {
       if (vidas == 0) {
         println("Has perdido 😭")
-        controlFinal("Records.txt", puntosTotales, modoDeJuego)
+        controlFinal(puntosTotales, modoDeJuego)
         return
       }
       print("Vidas restantes: ")
@@ -124,7 +124,7 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
       }
     }
 
-    def controlFinal(filename: String, puntuacionFinal: Int, modoDeJuego: Char): Unit = {
+    def controlFinal(puntuacionFinal: Int, modoDeJuego: Char): Unit = {
       val (horaFin: String, duracionPartida: Long) = obtenerTiempos()
       if (modoDeJuego == 'm') { //Es manual
         //        val puntuaciones: List[String] = cargarPuntuaciones(filename)
