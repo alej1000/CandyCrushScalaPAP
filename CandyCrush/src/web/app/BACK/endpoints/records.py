@@ -26,7 +26,7 @@ async def get_records():
     print("\n\n")
 
     for record in records:
-        stringReturn += str(record) + "|"
+        stringReturn += str(record) + "@"
     
     # stringReturn += "]"
     print(stringReturn)
