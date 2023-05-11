@@ -15,18 +15,20 @@ async def get_records():
     records = logica.obtener_records()
     return logica.respuesta_exitosa(records)
 
-# @router.get("/records/{id}")
-# async def get_record(id: int):
-#     """
-#     Este endpoint devuelve un record en particular
-#     """
-#     try:
-#         record = logica.obtener_record(id)
-#         if len(record) == 0:
-#             raise logica.CustomException(message="No se encontró el record con id " + str(id), code=404)
-#         return logica.respuesta_exitosa(record)
-#     except logica.CustomException as e:
-#         raise HTTPException(status_code=e.code, detail=e.message)
+
+
+@router.get("/records/{id}")
+async def get_record(id: int):
+    """
+    Este endpoint devuelve un record en particular
+    """
+    try:
+        record = logica.obtener_record(id)
+        if len(record) == 0:
+            raise logica.CustomException(message="No se encontró el record con id_player " + str(id), code=404)
+        return logica.respuesta_exitosa(record)
+    except logica.CustomException as e:
+        raise HTTPException(status_code=e.code, detail=e.message)
 
 @router.post("/records")
 async def post_record(request: Request):
@@ -37,6 +39,8 @@ async def post_record(request: Request):
     data = await request.json()
     record = logica.insertar_record(data)
     return logica.respuesta_exitosa(record)
+
+
 
 # #detalle taquilla (?)
 # @router.get("/taquillas/{id}")

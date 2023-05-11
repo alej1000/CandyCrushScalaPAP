@@ -11,6 +11,11 @@ def index():
         html = f.read()
     return HTMLResponse(html)
 
+@router.get("/puntuacion/{id}")
+def puntuacion(id: int):
+    with open("FRONT/puntos.html", "r", encoding="utf-8") as f:
+        html = f.read()
+    return HTMLResponse(html)
 
 @router.get("/registrarse")
 def registrarse():
@@ -35,3 +40,4 @@ def registrarse():
     with open("FRONT/cafeteria_pedido.html", "r", encoding="utf-8") as f:
         html = f.read()
     return HTMLResponse(html)
+

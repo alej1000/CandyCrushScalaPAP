@@ -3,43 +3,20 @@ const baseUrl = `${window.location.protocol}//${window.location.host}`;
 
 function cargarDatos(){
   //obtiene los valores de los records generando un boton con la informacion de cada uno
-  fetch(`${baseUrl}/records`)
+  //obtenemos el id de usuario, será el único parametro de la url
+  const url = new URL(window.location.href);
+  const puntuacion = url.pathname.split("/")[2];
+  console.log(puntuacion); // Output: 8
+
+
+  fetch(`${baseUrl}/records/${puntuacion}`)
     .then(response => response.json())
     .then(data => {
       console.log(data);
-      var records = data.data;
-      var html = '';
-      for (var i = 0; i < records.length; i++) {
-        nombre = records[i].nombre;
-        puntos = records[i].puntuacion;
-        fecha = records[i].fecha;
-        duracion = records[i].duracion;
-
-        // Convert the date string to a Date object
-        const date = new Date(fecha);
-
-        // Get the day, month and year components
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-
-        // Format the date components as a string in the DD-MM-YYYY format
-        const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year}`;
-
-        // Get the hour, minute and second components
-        const hour = date.getHours();
-        const minute = date.getMinutes();
-        const second = date.getSeconds();
-
-        // Format the time components as a string in the HH:MM:SS format
-        const formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`;
-
-        console.log(formattedDate); // Outputs: '10-05-2023'
-        console.log(formattedTime); // Outputs: '19:47:05'
-
-        html += `<button class="btn btn-primary" onclick="mostrarRecord(${records[i].id_record})">${nombre} ${puntos} ${formattedDate}</button><br>`;
-      }
-      document.getElementById('records').innerHTML = html;
+      records = data.data;
+      nombre = records['nombre'];
+      //añadimos el nombre del usuario a el elemento con id "header"
+      document.getElementById('header').innerHTML = `Hola ${records[0].nombre}!`;
     }
     )
 }
