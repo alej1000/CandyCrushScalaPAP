@@ -32,7 +32,7 @@ async def get_records():
     print(stringReturn)
     print("\n\n")
     #replace all single quotes with double quotes
-    stringReturn = stringReturn.replace("'", "\"")
+    # stringReturn = stringReturn.replace("'", '')
     return stringReturn
 
 
