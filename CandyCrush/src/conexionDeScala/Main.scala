@@ -147,26 +147,15 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
 
 
         //Subir a la base de datos
-//        val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida,url)
-//        println("CadenaJson: "+cadenaJson)
-//        HttpRequest.post(cadenaJson,"http://cundycrosh.uah:8000/records")
+        val cadenaJson:String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida,url)
+        println("CadenaJson: "+cadenaJson)
+        HttpRequest.post(cadenaJson,"http://cundycrosh.uah:8000/records")
 
-//        val string:String ="{\"nombre\":\"jojo\",\"puntuacion\":0,\"fecha\":\"2023-05-11T02:12:55\",\"duracion\":8,\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU\"}\n{\"nombre\":\"jojo\",\"puntuacion\":0,\"fecha\":\"2023-05-11T02:12:55\",\"duracion\":8,\"picture\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU\"}"
-//        println("String: "+string)
-//        mostrarPuntuaciones(List(string))
-
-//        val puntuacionesActualizadas:String = HttpRequest.get("http://localhost:8000/records")
-//        println("Puntuaciones del get: "+puntuacionesActualizadas)
-
-//        println("Se ha enviado la puntuacion a la base de datos")
-//        val peticion:List[String] = HttpRequest.get("http://localhost:8080/records")
-
-
-        println("\nRecords:")
         //Cargar de la base de la api
         val nuevasPuntuaciones: List[String] = HttpRequest.get("http://cundycrosh.uah:8000/records/arcade")
-        println("Nuevas puntuaciones: "+nuevasPuntuaciones)
+//        println("Nuevas puntuaciones: "+nuevasPuntuaciones)
 
+        println("\nRecords:")
         mostrarPuntuaciones(nuevasPuntuaciones)
       } else { // Es automatico
         println("La puntuacion final es: " + puntuacionFinal)
@@ -174,10 +163,17 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
         val nombre: String = "AutoGod"
         //guardarPuntuaciones(filename, nombre, puntuacionFinal, horaFin, duracionPartida)
         val url:String = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUnaRHgdYnRp7ieQttuFOM2HmOaFJS_IbHiQ&usqp=CAU"
+
+        //Subir a la base de datos
         val cadenaJson: String = puntuacionJson(nombre, puntuacionFinal, horaFin, duracionPartida, url)
         println("CadenaJson: " + cadenaJson)
         HttpRequest.post(cadenaJson, "http://cundycrosh.uah:8000/records")
 
+        //Cargar de la base de la api
+        val nuevasPuntuaciones: List[String] = HttpRequest.get("http://cundycrosh.uah:8000/records/arcade")
+
+        println("\nRecords:")
+        mostrarPuntuaciones(nuevasPuntuaciones)
 
 //        guardarPuntuacionesJson("RecordsJson.txt",nombre, puntuacionFinal, horaFin, duracionPartida,url)
 //        val nuevasPuntuaciones: List[String] = cargarPuntuaciones(filename) //Cuando sea la mas alta salta un mensaje de nuevo Record
