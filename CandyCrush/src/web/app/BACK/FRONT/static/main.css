@@ -473,7 +473,7 @@ font-weight: 400;
 }
 
 .btn:hover {
-  background-color: red;
+  background-color: rgb(243, 109, 109);
 }
 
 .btn:hover div{
