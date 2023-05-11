@@ -10,7 +10,9 @@ router = APIRouter()
 @router.get("/records")
 async def get_records(order: int = Query(default=1),filtro: str = Query(default="")):
     """
-    Devuelve todos los records en formato json
+    Devuelve todos los records en formato json.
+    Se puede filtrar por nombre de jugador
+    Se puede ordenar por fecha o por puntos
     """
     #si se recibe query param con order = 2, se ordena por puntos
     #si se recibe query param con order = 1, se ordena por fecha
@@ -21,7 +23,7 @@ async def get_records(order: int = Query(default=1),filtro: str = Query(default=
 @router.get("/records/arcade")
 async def get_records():
     """
-    Devuelve todos los records listos para mostrarse en el arcade
+    Devuelve todos los records listos para mostrarse en el arcade de Scala
     """
     records = logica.obtener_records(1)
     stringReturn = ""
@@ -41,7 +43,7 @@ async def get_records():
 @router.get("/records/{id}")
 async def get_record(id: int):
     """
-    Este endpoint devuelve un record en particular
+    Este endpoint devuelve un record en particular dado el id
     """
     try:
         record = logica.obtener_record(id)
