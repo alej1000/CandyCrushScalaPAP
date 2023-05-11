@@ -28,7 +28,7 @@ public class GameOver {
         String nombre = JOptionPane.showInputDialog("Ingrese su nombre");
         String foto = JOptionPane.showInputDialog("Ingrese la url de su foto");
         java.util.Date fecha = new java.util.Date();
-        java.text.SimpleDateFormat sdfDia = new java.text.SimpleDateFormat("dd-MM-yyyy");
+        java.text.SimpleDateFormat sdfDia = new java.text.SimpleDateFormat("yyyy-MM-dd");
         java.text.SimpleDateFormat sdfHora = new java.text.SimpleDateFormat("HH:mm:ss");
         String fechaFormateada = sdfDia.format(fecha);
         String horaFormateada = sdfHora.format(fecha);

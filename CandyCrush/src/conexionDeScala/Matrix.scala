@@ -10,22 +10,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     this(rows, cols, Matrix.generarMatriz(rows, cols, dificultad), dificultad)
   }
 
-  //  def imprimir(): Unit = {
-  //    imprimirMatriz(data)
-  //  }
-  //
-  //  def imprimirMatriz(matriz: List[Int]): Unit = {
-  //    matriz match {
-  //      case Nil => println()
-  //      case head :: tail => {
-  //        //print("|"+head+"|")
-  //        printf("| %3s |", head)
-  //        if (longitud(tail) % cols == 0) println()
-  //        imprimirMatriz(tail)
-  //      }
-  //    }
-  //  }
-
   override def toString(): String = {
     imprimir(data, cols)
     "Success"
@@ -37,65 +21,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   def getData(): List[Int] = data
 
-  // Este es el primer imprimir bonito pero usa bucles
-  //  def imprimir(data: List[Int], cols: Int): Unit = {
-  //    val rows = data.length / cols
-  //    if (rows * cols != data.length) {
-  //      throw new Error("La lista no tiene una longitud de múltiplo " + cols + "*" + rows)
-  //    }
-  //    imprimirRec(data, cols, rows, 0, 0)
-  //  }
-  //
-  //  def imprimirRec(data: List[Int], cols: Int, rows: Int, rowIndex: Int, colIndex: Int): Unit = {
-  //    if (rowIndex >= rows) {
-  //      return
-  //    }
-  //    if (colIndex == 0) {
-  //      // imprimir números de columna solo en la primera fila
-  //      if (rowIndex == 0) {
-  //        printf("%4s", "")
-  //        for (i <- 0 until cols) {
-  //          printf("%4d", i)
-  //        }
-  //        println()
-  //      }
-  //
-  //      // imprimir línea separadora superior solo en la primera fila
-  //      if (rowIndex == 0) {
-  //        printf("%s", " " * 4)
-  //        for (i <- 0 until cols) {
-  //          printf("%s", "-" * 4)
-  //        }
-  //        println()
-  //      }
-  //    }
-  //    if (colIndex == 0) {
-  //      // imprimir número de fila
-  //      printf("%4d", rowIndex)
-  //    }
-  //    // imprimir celda
-  //    printf("%4d", data(rowIndex * cols + colIndex))
-  //
-  //    // imprimir línea separadora lateral
-  //    if (colIndex == cols - 1) {
-  //      printf("%s", "|")
-  //      println()
-  //    } else {
-  //      printf("%s", "|")
-  //    }
-  //
-  //    // imprimir línea separadora entre filas
-  //    if (colIndex == cols - 1) {
-  //      printf("%s", " " * 4)
-  //      for (i <- 0 until cols) {
-  //        printf("%s", "-" * 4)
-  //      }
-  //      println()
-  //    }
-  //
-  //    imprimirRec(data, cols, rows, rowIndex + (colIndex + 1) / cols, (colIndex + 1) % cols)
-  //  }
-  //
   def imprimir(data: List[Int], cols: Int): Unit = {
     val rows = data.length / cols
     if (rows * cols != data.length) {
@@ -167,31 +92,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     imprimirLineaSeparadora(cols - 1)
   }
 
-
-
-  //  def imprimir(data: List[Int]): Unit = {
-  //    //val num = cols
-  //    //val l = data
-  //    if (Matrix.longitud(data) == 0) return
-  //    if (Matrix.longitud(data) % cols == 0) {
-  //      val chunk = Matrix.toma(cols, data)
-  //      imprimirBonito(chunk)
-  //      imprimir(Matrix.deja(cols, data))
-  //    } else {
-  //      throw new Error("La lista no tiene una longitud de mútiplo " + cols + "*" + rows)
-  //    }
-  //  }
-  //
-  //  def imprimirBonito(l: List[Int]): Unit = {
-  //    if (Matrix.longitud(l) == 0) {
-  //      println()
-  //      return
-  //    }
-  //    printf("|%3s |", l.head)
-  //    imprimirBonito(l.tail)
-  //  }
-
-
   def getElem(index: Int): Int = {
     getElem(data, index)
   }
@@ -221,12 +121,8 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   }
 
-
   def getFila(fila: Int): List[Int] = {
-
-    Matrix.toma(cols, Matrix.deja(fila * cols, data)) //Coge los 8 primeros elementos de la lista que queda de dejar todo menos los 8 primeros
-    //La matriz tiene 8 filas y 8 columnas
-    //toma(numColumnas,deja(filaElegida * numColumnas,matriz))
+    Matrix.toma(cols, Matrix.deja(fila * cols, data)) //Coge los numColumnas primeros elementos de la lista que queda de dejar todo menos los numColumnas primeros
   }
 
   def getColumna(columna: Int): List[Int] = {
@@ -237,7 +133,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     if (index >= cols || index < 0) throw new Error("El índice es mayor que el número de elementos de la lista")
     if (Matrix.longitud(l) == 0) Nil
     else getElem(l, index) :: getColumna(Matrix.deja(cols, l), index)
-
   }
 
   def reemplazarColumna(col:Int,nuevaColumna:List[Int],matriz:List[Int]):List[Int]= {
@@ -249,11 +144,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     if(fila>=rows) return matriz
     val cambioElemento:List[Int]= reemplazarElemento(fila,indiceCol,getElem(nuevaColumna,fila),matriz)
     reemplazarColumnaAux(indiceCol, nuevaColumna, cambioElemento, fila+1)
-  }
-
-  def test(): Matrix = {
-    val matriz = new Matrix(8, 8, 1)
-    matriz
   }
 
   def consulta(fila: Int, columna: Int, vidas: Int): (Matrix, Int, Int,Int,Matrix) = { //7: Bomba 8: TNT 9: Rompecabezas
@@ -289,16 +179,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
         (new Matrix(rows, cols, matrizGrav, dificultad), vidas,contador,8,matriz)
 
       }
-      //      case 9 => {
-      //        println("Has encontrado un rompecabezas")
-      //        val matriz:Matrix =eliminarRompecabezas(fila, columna, data)
-      //        println("Matriz después de eliminar el rompecabezas")
-      //        matriz.toString()
-      //        println("Matriz después de activar la gravedad")
-      //        val matrizGrav: List[Int] = matriz.activarGravedad(0, data)
-      //        (new Matrix(rows, cols, matrizGrav, dificultad), vidas)
-      //
-      //      }
       case default => {
         if(elemento>=11 && elemento<=16){ //Es rompecabezas
           println("Has encontrado un rompecabezas")
@@ -351,8 +231,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   private def reemplazarElemento(fila: Int, columna: Int, elemento: Int): List[Int] = {
     val index: Int = fila * cols + columna
-    val listaDeElemento: List[Int] = elemento :: Nil
-    //val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(Matrix.toma(index,data),listaDeElemento) , Matrix.deja(index,data))
     val matriz: List[Int] = Matrix.concatenar(Matrix.toma(index, data), elemento :: Matrix.deja(index + 1, data))
     //matriz es los primeros elementos, el elemento a intercambiar en la posición correspondiente, el resto de elementos
     matriz
@@ -360,8 +238,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   private def reemplazarElemento(fila: Int, columna: Int, elemento: Int, datos: List[Int]): List[Int] = {
     val index: Int = fila * cols + columna
-    val listaDeElemento: List[Int] = elemento :: Nil
-    //val matriz: List[Int] = Matrix.concatenar(Matrix.concatenar(Matrix.toma(index,data),listaDeElemento) , Matrix.deja(index,data))
     val matriz: List[Int] = Matrix.concatenar(Matrix.toma(index, datos), elemento :: Matrix.deja(index + 1, datos))
     //matriz es los primeros elementos, el elemento a intercambiar en la posición correspondiente, el resto de elementos
     matriz
@@ -373,7 +249,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     // Encontramos el índice inicial y final de la fila
     val inicio = fila * cols //Inicio de la fila a eliminar
     val fin = inicio + cols - 1
-    val lista0: List[Int] = Matrix.generarPila(1, cols) //Genero una lista con 0 del tamaño de columnas que he eliminado
+    val lista0: List[Int] = Matrix.generarLista0s(1, cols) //Genero una lista con 0 del tamaño de columnas que he eliminado
 
     // Eliminamos los elementos de la fila
     val listaSinFila = Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio, matriz), lista0), Matrix.deja(fin + 1, matriz))
@@ -381,17 +257,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
   }
 
-  //Esta mal seguro, está sumando 1 al indice y eso sería avanzar columnas no filas-> indice + columnas podría ser
-  //  def eliminarColumna(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
-  //    if (isEmpty(matriz)) Nil
-  //    else {
-  //      val fila = index / columnas
-  //      val inicio = fila * columnas + index % columnas //fila * columna + columna -> indice que quiero eliminar
-  //      val fin = inicio + columnas - 1
-  //      val lista0: List[Int] = Matrix.generarPila(fin - inicio, 1)
-  //      Matrix.concatenar(Matrix.concatenar(Matrix.toma(inicio,matriz), lista0), eliminarColumna(index + 1, columnas, Matrix.deja(fin + 1,matriz)))
-  //    }
-  //  }
   def eliminarColumna(indice: Int, columnas: Int): List[Int] = {
     if (Matrix.isEmpty(data)) Nil
     else {
@@ -401,14 +266,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
   }
 
-  //  def eliminarColumnaAux(index: Int, columnas: Int, matriz: List[Int]): List[Int] = {
-  //    if (index >= columnas) matriz
-  //    else {
-  //      val fila = index / columnas
-  //      val col = index % columnas
-  //      eliminarColumnaAux(col, cols, reemplazarElemento(fila, col, 0, matriz))
-  //    }
-  //  }
   def eliminarColumnaAux(col:Int,fila:Int,matriz:List[Int]):List[Int]={
     if (fila >= rows) matriz
     else {
@@ -416,12 +273,9 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
   }
 
-
-  //Supongo que habrá que pasarle la matriz a eliminar, de momento coge los datos de la clase Matrix
   private def eliminarBomba(fila: Int, columna: Int, eliminoFila: Int): (Matrix,Int) = {
     if (eliminoFila == 1) {
       //Elimino la fila
-      //val matriz = new Matrix(rows,cols,data,dificultad)
       println("Elimino fila")
       val lista: List[Int] = eliminarFila(fila, data, cols)
       (new Matrix(rows, cols, lista, dificultad),cols) //Devuelvo la matriz sin la fila y el número de columnas eliminadas
@@ -437,9 +291,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
   private def eliminarRompecabezas(fila: Int, columna: Int, matriz: List[Int]): (Matrix,Int) = {
     //Recorre la matriz y si encuentra un elemento igual al de la posición de origen, lo cambia por un 0
     val (lista:List[Int],contador:Int)= eliminarRompecabezasAux(fila,columna,matriz,getElem(matriz,fila*cols+columna),1)
-    //val rompecabezasEliminado:List[Int] = eliminarElemento(fila,columna, lista)._1.data //Devuelve la matriz sin el rompecabezas porque ya ha eliminado todos los elementos iguales
-    //new Matrix(rows,cols,rompecabezasEliminado,dificultad)
-
+    //Elimina el propio elemento rompecabezas
     val rompecabezasEliminado:List[Int]=reemplazarElemento(fila, columna, 0, lista)
     (new Matrix(rows,cols,rompecabezasEliminado,dificultad),contador)
 
@@ -468,25 +320,10 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
 
 
   private def eliminarTNT(fila:Int,columna:Int,matriz:List[Int]): (Matrix,Int) = {
-    //val inicio:Int= (fila-4) * cols + (columna-4) //Primera esquina a comprobar
-    //val fin:Int= (fila+4) * cols + (columna + 4) //Ultima esquina a comprobar
-    //val lista:List[Int]=eliminarTNTAux(inicio,fin,fila*cols+columna,fila-4,columna-4,matriz)
-    //val lista:List[Int] = eliminarTNTAux(fila-4,fila+4,columna-4,columna+4,fila-4,columna-4,fila,columna,matriz)
+
     val (lista:List[Int],contador:Int) = eliminarTNTAux(-4,-4,fila,columna,matriz,0)
     (new Matrix(rows,cols,lista,dificultad),contador)
   }
-  //  private def eliminarTNTAux(filaInicio:Int,filaFin:Int,columnaInicio:Int,columnaFin:Int,filaActual:Int,columnaActual:Int,filaSeleccionada:Int,columnaSeleccionada:Int,matriz:List[Int]):List[Int]={
-  //    if(filaActual>=filaActual && filaActual<filaFin && filaActual<rows && filaActual>=0){ //Estoy en la fila correcta
-  //      if((filaActual*filaActual,columnaActual*columnaActual) <= 16){//Pitagoras para ver si estoy en el rango correcto
-  //        val matriz0:List[Int] = reemplazarElemento(filaActual,columnaActual,0) //Elimino la posicion
-  //        eliminarTNTAux(filaInicio, filaFin, columnaInicio, columnaFin, filaActual, columnaActual+1, filaSeleccionada, columnaSeleccionada, matriz0)
-  //      }else{
-  //        eliminarTNTAux(filaInicio,filaFin, columnaInicio, columnaFin, filaActual, columnaActual+1, filaSeleccionada, columnaSeleccionada, matriz)
-  //      }
-  //    }else{
-  //      matriz
-  //    }
-  //  }
 
   private def eliminarTNTAux(filaRelativa:Int,columnaRelativa:Int,filaOriginal:Int,columnaOriginal:Int,matriz:List[Int],contador:Int):(List[Int],Int)={
     val filaActual:Int = filaRelativa+filaOriginal
@@ -510,9 +347,6 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
   }
 
-
-
-
   def detectorEliminacion(fila:Int,columna:Int): (Matrix,Int) ={
     if(getElem(fila,columna)==7){
       val media:Int = (rows+cols)/2
@@ -520,8 +354,7 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
     else if(getElem(fila,columna)==8) eliminarTNT(fila,columna,data)
     else if(getElem(fila,columna)>=11 && getElem(fila, columna)<=16) eliminarRompecabezas(fila,columna,data)
-    else
-      eliminarElemento(fila,columna,data)
+    else eliminarElemento(fila,columna,data)
   }
 
   private def eliminarElemento(fila: Int, columna: Int, matriz: List[Int]): (Matrix, Int) = {
@@ -618,48 +451,9 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     }
     concatenar(generarMatriz(1,valoresARandomizar,dificultad),Matrix.deja(valoresARandomizar,columna))
   }
-  /*
-  def activarGravedad2(): Matrix = {
-    //Algoritmo que permite añadir gravedad al tablero haciendo que cualquier posición vacía (0) desaparezca para que el usuario pueda continuar su partida.
-    //Por cada columna, declara un contador.
-    // Recursivamente se recorre la columna de abajo a arriba comprobando si la posición actual es o no una posición vacía (0).
-    // En ese caso de ser no vacía, se copiará este elemento en la posición de la columna (de abajo a arriba) que indique el contador,y este se incrementará en 1.
-    // En caso de encontrar un valor nulo, se pasará a la siguiente posición de la columna sin incrementar el contador (lo que asegurará que, si más adelante hay un valor no nulo, esta posición será sustituida por el valor apropiado).
-    // Esto hará que se depositen en orden todos los elementos que había en la columna, dejando los valores "libres" en las partes altas de la columna, los cuales se eliminarán generando números aleatorios.
-    // Gracias al contador, se puede averiguar en qué posiciones se deben generar estos valores aleatorios.
 
-    def moveDown(matriz: List[Int], fila: Int, columna: Int): List[Int] = {
-      if (fila == 0 && columna == 0) matriz // si llegamos al principio, regresamos la matriz actual
-      else if (fila == 0) moveDown(matriz, rows - 1, columna - 1) // si llegamos al principio de una fila, avanzamos a la fila anterior y la última columna
-      else if (matriz(fila * cols + columna) == 0) {
-        // si encontramos un cero, buscamos el primer elemento no cero por encima de él
-        val firstNonZeroIndex = (0 until fila).reverse.find(i => matriz(i * cols + columna) != 0)
-        firstNonZeroIndex match {
-          case Some(i) => {
-            // intercambiamos el cero con el primer elemento no cero encontrado
-            val currentIndex = i * cols + columna
-            val nonZeroIndex = fila * cols + columna
-            val newMatriz = matriz.updated(nonZeroIndex, matriz(currentIndex)).updated(currentIndex, 0)
-            moveDown(newMatriz, i, columna) // hacemos recursión con la posición original del elemento no cero
-          }
-          case None => moveDown(matriz, fila - 1, columna) // si no encontramos ningún elemento no cero por encima, avanzamos a la posición superior
-        }
-      }
-      else moveDown(matriz, fila - 1, columna) // si el elemento actual no es cero, avanzamos a la posición superior
-    }
-
-    val newMatriz = moveDown(data, rows - 1, cols - 1)
-    new Matrix(rows, cols, newMatriz, dificultad)
-  }
-*/
-
-
-
+  //Fin de la clase Matrix
 }
-
-
-
-//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA AAAAAAAAAAAAAAA AAAA
 
 //En este objeto se guardan las funciones para usar dentro de la clase ->
 object Matrix {
@@ -688,9 +482,7 @@ object Matrix {
   private def generarColumnas(n: Int,dificultad:Int): List[Int] = {
     val rand = new scala.util.Random()
     if (n == 0) Nil
-    //Tendré que hacer que mire el nivel de dificultad y genere entre 4 y 6
     else {
-      //(rand.nextInt(5) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio
       if (dificultad == 1) (rand.nextInt(4) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 4
       else (rand.nextInt(6) + 1) :: generarColumnas(n - 1, dificultad) //Genero un número aleatorio entre 1 y 6
     }
@@ -708,17 +500,15 @@ object Matrix {
     else deja(n - 1, l.tail)
   }
 
-  private def generarPila(filas:Int,columnas:Int):List[Int]={ //Inicializa una lista con ceros
+  private def generarLista0s(filas:Int,columnas:Int):List[Int]={ //Inicializa una lista con ceros
     if(filas==0) Nil
-    else concatenar(generarColumnasPila(columnas),generarPila(filas-1,columnas))
+    else concatenar(generarColumnas0s(columnas),generarLista0s(filas-1,columnas))
   }
 
-  private def generarColumnasPila(n:Int):List[Int] = {
+  private def generarColumnas0s(n:Int):List[Int] = {
     if(n==0) Nil
-    else 0 :: generarColumnasPila(n-1)
+    else 0 :: generarColumnas0s(n-1)
   }
-
-
 
   private def concatenar(x: List[Int], y: List[Int]): List[Int] = {
     x match {
@@ -726,10 +516,6 @@ object Matrix {
       case head :: tail => head :: concatenar(tail, y)
     }
   }
-
-def test():(Int,Int,Int)={
-  (1,2,3)
-}
 
   def estaEnLista[Int](elem: Int, lista: List[Int]): Boolean = {
     lista match {
@@ -743,85 +529,3 @@ def test():(Int,Int,Int)={
   //fin del objeto
 
 }
-
-
-
-//UPS CUDA SE CUELA
-
-
-
-
-//  __device__ void eliminarBomba(int * pila, int * tablero, int indiceOrigen, int fila, int columna, int eliminaFila) { //Borra la linea o la columa aleatoriamente
-//    int index = fila * numColumnas + columna;
-//    printf("Entro a eliminarBomba\n");
-//
-//    if (eliminaFila == 1) {
-//      //Eliminar fila
-//      printf("Voy a eliminar fila\n");
-//      if (index == indiceOrigen) { //Si es la posicion de origen llamo a eliminar a la izquierda y a la derecha
-//        tablero[index] = 0;
-//        pila[index] = index;
-//        eliminarBomba(pila, tablero, indiceOrigen, fila, columna - 1, eliminaFila);
-//        eliminarBomba(pila, tablero, indiceOrigen, fila, columna + 1, eliminaFila);
-//      }
-//      else { //Sino -> borro
-//        if (pila[index] == -1) { //Si No lo he comprobado ya
-//          if (columna == 0 || columna == numColumnas - 1) { //Si estoy en la primera columna o la ultima los borra y acaba
-//            tablero[index] = 0;
-//            pila[index] = index; //Lo meto en la pila para saber que tengo que activarle la gravedad
-//          }
-//          else { //Esta parte de aquí es para que no haya bucles infinitos (No llamar a la funcion con elementos ya llamados)
-//            if (index + 1 != indiceOrigen) { //La columna de la derecha NO es la de origen -> llamo a eliminar a la de la derecha
-//              tablero[index] = 0;
-//              pila[index] = 0;
-//              pila[index] = index; //Lo meto en la pila para saber que tengo que activarle la gravedad
-//              eliminarBomba(pila, tablero, indiceOrigen, fila, columna + 1, eliminaFila);
-//            }
-//            if (index - 1 != indiceOrigen) { //La columna de la izquierda NO es la de origen -> Llamo a eliminar la de la izquierda
-//              tablero[index] = 0;
-//              pila[index] = 0;
-//              pila[index] = index; //Lo meto en la pila para saber que tengo que activarle la gravedad
-//              eliminarBomba(pila, tablero, indiceOrigen, fila, columna - 1, eliminaFila);
-//            }
-//          }
-//        }
-//      }
-//    }
-//    else {
-//      //Eliminar columna
-//      printf("Voy a eliminar columna\n");
-//      if (index == indiceOrigen) { //Si es la posicion de origen llamo a eliminar encima y abajo
-//        tablero[index] = 0;
-//        pila[index] = index;
-//        eliminarBomba(pila, tablero, indiceOrigen, fila - 1, columna, eliminaFila);
-//        eliminarBomba(pila, tablero, indiceOrigen, fila + 1, columna, eliminaFila);
-//        printf("Elimino la bomba\n");
-//      }
-//      else { //Sino -> borro
-//        if (pila[index] == -1) { //Si No lo he comprobado ya
-//          if (fila == 0 || fila == numFilas - 1) { //Si estoy en la primera o ultima fila los borra y acaba
-//            tablero[index] = 0;
-//            pila[index] = index; //Lo meto en la pila para saber que tengo que activarle la gravedad
-//          }
-//          else { //Esta parte de aquí es para que no haya bucles infinitos (No llamar a la funcion con elementos ya llamados)
-//            if (index - numColumnas != indiceOrigen) { //La fila de encima NO es la de origen -> llamo a eliminar encima
-//              tablero[index] = 0;
-//              pila[index] = index;
-//              pila[index] = index; //Lo meto en la pila para saber que tengo que activarle la gravedad
-//              eliminarBomba(pila, tablero, indiceOrigen, fila - 1, columna, eliminaFila);
-//            }
-//            if (index + numColumnas != indiceOrigen) {
-//              tablero[index] = 0;
-//              pila[index] = index;
-//              pila[index] = index; //Lo meto en la pila para saber que tengo que activarle la gravedad
-//              eliminarBomba(pila, tablero, indiceOrigen, fila + 1, columna, eliminaFila);
-//            }
-//          }
-//        }
-//      }
-//    }
-//    printf("Salgo de eliminarBomba\n");
-//
-//  }
-
-
