@@ -78,6 +78,9 @@ public class MiPanel extends JPanel implements ActionListener {
     private Integer dimYPadre;
     private Integer desplazamientoXPadre;
     private Integer desplazamientoYPadre;
+
+    //time when the panel is constructed
+    private long startTime = System.currentTimeMillis();
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
     public MiPanel(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos,int dimXPadre, int dimYPadre, int desplazamientoXPadre, int desplazamientoYPadre) {
         this.botonesColumnas = botonesX;
@@ -488,7 +491,6 @@ public class MiPanel extends JPanel implements ActionListener {
             @Override
             public void run() {
                 try {
-//                    latch.await(); // espera a que todos los hilos terminen
                     while (contador.get() > 0) {
                         Thread.sleep(150);
                         MetodosGUI.reproducirSonido(ruta + "slide sound effect.wav");
@@ -548,7 +550,6 @@ public class MiPanel extends JPanel implements ActionListener {
         new Thread(() -> {
             //hilo que debe entrar en el while cuando todos los hilos de movimiento hayan terminado
             while (contador.get() > 0) {
-                //System.out.print(contador.get());   //para que no se salte el while
             }
             actualizarLabels(listaNueva);
             lista = listaNueva;
@@ -573,12 +574,13 @@ public class MiPanel extends JPanel implements ActionListener {
 
     private void gameOver(){
         javax.swing.JOptionPane.showMessageDialog(null, "GAME OVER");
-//        for(int i = 0; i< botonesY; i++){
-//            for(int j = 0; j< botonesX; j++){
-//                botones[i][j].setEnabled(false);
-//            }
-//        }
-        //System.exit(0);
+
+        long endTime = System.currentTimeMillis();
+        int totalTime =  ((int)(endTime - startTime) / 1000);
+
+        GameOver.solicitarInfo(numeroPuntos, totalTime);
+        GameOver.mostrarPuntajes();
+
     }
 
     public void setLabelVidas(JLabel labelVidas) {
