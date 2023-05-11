@@ -26,8 +26,8 @@ async def get_records():
     print("\n\n")
     for record in records:
         record["fecha"] = str(record["fecha"])
-        record["puntuacion"] = str(record["puntuacion"])
-        record["duracion"] = str(record["duracion"])
+        record["puntuacion"] = int(record["puntuacion"])
+        record["duracion"] = int(record["duracion"])
         stringReturn += str(record) + "@"
     
     # stringReturn += "]"
