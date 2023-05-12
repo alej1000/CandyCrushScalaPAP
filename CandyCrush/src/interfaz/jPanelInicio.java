@@ -4,12 +4,11 @@
  */
 package interfaz;
 
-import conexionDeScala.Matrix;
+import logicaScala.Matrix;
 
 import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
-import java.net.URI;
 import javax.swing.*;
 
 /**
@@ -317,8 +316,10 @@ public class jPanelInicio extends JPanel {
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
 
         try {
-            File file = new File(ruta+"/assets/Memoria PL1 Martin Guijarro Cesar.pdf");
-            if (!Desktop.isDesktopSupported())//revisamos si Desktop es permitido por el sistema 
+            File file = new File("../Memoria.pdf");
+
+//            File file = new File(ruta+"/assets/Memoria PL1 Martin Guijarro Cesar.pdf");
+            if (!Desktop.isDesktopSupported())//revisamos si Desktop es permitido por el sistema
             {
                 JOptionPane.showMessageDialog(null, "No se ha podido abrir el archivo porque la plataforma no soporta Desktop");
                 return;

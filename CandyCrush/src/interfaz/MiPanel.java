@@ -5,8 +5,8 @@
 package interfaz;
 
 
-import conexionDeScala.Main;
-import conexionDeScala.Matrix;
+import logicaScala.Main;
+import logicaScala.Matrix;
 
 import java.awt.*;
 import java.awt.event.*;

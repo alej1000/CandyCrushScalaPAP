@@ -1,4 +1,4 @@
-package conexionDeScala
+package logicaScala
 
 import java.io.{BufferedReader, InputStreamReader, OutputStream}
 import java.net.{HttpURLConnection, URL}

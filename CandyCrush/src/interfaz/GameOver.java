@@ -1,11 +1,10 @@
 package interfaz;
 
 import javax.swing.*;
-import conexionDeScala.HttpRequest;
+import logicaScala.HttpRequest;
 
 import org.json.*;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -13,7 +12,6 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
 
 
 public class GameOver {

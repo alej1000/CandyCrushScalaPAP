@@ -1,4 +1,4 @@
-package conexionDeScala
+package logicaScala
 
 import Matrix.{concatenar, generarMatriz}
 

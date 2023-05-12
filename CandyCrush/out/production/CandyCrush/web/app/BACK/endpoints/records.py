@@ -61,7 +61,6 @@ async def post_record(request: Request):
     """
     #data es un diccionario con los datos que se reciben en el form data
     data = await request.json()
-    print(data)
     if data["nombre"] == "":
         data["nombre"] = "Anonimo"
     record = logica.insertar_record(data)

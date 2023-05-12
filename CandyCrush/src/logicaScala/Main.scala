@@ -1,4 +1,4 @@
-package conexionDeScala
+package logicaScala
 
 import scala.io._
 import java.io._

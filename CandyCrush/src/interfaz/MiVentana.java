@@ -8,7 +8,7 @@ package interfaz;
  *
  * @author César
  */
-import conexionDeScala.Matrix;
+import logicaScala.Matrix;
 
 import javax.swing.*;
 import java.util.Random;
