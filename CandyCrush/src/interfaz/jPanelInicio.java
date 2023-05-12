@@ -201,7 +201,7 @@ public class jPanelInicio extends JPanel {
         btnVerVideo.setBackground(new Color(151, 250, 99));
         btnVerVideo.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
         btnVerVideo.setForeground(new Color(255, 255, 255));
-        btnVerVideo.setText("VÍDEO DEFENSA");
+        btnVerVideo.setText("VER PUNTUACIONES");
         btnVerVideo.setBorder(null);
         btnVerVideo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnVerVideo.setFocusPainted(false);
@@ -355,25 +355,26 @@ public class jPanelInicio extends JPanel {
         //este botón abre la defensa del trabajo
 
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
-        try {
-            URI uri = new URI("https://bit.ly/3fUVowh");
-                    Desktop.getDesktop().browse(uri);
-            if (!Desktop.isDesktopSupported())//revisamos si Desktop es permitido por el sistema 
-            {
-                JOptionPane.showMessageDialog(null, "No se ha podido abrir el vídeo porque la plataforma no soporta Desktop");
-                return;
-            }
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(uri);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "No se ha podido abrir el vídeo por un error con la clase URI");
-
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        GameOver.mostrarPuntajes();
+//        try {
+//            URI uri = new URI("https://bit.ly/3fUVowh");
+//                    Desktop.getDesktop().browse(uri);
+//            if (!Desktop.isDesktopSupported())//revisamos si Desktop es permitido por el sistema
+//            {
+//                JOptionPane.showMessageDialog(null, "No se ha podido abrir el vídeo porque la plataforma no soporta Desktop");
+//                return;
+//            }
+//            Desktop desktop = Desktop.getDesktop();
+//            try {
+//                desktop.browse(uri);
+//            } catch (Exception e) {
+//                JOptionPane.showMessageDialog(null, "No se ha podido abrir el vídeo por un error con la clase URI");
+//
+//                e.printStackTrace();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }//GEN-LAST:event_btnVerVideoActionPerformed
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed

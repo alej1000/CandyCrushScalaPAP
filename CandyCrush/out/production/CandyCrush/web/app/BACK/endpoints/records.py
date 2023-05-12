@@ -28,12 +28,12 @@ async def get_records():
     records = logica.obtener_records(1)
     stringReturn = ""
     for record in records:
-        record["fecha"] = str(record["fecha"])
+        record["fecha"] = str(record["fecha"]).replace(" ", 'T')
         record["puntuacion"] = int(record["puntuacion"])
         record["duracion"] = int(record["duracion"])
         stringReturn += str(record) + "@"
     #remove every space
-    # stringReturn = stringReturn.replace(" ", '')
+    stringReturn = stringReturn.replace(" ", '')
     #remove the last character
     stringReturn = stringReturn[:-1]
 
@@ -61,6 +61,9 @@ async def post_record(request: Request):
     """
     #data es un diccionario con los datos que se reciben en el form data
     data = await request.json()
+    print(data)
+    if data["nombre"] == "":
+        data["nombre"] = "Anonimo"
     record = logica.insertar_record(data)
     return logica.respuesta_exitosa(record)
 

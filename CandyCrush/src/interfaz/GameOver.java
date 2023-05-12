@@ -18,12 +18,6 @@ import java.util.*;
 
 public class GameOver {
 
-    public static void main(String[] args) {
-//        int puntaje = 0;
-//        int tiempo = 0;
-//        solicitarInfo(puntaje, tiempo);
-        mostrarPuntajes();
-    }
     public static void solicitarInfo(int puntaje, int tiempo){
         String nombre = JOptionPane.showInputDialog("Ingrese su nombre");
         String foto = JOptionPane.showInputDialog("Ingrese la url de su foto");
@@ -88,7 +82,7 @@ public class GameOver {
         // Mostrar la tabla en una ventana
         JFrame frame = new JFrame("Tabla de Puntuaciones");
         frame.getContentPane().add(new JScrollPane(table));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
