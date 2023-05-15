@@ -18,11 +18,12 @@ public class WebcamPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private BufferedImage image;
+    private Webcam webcam;
 
     public WebcamPanel() {
         setLayout(new FlowLayout());
 
-        Webcam webcam = Webcam.getDefault();
+        webcam = Webcam.getDefault();
         webcam.setViewSize(new Dimension(640, 480));
         webcam.open();
 
@@ -32,12 +33,19 @@ public class WebcamPanel extends JPanel {
             String base64Image = getBase64Image(image);
             String dataUrl = "data:image/jpeg;base64," + base64Image;
             System.out.println("Data URL:\n" + dataUrl);
+
+            webcam.close();
+
+            // Cerrar el panel al capturar la imagen
+            JFrame frame = (JFrame) getTopLevelAncestor();
+            frame.dispose();
         });
 
         add(captureButton);
 
         new Thread(() -> {
             while (true) {
+                image = webcam.getImage();
                 repaint();
 
                 try {
