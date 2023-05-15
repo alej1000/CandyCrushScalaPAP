@@ -191,20 +191,38 @@ object Main { //Object, instancia unica que se utiliza en todo el programa
     def parsearJson(cadenaJson: String): (String, Int, String, Long) = {
       //if (cadenaJson == "" || cadenaJson == "[]" || cadenaJson == "[" || cadenaJson == "]") return (cadenaJson, -1, cadenaJson, -1) //Si no hay nada
 
-      val nombreInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"nombre")) +2 //Es más dos porque tiene comillas después del :
-      val puntuacionInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"puntuacion")) + 1
-      val fechaInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"fecha")) + 2
-      val duracionInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"duracion")) + 1
+//      val nombreInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"nombre")) +2 //Es más dos porque tiene comillas después del :
+//      val puntuacionInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"puntuacion")) + 1
+//      val fechaInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"fecha")) + 2
+//      val duracionInicio = indexOfRecursive(cadenaJson,":", indexOfRecursive(cadenaJson,"duracion")) + 1
+//
+//      val nombreFin = indexOfRecursive(cadenaJson,"'", nombreInicio+2)
+//      val puntuacionFin = indexOfRecursive(cadenaJson,",", puntuacionInicio)
+//      val fechaFin = indexOfRecursive(cadenaJson,"'", fechaInicio+2)
+//      val duracionFin = indexOfRecursive(cadenaJson,",", duracionInicio)
 
-      val nombreFin = indexOfRecursive(cadenaJson,"'", nombreInicio+2)
-      val puntuacionFin = indexOfRecursive(cadenaJson,",", puntuacionInicio)
-      val fechaFin = indexOfRecursive(cadenaJson,"'", fechaInicio+2)
-      val duracionFin = indexOfRecursive(cadenaJson,",", duracionInicio)
+//      val nombre = substringRecursive(cadenaJson,nombreInicio, nombreFin)
+//      val puntuacion = substringRecursive(cadenaJson,puntuacionInicio, puntuacionFin).toInt
+//      val fecha = substringRecursive(cadenaJson,fechaInicio, fechaFin)
+//      val duracion = substringRecursive(cadenaJson,duracionInicio, duracionFin).toLong
 
-      val nombre = substringRecursive(cadenaJson,nombreInicio, nombreFin)
-      val puntuacion = substringRecursive(cadenaJson,puntuacionInicio, puntuacionFin).toInt
-      val fecha = substringRecursive(cadenaJson,fechaInicio, fechaFin)
-      val duracion = substringRecursive(cadenaJson,duracionInicio, duracionFin).toLong
+
+      val nombreInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("nombre")) + 2 //Es más dos porque tiene comillas después del :
+      val puntuacionInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("puntuacion")) + 1
+      val fechaInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("fecha")) + 2
+      val duracionInicio = cadenaJson.indexOf(":", cadenaJson.indexOf("duracion")) + 1
+
+      val nombreFin = cadenaJson.indexOf("'", nombreInicio+2)
+      val puntuacionFin = cadenaJson.indexOf(",", puntuacionInicio)
+      val fechaFin = cadenaJson.indexOf("'", fechaInicio+2)
+      val duracionFin = cadenaJson.indexOf(",", duracionInicio)
+
+      val nombre = cadenaJson.substring(nombreInicio, nombreFin)
+      val puntuacion = cadenaJson.substring(puntuacionInicio, puntuacionFin).toInt
+      val fecha = cadenaJson.substring(fechaInicio, fechaFin)
+      val duracion = cadenaJson.substring(duracionInicio, duracionFin).toLong
+
+
 
       (nombre, puntuacion, fecha, duracion)
     }
