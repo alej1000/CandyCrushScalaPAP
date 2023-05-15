@@ -6,12 +6,25 @@ from fastapi import HTTPException
 import json
 
 
+# def get_connection():
+#     conn = psycopg2.connect(
+#         dbname='Records',
+#         user='fastapi@fastapi-server',
+#         password='C@ndyCrosh',
+#         host='fastapi-server.postgres.database.azure.com',
+#         port='5432')
+#     if conn:
+#         print('Conectado a la base de datos')
+#     else:
+#         print('Error al conectar a la base de datos')
+#     return conn
+
 def get_connection():
     conn = psycopg2.connect(
-        dbname='Records',
-        user='fastapi@fastapi-server',
-        password='C@ndyCrosh',
-        host='fastapi-server.postgres.database.azure.com',
+        dbname='tyazrbzv',
+        user='tyazrbzv',
+        password='f9HMCrRsaasQzzDW-por011gDQDQtgPx',
+        host='horton.db.elephantsql.com',
         port='5432')
     if conn:
         print('Conectado a la base de datos')
