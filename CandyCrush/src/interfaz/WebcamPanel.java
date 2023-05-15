@@ -3,6 +3,7 @@ package interfaz;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
@@ -30,6 +31,8 @@ public class WebcamPanel extends JPanel {
         JButton captureButton = new JButton("Capture");
         captureButton.addActionListener(e -> {
             image = webcam.getImage();
+            image = cropToSquare(image);
+            image = resize(image, 500, 500);
             String base64Image = getBase64Image(image);
             String dataUrl = "data:image/jpeg;base64," + base64Image;
             System.out.println("Data URL:\n" + dataUrl);
@@ -55,6 +58,22 @@ public class WebcamPanel extends JPanel {
                 }
             }
         }).start();
+    }
+
+    private BufferedImage cropToSquare(BufferedImage source) {
+        int size = Math.min(source.getWidth(), source.getHeight());
+        int x = (source.getWidth() - size) / 2;
+        int y = (source.getHeight() - size) / 2;
+        return source.getSubimage(x, y, size, size);
+    }
+
+    private BufferedImage resize(BufferedImage image, int width, int height) {
+        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics g = resizedImage.createGraphics();
+        g.drawImage(scaledImage, 0, 0, null);
+        g.dispose();
+        return resizedImage;
     }
 
     private String getBase64Image(BufferedImage image) {
