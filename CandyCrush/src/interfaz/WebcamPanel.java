@@ -105,15 +105,15 @@ public class WebcamPanel extends JPanel {
         return base64Image;
     }
 
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame("Webcam Capture");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.setSize(640, 520);
-//        frame.setResizable(false);
-//
-//        WebcamPanel panel = new WebcamPanel();
-//        frame.add(panel);
-//
-//        frame.setVisible(true);
-//    }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Webcam Capture");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(640, 520);
+        frame.setResizable(false);
+
+        WebcamPanel panel = new WebcamPanel();
+        frame.add(panel);
+
+        frame.setVisible(true);
+    }
 }
