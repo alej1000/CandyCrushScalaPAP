@@ -21,6 +21,8 @@ public class WebcamPanel extends JPanel {
     private BufferedImage image;
     private Webcam webcam;
 
+    private String base64Image  ="";
+
     public WebcamPanel() {
         setLayout(new FlowLayout());
 
@@ -35,8 +37,9 @@ public class WebcamPanel extends JPanel {
             image = resize(image, 500, 500);
             String base64Image = getBase64Image(image);
             String dataUrl = "data:image/jpeg;base64," + base64Image;
-            System.out.println("Data URL:\n" + dataUrl);
+//            System.out.println("Data URL:\n" + dataUrl);
 
+            this.base64Image = base64Image;
             webcam.close();
 
             // Cerrar el panel al capturar la imagen
@@ -98,15 +101,19 @@ public class WebcamPanel extends JPanel {
         }
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Webcam Capture");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(640, 520);
-        frame.setResizable(false);
-
-        WebcamPanel panel = new WebcamPanel();
-        frame.add(panel);
-
-        frame.setVisible(true);
+    public String getBase64Image() {
+        return base64Image;
     }
+
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame("Webcam Capture");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setSize(640, 520);
+//        frame.setResizable(false);
+//
+//        WebcamPanel panel = new WebcamPanel();
+//        frame.add(panel);
+//
+//        frame.setVisible(true);
+//    }
 }

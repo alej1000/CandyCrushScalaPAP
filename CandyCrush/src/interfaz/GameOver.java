@@ -1,6 +1,7 @@
 package interfaz;
 
 import javax.swing.*;
+
 import logicaScala.HttpRequest;
 
 import org.json.*;
@@ -16,21 +17,55 @@ import java.net.URISyntaxException;
 
 public class GameOver {
 
-    public static void solicitarInfo(int puntaje, int tiempo){
+    private static WebcamPanel panel;
+    private static JFrame frame;
+
+    public static void solicitarInfo(int puntaje, int tiempo) {
         String nombre = JOptionPane.showInputDialog("Ingrese su nombre");
-        String foto = JOptionPane.showInputDialog("Ingrese la url de su foto");
+        JFrame frame = new JFrame("Webcam Capture");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(640, 520);
+        frame.setResizable(false);
+
+        WebcamPanel panel = new WebcamPanel();
+        new Thread(() -> {
+
+            frame.add(panel);
+            frame.setVisible(true);
+
+        }).start();
+
+//        while(panel == null){
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        while (panel.getBase64Image().equals("")) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        String foto = panel.getBase64Image();
+        frame.dispose();
+
+
+//        String foto = JOptionPane.showInputDialog("Ingrese la url de su foto");
         java.util.Date fecha = new java.util.Date();
         java.text.SimpleDateFormat sdfDia = new java.text.SimpleDateFormat("yyyy-MM-dd");
         java.text.SimpleDateFormat sdfHora = new java.text.SimpleDateFormat("HH:mm:ss");
         String fechaFormateada = sdfDia.format(fecha);
         String horaFormateada = sdfHora.format(fecha);
         String fechaHoraFormateada = fechaFormateada + "T" + horaFormateada;
-        String json = "{\"nombre\":\""+nombre+"\",\"puntuacion\":"+puntaje+",\"duracion\":"+tiempo+",\"fecha\":\""+fechaHoraFormateada+"\",\"picture\":\""+foto+"\"}";
-        String salida = HttpRequest.post(json,"http://cundycrosh.uah:8000/records");
+        String json = "{\"nombre\":\"" + nombre + "\",\"puntuacion\":" + puntaje + ",\"duracion\":" + tiempo + ",\"fecha\":\"" + fechaHoraFormateada + "\",\"picture\":\"" + foto + "\"}";
+        String salida = HttpRequest.post(json, "http://cundycrosh.uah:8000/records");
         System.out.println(salida);
     }
 
-    public static void mostrarPuntajes(){
+    public static void mostrarPuntajes() {
         String salida = HttpRequest.getJson("http://cundycrosh.uah:8000/records");
         System.out.println(salida);
 
@@ -66,15 +101,15 @@ public class GameOver {
         // Agregar un MouseListener a la tabla para detectar clicks dobles
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                    int row = table.getSelectedRow(); // Obtener la fila seleccionada
-                    int id_player = (int) table.getValueAt(row, 0); // Obtener el valor de la celda "id_player"
-                    String url = "http://cundycrosh.uah:8000/puntuacion/" + id_player; // Crear la URL con el id_player
-                    try {
-                        Desktop.getDesktop().browse(new URI(url)); // Abrir la URL en el navegador
-                    } catch (IOException | URISyntaxException ex) {
-                        ex.printStackTrace();
-                    }
+                int row = table.getSelectedRow(); // Obtener la fila seleccionada
+                int id_player = (int) table.getValueAt(row, 0); // Obtener el valor de la celda "id_player"
+                String url = "http://cundycrosh.uah:8000/puntuacion/" + id_player; // Crear la URL con el id_player
+                try {
+                    Desktop.getDesktop().browse(new URI(url)); // Abrir la URL en el navegador
+                } catch (IOException | URISyntaxException ex) {
+                    ex.printStackTrace();
                 }
+            }
         });
 
         // Mostrar la tabla en una ventana
