@@ -27,6 +27,10 @@ public class GameOver {
         frame.setSize(640, 520);
         frame.setResizable(false);
 
+
+
+
+
         WebcamPanel panel = new WebcamPanel();
         new Thread(() -> {
 
@@ -51,6 +55,9 @@ public class GameOver {
         }
         String foto = panel.getBase64Image();
         frame.dispose();
+
+
+
 
 
 //        String foto = JOptionPane.showInputDialog("Ingrese la url de su foto");

@@ -38,6 +38,8 @@ public class JPanelPartida extends javax.swing.JPanel {
     JLabel labelPuntos = new JLabel();
     private  JLabel labelFotoPuntos = new JLabel();
 
+//    private VidasPanel corazones = vidasPanel(numeroVidas);
+
     private JLabel jLabelFondo = new javax.swing.JLabel();
     public JPanelPartida(jPanelInicio pnlAnterior, MiPanel panelPartida, Main jFrameMain) {
         this.pnlAnterior = pnlAnterior;
@@ -53,6 +55,12 @@ public class JPanelPartida extends javax.swing.JPanel {
         labelVidas.setVisible(true);
         labelVidas.setFont(new Font("Dialog", Font.BOLD, 20));
         this.add(labelVidas);
+
+
+        //Vidas con corazones
+        //corazones.setBounds((int)(((1183*0.2)/2)-50), 150, 100, 20);
+        //corazones.setVisible(true);
+        //this.add(corazones);
 
         //Dimensiones ventana: 1183, 750
         //Foto de vidas

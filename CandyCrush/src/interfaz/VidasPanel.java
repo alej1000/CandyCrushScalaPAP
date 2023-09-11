@@ -42,12 +42,14 @@ public class VidasPanel extends JFrame {
         vidasPanel.setVisible(true);
 
         // Ejemplo de cambio dinámico de las vidas
-        try {
-            Thread.sleep(3000); // Esperar 3 segundos
-            vidasPanel.vidas = 4; // Cambiar el número de vidas
-            vidasPanel.actualizarVidas(); // Actualizar el panel de vidas
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while (vidasPanel.vidas > 0) {
+            try {
+                Thread.sleep(3000); // Esperar 3 segundos
+                vidasPanel.vidas -=1; // Cambiar el número de vidas
+                vidasPanel.actualizarVidas(); // Actualizar el panel de vidas
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

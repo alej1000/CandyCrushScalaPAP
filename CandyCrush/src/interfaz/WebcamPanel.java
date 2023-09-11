@@ -5,10 +5,17 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Base64;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,10 +41,11 @@ public class WebcamPanel extends JPanel {
         captureButton.addActionListener(e -> {
             image = webcam.getImage();
             image = cropToSquare(image);
-            image = resize(image, 500, 500);
+            image = resize(image, 300, 300);
+            image = compressJPEG(image, 0.18f); // Comprimir la imagen con calidad 60%
             String base64Image = getBase64Image(image);
             String dataUrl = "data:image/jpeg;base64," + base64Image;
-//            System.out.println("Data URL:\n" + dataUrl);
+            System.out.println("Data URL:\n" + dataUrl);
 
             this.base64Image = base64Image;
             webcam.close();
@@ -78,6 +86,30 @@ public class WebcamPanel extends JPanel {
         g.dispose();
         return resizedImage;
     }
+
+    private BufferedImage compressJPEG(BufferedImage input, float quality) {
+        ByteArrayOutputStream compressed = new ByteArrayOutputStream();
+
+        try (ImageOutputStream outputStream = new MemoryCacheImageOutputStream(compressed)) {
+            ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("JPEG").next();
+            ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
+            jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            jpgWriteParam.setCompressionQuality(quality);
+
+            jpgWriter.setOutput(outputStream);
+            jpgWriter.write(null, new IIOImage(input, null, null), jpgWriteParam);
+            jpgWriter.dispose();
+
+            // Convert the compressed byte array back to a BufferedImage
+            byte[] jpegData = compressed.toByteArray();
+            ByteArrayInputStream inputBytes = new ByteArrayInputStream(jpegData);
+            return ImageIO.read(inputBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return input; // Return the original image in case of an error
+        }
+    }
+
 
     private String getBase64Image(BufferedImage image) {
         String base64Image = "";
