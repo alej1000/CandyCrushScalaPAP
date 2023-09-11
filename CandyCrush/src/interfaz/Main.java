@@ -35,9 +35,20 @@ public class Main extends javax.swing.JFrame {
 
         vistaPrincipal = (CardLayout) pnlVistaGeneral.getLayout();
         pnlInicio = new jPanelInicio(this);
-       
 
-        mostrarPanel(pnlInicio, "Inicio");
+        if (SwingUtilities.isEventDispatchThread()) {
+            mostrarPanel(pnlInicio, "Inicio");
+
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    mostrarPanel(pnlInicio, "Inicio");
+
+                }
+            });
+        }
+
     }
 
     /**
@@ -162,6 +173,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+
     }
 
     public void mostrarPanel(JPanel panel, String nombre) {     //método utilizado para cambiar de paneles dinámicamente utilizando CarldLayout
@@ -169,7 +181,6 @@ public class Main extends javax.swing.JFrame {
         vistaPrincipal.show(pnlVistaGeneral, nombre);
         SwingUtilities.updateComponentTreeUI(this);
         this.repaint();
-
     }
 
 

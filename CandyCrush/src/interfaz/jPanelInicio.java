@@ -479,25 +479,136 @@ public class jPanelInicio extends JPanel {
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");   //reproducimos el sonido
         new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();        //iniciamos la animación de cortinilla
         jPanelInicio estePanel = this;
-        Matrix matrix = new Matrix(filas, columnas,dificultad);
 
-        MiPanel panelPartida = new MiPanel(columnas, filas,columnas*20,filas*20,matrix,null,null);
 
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(300);                 //esperamos a que termine la animación del cortinilla
 
-                        frame.mostrarPanel(new JPanelPartida(estePanel,panelPartida, frame), "");    //cambiamos de panel
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        } catch (Exception e) {
+
+        //nuevo hilo que inicializa matrix
+//        Runnable miRunnable = new Runnable() {
+//
+//            MiPanel miPanel;
+//            JPanelPartida panelPartida;
+//            @Override
+//            public void run() {
+//                Matrix matrix = new Matrix(columnas, filas, dificultad);
+//                miPanel = new MiPanel(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
+//                panelPartida = new JPanelPartida(estePanel, miPanel, frame);
+//            }
+//
+//            public MiPanel getMiPanel() {
+//                return miPanel;
+//            }
+//
+//            public JPanelPartida getPanelPartida() {
+//                return panelPartida;
+//            }
+//        };
+//
+//        Thread hiloCargaSegundoPlano = new Thread(miRunnable);
+//        hiloCargaSegundoPlano.start();
+
+
+
+
+
+
+//        Thread hiloCargaSegundoPlano = new Thread(new Runnable() {
+//
+//            MiPanel miPanel;
+//            JPanelPartida panelPartida;
+//            @Override
+//            public void run(){
+//                Matrix matrix = new Matrix(columnas, filas, dificultad);
+//                miPanel = new MiPanel(columnas, filas,columnas*20,filas*20,matrix,null,null);
+//                panelPartida= new JPanelPartida(estePanel, miPanel, frame);
+//            }
+//
+//            public MiPanel getMiPanel(){
+//                return miPanel;
+//            }
+//
+//            public JPanelPartida getPanelPartida(){
+//                return panelPartida;
+//            }
+//
+//        });
+//        hiloCargaSegundoPlano.start();
+
+
+
+//        Thread hiloCargaSegundoPlano = new Thread(new Runnable() {
+//            MiPanel miPanel;
+//            JPanelPartida panelPartida;
+//
+//            @Override
+//            public void run() {
+//                Matrix matrix = new Matrix(columnas, filas, dificultad);
+//                miPanel = new MiPanel(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
+//                panelPartida = new JPanelPartida(estePanel, miPanel, frame);
+//            }
+//
+//            public MiPanel getMiPanel() {
+//                return miPanel;
+//            }
+//
+//            public JPanelPartida getPanelPartida() {
+//                return panelPartida;
+//            }
+//        });
+//
+//// Iniciar el hilo
+//        hiloCargaSegundoPlano.start();
+        class HiloInicializador extends Thread{
+            MiPanel miPanel;
+            JPanelPartida panelPartida;
+
+            @Override
+            public void run() {
+                Matrix matrix = new Matrix(columnas, filas, dificultad);
+                miPanel = new MiPanel(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
+                panelPartida = new JPanelPartida(estePanel, miPanel, frame);
+                System.out.println("hilo inicializador terminado");
+            }
+
+            public MiPanel getMiPanel() {
+                return miPanel;
+            }
+
+            public JPanelPartida getPanelPartida() {
+                return panelPartida;
+            }
+
         }
+        HiloInicializador hiloCargaSegundoPlano = new HiloInicializador();
+        hiloCargaSegundoPlano.start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+
+                    //esperamos a que termine la animación del cortinilla
+                    Thread.sleep(6000);
+                    //si estamos en el hilo principal
+                    if (SwingUtilities.isEventDispatchThread()) {
+                        frame.mostrarPanel(hiloCargaSegundoPlano.getPanelPartida(), "");    //cambiamos de panel
+                    } else {
+                        //si no estamos en el hilo principal
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                frame.mostrarPanel(hiloCargaSegundoPlano.getPanelPartida(), "");    //cambiamos de panel
+
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+//
 
 
     }//GEN-LAST:event_btnIniciarPartidaActionPerformed
@@ -516,7 +627,21 @@ public class jPanelInicio extends JPanel {
     }//GEN-LAST:event_btnRegresarMouseExited
 
     public void regresar() {
-        frame.mostrarPanel(this, TOOL_TIP_TEXT_KEY);
+        if (SwingUtilities.isEventDispatchThread()) {
+            frame.mostrarPanel(this, TOOL_TIP_TEXT_KEY);
+
+        } else {
+            jPanelInicio estePanel = this;
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    frame.mostrarPanel(estePanel, TOOL_TIP_TEXT_KEY);
+
+                }
+            });
+        }
+
 
         new HiloAnimacion(pnlTransicion, 0, -750, 1.4).start();
         JPanel panelActual = this;
