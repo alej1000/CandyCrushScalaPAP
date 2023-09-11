@@ -46,6 +46,7 @@ public class GameOver {
                 } while (fotoAtomic.get() == null || fotoAtomic.get().equals(""));
 
                 enviarDatos(nombre,puntaje,tiempo,fotoAtomic.get());
+                mostrarPuntajes();
 
                 frame.dispose();
 
@@ -54,6 +55,7 @@ public class GameOver {
         }else{
             foto = JOptionPane.showInputDialog("Ingrese la url de su foto");
             enviarDatos(nombre,puntaje,tiempo,foto);
+            mostrarPuntajes();
         }
 
 
@@ -139,5 +141,7 @@ public class GameOver {
         frame.pack();
         frame.setVisible(true);
     }
+
+
 
 }

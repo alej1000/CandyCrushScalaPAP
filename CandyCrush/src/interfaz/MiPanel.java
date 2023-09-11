@@ -488,7 +488,7 @@ public class MiPanel extends JPanel implements ActionListener {
         int totalTime =  ((int)(endTime - startTime) / 1000);
 
         GameOver.solicitarInfo(numeroPuntos, totalTime);
-        GameOver.mostrarPuntajes();
+//        GameOver.mostrarPuntajes();
 
     }
 
