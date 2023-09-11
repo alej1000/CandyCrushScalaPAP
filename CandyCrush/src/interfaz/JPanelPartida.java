@@ -56,12 +56,6 @@ public class JPanelPartida extends javax.swing.JPanel {
         labelVidas.setFont(new Font("Dialog", Font.BOLD, 20));
         this.add(labelVidas);
 
-
-        //Vidas con corazones
-        //corazones.setBounds((int)(((1183*0.2)/2)-50), 150, 100, 20);
-        //corazones.setVisible(true);
-        //this.add(corazones);
-
         //Dimensiones ventana: 1183, 750
         //Foto de vidas
         labelFotoVidas.setBounds((int)(((1183*0.1)/2)-50), 100, 100, 50);

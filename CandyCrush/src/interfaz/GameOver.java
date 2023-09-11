@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class GameOver {
@@ -22,45 +23,56 @@ public class GameOver {
 
     public static void solicitarInfo(int puntaje, int tiempo) {
         String nombre = JOptionPane.showInputDialog("Ingrese su nombre");
-        JFrame frame = new JFrame("Webcam Capture");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(640, 520);
-        frame.setResizable(false);
 
+//       Boolean camara= JOptionPane.showConfirmDialog(null, "¿Desea tomar una foto con su webcam?") == 0;
+        Boolean camara= true;
+        String foto;
+        AtomicReference<String> fotoAtomic = new AtomicReference<>();
+        if (camara) {
+            new Thread(() -> {
+                JFrame frame = new JFrame("Webcam Capture");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.setSize(640, 520);
+                frame.setResizable(false);
 
+                WebcamPanel panel = new WebcamPanel();
+                frame.add(panel);
 
+                frame.setVisible(true);
 
+                // Aquí el hilo principal se queda atascado
+                do {
+                    fotoAtomic.set(panel.getBase64Image());
+                } while (fotoAtomic.get() == null || fotoAtomic.get().equals(""));
 
-        WebcamPanel panel = new WebcamPanel();
-        new Thread(() -> {
+                enviarDatos(nombre,puntaje,tiempo,fotoAtomic.get());
 
-            frame.add(panel);
-            frame.setVisible(true);
+                frame.dispose();
 
-        }).start();
+            }).start();
 
-//        while(panel == null){
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-        while (panel.getBase64Image().equals("")) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        }else{
+            foto = JOptionPane.showInputDialog("Ingrese la url de su foto");
+            enviarDatos(nombre,puntaje,tiempo,foto);
         }
-        String foto = panel.getBase64Image();
-        frame.dispose();
 
 
 
 
 
-//        String foto = JOptionPane.showInputDialog("Ingrese la url de su foto");
+
+//        java.util.Date fecha = new java.util.Date();
+//        java.text.SimpleDateFormat sdfDia = new java.text.SimpleDateFormat("yyyy-MM-dd");
+//        java.text.SimpleDateFormat sdfHora = new java.text.SimpleDateFormat("HH:mm:ss");
+//        String fechaFormateada = sdfDia.format(fecha);
+//        String horaFormateada = sdfHora.format(fecha);
+//        String fechaHoraFormateada = fechaFormateada + "T" + horaFormateada;
+//        String json = "{\"nombre\":\"" + nombre + "\",\"puntuacion\":" + puntaje + ",\"duracion\":" + tiempo + ",\"fecha\":\"" + fechaHoraFormateada + "\",\"picture\":\"" + foto + "\"}";
+//        String salida = HttpRequest.post(json, "http://cundycrosh.uah:8000/records");
+//        System.out.println(salida);
+    }
+
+    private static void enviarDatos(String nombre, int puntaje, int tiempo, String foto){
         java.util.Date fecha = new java.util.Date();
         java.text.SimpleDateFormat sdfDia = new java.text.SimpleDateFormat("yyyy-MM-dd");
         java.text.SimpleDateFormat sdfHora = new java.text.SimpleDateFormat("HH:mm:ss");
@@ -70,6 +82,7 @@ public class GameOver {
         String json = "{\"nombre\":\"" + nombre + "\",\"puntuacion\":" + puntaje + ",\"duracion\":" + tiempo + ",\"fecha\":\"" + fechaHoraFormateada + "\",\"picture\":\"" + foto + "\"}";
         String salida = HttpRequest.post(json, "http://cundycrosh.uah:8000/records");
         System.out.println(salida);
+
     }
 
     public static void mostrarPuntajes() {

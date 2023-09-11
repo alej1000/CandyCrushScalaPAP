@@ -43,11 +43,11 @@ public class WebcamPanel extends JPanel {
             image = cropToSquare(image);
             image = resize(image, 300, 300);
             image = compressJPEG(image, 0.18f); // Comprimir la imagen con calidad 60%
-            String base64Image = getBase64Image(image);
+            String base64Image = convertToBase64Image(image);
             String dataUrl = "data:image/jpeg;base64," + base64Image;
-            System.out.println("Data URL:\n" + dataUrl);
+//            System.out.println("Data URL:\n" + dataUrl);
 
-            this.base64Image = base64Image;
+            this.base64Image = dataUrl;
             webcam.close();
 
             // Cerrar el panel al capturar la imagen
@@ -69,6 +69,8 @@ public class WebcamPanel extends JPanel {
                 }
             }
         }).start();
+
+
     }
 
     private BufferedImage cropToSquare(BufferedImage source) {
@@ -111,7 +113,7 @@ public class WebcamPanel extends JPanel {
     }
 
 
-    private String getBase64Image(BufferedImage image) {
+    private String convertToBase64Image(BufferedImage image) {
         String base64Image = "";
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

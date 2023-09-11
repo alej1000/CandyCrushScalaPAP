@@ -29,6 +29,7 @@ public class MiPanel extends JPanel implements ActionListener {
 
     private int vidas =5;
     private JLabel labelVidas;
+    private VidasPanel corazones;
 
     private  int numeroPuntos=0;
     private JLabel labelPuntos;
@@ -124,6 +125,7 @@ public class MiPanel extends JPanel implements ActionListener {
         this.matriz = matriz;
         this.labelVidas= labelVidas;
         this.labelPuntos= labelPuntos;
+        this.corazones = new VidasPanel(vidas);
         this.lista = convertirListaScalaAJava(matriz.getData());
         this.dimX = dimX;   //tamaño del panel horizontalmente
         this.dimY = dimY;   //tamaño del panel verticalmente
