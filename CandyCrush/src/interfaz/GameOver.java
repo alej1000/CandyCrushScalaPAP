@@ -54,6 +54,9 @@ public class GameOver {
 
         }else{
             foto = JOptionPane.showInputDialog("Ingrese la url de su foto");
+            if (foto == null) {
+                foto = "";
+            }
             enviarDatos(nombre,puntaje,tiempo,foto);
             mostrarPuntajes();
         }

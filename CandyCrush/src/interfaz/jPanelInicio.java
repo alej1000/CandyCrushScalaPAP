@@ -10,7 +10,6 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.*;
 
 /**
@@ -482,20 +481,20 @@ public class jPanelInicio extends JPanel {
         AtomicBoolean panelesListos = new AtomicBoolean(false);
 
         class HiloInicializador extends Thread{
-            MiPanel miPanel;
+            PanelTablero panelTablero;
             JPanelPartida panelPartida;
 
             @Override
             public void run() {
                 Matrix matrix = new Matrix(filas, columnas, dificultad);
-                miPanel = new MiPanel(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
-                panelPartida = new JPanelPartida(estePanel, miPanel, frame);
+                panelTablero = new PanelTablero(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
+                panelPartida = new JPanelPartida(estePanel, panelTablero, frame);
                 panelesListos.set(true);
                 System.out.println("hilo inicializador terminado");
             }
 
-            public MiPanel getMiPanel() {
-                return miPanel;
+            public PanelTablero getPanelTablero() {
+                return panelTablero;
             }
 
             public JPanelPartida getPanelPartida() {
@@ -611,6 +610,7 @@ public class jPanelInicio extends JPanel {
                             }
                         });
                     }
+                    hiloCargaSegundoPlano.getPanelTablero().animacionCarga();   //iniciamos la animacion de carga del tablero
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -13,11 +13,11 @@ import logicaScala.Matrix;
 import javax.swing.*;
 import java.util.Random;
 
-public class MiVentana extends JFrame {
+public class FrameTableroSolo extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    public MiVentana() {
+    public FrameTableroSolo() {
         Random random = new Random();
         int filas = 9;
         int columnas = 14;
@@ -29,16 +29,16 @@ public class MiVentana extends JFrame {
         JLabel labelPuntos = new JLabel();
 
 
-        MiPanel miPanel =new MiPanel(columnas, filas,700,400,matrix,labelVidas,labelPuntos); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
-        miPanel.animacionCarga();
+        PanelTablero panelTablero =new PanelTablero(columnas, filas,700,400,matrix,labelVidas,labelPuntos); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
+        panelTablero.animacionCarga();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Establece la acción por defecto al cerrar la ventana
-        this.add(miPanel); // Agrega el panel al JFrame
+        this.add(panelTablero); // Agrega el panel al JFrame
         this.pack(); // Ajusta el tamaño del JFrame al tamaño del panel
         this.setVisible(true); // Hace visible el JFrame
     
     }
 
     public static void main(String[] args) {
-        new MiVentana(); // Crea una nueva ventana
+        new FrameTableroSolo(); // Crea una nueva ventana
     }
 }

@@ -9,11 +9,10 @@ import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 /**
- *
- * @author César Martín Guijarro Panel donde se ejecuta el ejercicio número 2.
+ * @author César Martín Guijarro
+    Este panel contiene el tablero de juego, el número de vidas y el número de puntos.
  */
 public class JPanelPartida extends javax.swing.JPanel {
-    
 
     private jPanelInicio pnlAnterior;
     private Main jFrameMain;
@@ -24,7 +23,7 @@ public class JPanelPartida extends javax.swing.JPanel {
     private Thread hiloMusica;
 
     private String ruta = "src/assets/";
-    private MiPanel panelPartida;
+    private PanelTablero panelTablero;
 
     private int numeroVidas = 5;
 
@@ -41,10 +40,10 @@ public class JPanelPartida extends javax.swing.JPanel {
 //    private VidasPanel corazones = vidasPanel(numeroVidas);
 
     private JLabel jLabelFondo = new javax.swing.JLabel();
-    public JPanelPartida(jPanelInicio pnlAnterior, MiPanel panelPartida, Main jFrameMain) {
+    public JPanelPartida(jPanelInicio pnlAnterior, PanelTablero panelTablero, Main jFrameMain) {
         this.pnlAnterior = pnlAnterior;
         this.jFrameMain = jFrameMain;
-        this.panelPartida = panelPartida;
+        this.panelTablero = panelTablero;
         initComponents();
 
         this.setBackground(Color.decode("#292930"));
@@ -80,11 +79,11 @@ public class JPanelPartida extends javax.swing.JPanel {
 
         int centroX = (int) (this.getWidth() / 2 );
         int centroY = (int) (this.getHeight() / 2 );
-        this.panelPartida.setLabelPuntos(labelPuntos);
-        this.panelPartida.setLabelVidas(labelVidas);
+        this.panelTablero.setLabelPuntos(labelPuntos);
+        this.panelTablero.setLabelVidas(labelVidas);
         reajustarPanel();
-        panelPartida.animacionCarga();
-        this.add(this.panelPartida);
+        //panelPartida.animacionCarga();
+        this.add(this.panelTablero);
         iniciarTransicion();
         hiloMusica = new Thread(() -> {
             Clip miClip = null;
@@ -104,7 +103,7 @@ public class JPanelPartida extends javax.swing.JPanel {
     }
 
     public void reajustarPanel(){
-        double aspectRatio = panelPartida.getBotonesColumnas() / (panelPartida.getBotonesFilas()+0.0);
+        double aspectRatio = panelTablero.getBotonesColumnas() / (panelTablero.getBotonesFilas()+0.0);
         System.out.println("aspectRatio: " + aspectRatio);
         int anchuraReal = getPreferredSize().width;
         int altura = getPreferredSize().height-36;
@@ -112,26 +111,26 @@ public class JPanelPartida extends javax.swing.JPanel {
         double aspectRatioPanel = anchura / (altura+0.0);
         System.out.println("aspectRatioPanel: " + aspectRatioPanel);
         if (aspectRatio > aspectRatioPanel) { //Si es más ancho que alto
-            panelPartida.setSize(anchura, Math.round((float)(anchura / aspectRatio)));
-            panelPartida.setDimX(anchura);
-            panelPartida.setDimY(Math.round((float)(anchura / aspectRatio)));
+            panelTablero.setSize(anchura, Math.round((float)(anchura / aspectRatio)));
+            panelTablero.setDimX(anchura);
+            panelTablero.setDimY(Math.round((float)(anchura / aspectRatio)));
 
 
 
         } else { //Si es más alto que ancho
-            panelPartida.setSize((int) (altura * aspectRatio),altura);
-            panelPartida.setDimX((int) (altura * aspectRatio));
-            panelPartida.setDimY(altura);
+            panelTablero.setSize((int) (altura * aspectRatio),altura);
+            panelTablero.setDimX((int) (altura * aspectRatio));
+            panelTablero.setDimY(altura);
 
 //            panelPartida.setSize((int) (getPreferredSize().height * aspectRatio), getHeight());
 
 
         }
-        panelPartida.setLocation((anchuraReal - panelPartida.getWidth()) / 2, (altura - panelPartida.getHeight()) / 2);
-        panelPartida.setDimXPadre(anchuraReal);
-        panelPartida.setDimYPadre(altura);
-        panelPartida.setDesplazamientoXPadre(-(anchuraReal - panelPartida.getWidth()) / 2);
-        panelPartida.setDesplazamientoYPadre(-(altura - panelPartida.getHeight()) / 2);
+        panelTablero.setLocation((anchuraReal - panelTablero.getWidth()) / 2, (altura - panelTablero.getHeight()) / 2);
+        panelTablero.setDimXPadre(anchuraReal);
+        panelTablero.setDimYPadre(altura);
+        panelTablero.setDesplazamientoXPadre(-(anchuraReal - panelTablero.getWidth()) / 2);
+        panelTablero.setDesplazamientoYPadre(-(altura - panelTablero.getHeight()) / 2);
     }
 
     @SuppressWarnings("unchecked")
@@ -210,8 +209,8 @@ public class JPanelPartida extends javax.swing.JPanel {
                 try {
                     Thread.sleep(100);
 
-                   new HiloAnimacion(panelPartida, panelPartida.getX(), -2*panelPartida.getDimY(), 1.3).start();
-                new HiloAnimacion(jLabelFondo, jLabelFondo.getX(), -2*panelPartida.getDimY(), 1.3).start();
+                   new HiloAnimacion(panelTablero, panelTablero.getX(), -2* panelTablero.getDimY(), 1.3).start();
+                new HiloAnimacion(jLabelFondo, jLabelFondo.getX(), -2* panelTablero.getDimY(), 1.3).start();
 //                    new HiloAnimacion(jLabelCadena1, 182, -200, 1.3).start();
 //
 //                    Thread.sleep(80);
@@ -321,4 +320,8 @@ public class JPanelPartida extends javax.swing.JPanel {
     private javax.swing.JLabel jLblIntroduzcaCadena;
     private javax.swing.JPanel pnlInput; //Panel GameOver
     // End of variables declaration//GEN-END:variables
+
+    public PanelTablero getPanelTablero() {
+        return panelTablero;
+    }
 }

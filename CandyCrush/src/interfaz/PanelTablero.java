@@ -17,7 +17,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
-public class MiPanel extends JPanel implements ActionListener {
+/**
+ * @author César Martín Guijarro
+    Este panel contiene los caramelos y los botones que los representan. Se encapsulará dentro del JPanelPartida.
+ */
+public class PanelTablero extends JPanel implements ActionListener {
 
     private JButton[][] botones;
     private int botonesColumnas, botonesFilas;
@@ -54,7 +58,7 @@ public class MiPanel extends JPanel implements ActionListener {
     //time when the panel is constructed
     private long startTime = System.currentTimeMillis();
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
-    public MiPanel(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos,int dimXPadre, int dimYPadre, int desplazamientoXPadre, int desplazamientoYPadre) {
+    public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos, int dimXPadre, int dimYPadre, int desplazamientoXPadre, int desplazamientoYPadre) {
         this.botonesColumnas = botonesX;
         this.botonesFilas = botonesFilas;
         this.matriz = matriz;
@@ -119,7 +123,7 @@ public class MiPanel extends JPanel implements ActionListener {
         add(fondo);
     }
 
-    public MiPanel(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos) {
+    public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos) {
         this.botonesColumnas = botonesX;
         this.botonesFilas = botonesFilas;
         this.matriz = matriz;
