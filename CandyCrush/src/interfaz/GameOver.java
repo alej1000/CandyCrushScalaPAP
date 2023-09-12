@@ -24,9 +24,9 @@ public class GameOver {
     public static void solicitarInfo(int puntaje, int tiempo) {
         String nombre = JOptionPane.showInputDialog("Ingrese su nombre");
 
-//       Boolean camara= JOptionPane.showConfirmDialog(null, "¿Desea tomar una foto con su webcam?") == 0;
-        Boolean camara= true;
+       Boolean camara= JOptionPane.showConfirmDialog(null, "¿Desea tomar una foto con su webcam?","Warning",JOptionPane.YES_NO_OPTION) == 0;    //Alejandro me obliga a que le indique aquí que el YES_NO_OPTION sirve para que el usuario pueda elegir entre dos opciones, en este caso, si o no. De esta manera no habrá ningún boton de cancelar, evitando que el usuario no sepa que hacer. Espero que este comentario sea suficiente para que Raboso se haya dado cuenta de que Alejandro me obliga a poner este comentario.
         String foto;
+
         AtomicReference<String> fotoAtomic = new AtomicReference<>();
         if (camara) {
             new Thread(() -> {
