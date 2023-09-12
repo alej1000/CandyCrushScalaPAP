@@ -9,6 +9,8 @@ import logicaScala.Matrix;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.*;
 
 /**
@@ -476,9 +478,35 @@ public class jPanelInicio extends JPanel {
 
     private void btnIniciarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarPartidaActionPerformed
         // TODO add your handling code here:
+        jPanelInicio estePanel = this;
+        AtomicBoolean panelesListos = new AtomicBoolean(false);
+
+        class HiloInicializador extends Thread{
+            MiPanel miPanel;
+            JPanelPartida panelPartida;
+
+            @Override
+            public void run() {
+                Matrix matrix = new Matrix(columnas, filas, dificultad);
+                miPanel = new MiPanel(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
+                panelPartida = new JPanelPartida(estePanel, miPanel, frame);
+                panelesListos.set(true);
+                System.out.println("hilo inicializador terminado");
+            }
+
+            public MiPanel getMiPanel() {
+                return miPanel;
+            }
+
+            public JPanelPartida getPanelPartida() {
+                return panelPartida;
+            }
+
+        }
+        HiloInicializador hiloCargaSegundoPlano = new HiloInicializador();
+        hiloCargaSegundoPlano.start();
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");   //reproducimos el sonido
         new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();        //iniciamos la animación de cortinilla
-        jPanelInicio estePanel = this;
 
 
 
@@ -558,29 +586,7 @@ public class jPanelInicio extends JPanel {
 //
 //// Iniciar el hilo
 //        hiloCargaSegundoPlano.start();
-        class HiloInicializador extends Thread{
-            MiPanel miPanel;
-            JPanelPartida panelPartida;
 
-            @Override
-            public void run() {
-                Matrix matrix = new Matrix(columnas, filas, dificultad);
-                miPanel = new MiPanel(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
-                panelPartida = new JPanelPartida(estePanel, miPanel, frame);
-                System.out.println("hilo inicializador terminado");
-            }
-
-            public MiPanel getMiPanel() {
-                return miPanel;
-            }
-
-            public JPanelPartida getPanelPartida() {
-                return panelPartida;
-            }
-
-        }
-        HiloInicializador hiloCargaSegundoPlano = new HiloInicializador();
-        hiloCargaSegundoPlano.start();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -588,7 +594,10 @@ public class jPanelInicio extends JPanel {
 
 
                     //esperamos a que termine la animación del cortinilla
-                    Thread.sleep(6000);
+                    while (!panelesListos.get()) {
+                        Thread.sleep(10);
+                    }
+//                    Thread.sleep(500);
                     //si estamos en el hilo principal
                     if (SwingUtilities.isEventDispatchThread()) {
                         frame.mostrarPanel(hiloCargaSegundoPlano.getPanelPartida(), "");    //cambiamos de panel

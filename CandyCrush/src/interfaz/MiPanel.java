@@ -357,7 +357,7 @@ public class MiPanel extends JPanel implements ActionListener {
     public void animacionCarga() {
         AtomicInteger contador = new AtomicInteger(botonesColumnas * botonesFilas);
 
-        int delay = 45;
+        int delay = 45; // milisegundos que hay entre la caída de cada caramelo
 
         new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
             @Override
