@@ -1,6 +1,7 @@
 # Ignorar todo
 # *
 *.pyc
+*.class
 
 # Excepto directorios
  !*/

@@ -85,18 +85,6 @@ public class JPanelPartida extends javax.swing.JPanel {
         //panelPartida.animacionCarga();
         this.add(this.panelTablero);
         iniciarTransicion();
-        hiloMusica = new Thread(() -> {
-            Clip miClip = null;
-            try {
-                while (true) {
-                    miClip = MetodosGUI.reproducirSonido(ruta + "musicaDeFondo.wav",true);
-                    Thread.sleep(58000);
-                }
-            } catch (InterruptedException e) {
-                miClip.stop();
-            }
-        });
-        hiloMusica.start();
         jLabelFondo.setBounds(0,  0, this.getPreferredSize().width, this.getPreferredSize().height);
         MetodosGUI.ponerImagenLabel(jLabelFondo, new ImageIcon(ruta+ "fondo.png"));
         add(jLabelFondo);
@@ -197,6 +185,21 @@ public class JPanelPartida extends javax.swing.JPanel {
         btnRegresar.setBounds(-96, 36, 60, 60);
     }// </editor-fold>//GEN-END:initComponents
 
+
+    public void iniciarMusica(){
+        hiloMusica = new Thread(() -> {
+            Clip miClip = null;
+            try {
+                while (true) {
+                    miClip = MetodosGUI.reproducirSonido(ruta + "musicaDeFondo.wav",true);
+                    Thread.sleep(58000);
+                }
+            } catch (InterruptedException e) {
+                miClip.stop();
+            }
+        });
+        hiloMusica.start();
+    }
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
 
         //Al pulsar el botón se inicia la animación de regreso a la página principal

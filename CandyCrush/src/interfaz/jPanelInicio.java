@@ -33,6 +33,13 @@ public class jPanelInicio extends JPanel {
     private int filas = 9;
     private int columnas = 9;
 
+    private PanelTablero panelTablero;
+
+    private JPanelPartida panelPartida;
+
+    AtomicBoolean panelesListos = new AtomicBoolean(false);
+
+
 
     public jPanelInicio(Main frame) {
         initComponents();
@@ -46,6 +53,7 @@ public class jPanelInicio extends JPanel {
         btnIniciar.setBackground(Color.decode("#438eff"));
         btnVerVideo.setBackground(Color.decode("#438eff"));
         btnMemoria.setBackground(Color.decode("#438eff"));
+        inicializarMatrizPanelesPartida();
 
         this.frame = frame;
 
@@ -445,6 +453,8 @@ public class jPanelInicio extends JPanel {
 //        new HiloTransicion(frame, this).start();
         filas = pedirEntero("filas");
         columnas = pedirEntero("columnas");
+        inicializarMatrizPanelesPartida();
+
 
     }//GEN-LAST:event_btnAjustesDeTableroActionPerformed
 
@@ -475,10 +485,10 @@ public class jPanelInicio extends JPanel {
 
     }//GEN-LAST:event_btnIniciarPartidaMouseExited
 
-    private void btnIniciarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarPartidaActionPerformed
-        // TODO add your handling code here:
+    private void inicializarMatrizPanelesPartida(){
         jPanelInicio estePanel = this;
-        AtomicBoolean panelesListos = new AtomicBoolean(false);
+        panelesListos.set(false);
+
 
         class HiloInicializador extends Thread{
             PanelTablero panelTablero;
@@ -489,6 +499,8 @@ public class jPanelInicio extends JPanel {
                 Matrix matrix = new Matrix(filas, columnas, dificultad);
                 panelTablero = new PanelTablero(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
                 panelPartida = new JPanelPartida(estePanel, panelTablero, frame);
+                estePanel.setPanelTablero(panelTablero);
+                estePanel.setPanelPartida(panelPartida);
                 panelesListos.set(true);
                 System.out.println("hilo inicializador terminado");
             }
@@ -502,8 +514,41 @@ public class jPanelInicio extends JPanel {
             }
 
         }
+
         HiloInicializador hiloCargaSegundoPlano = new HiloInicializador();
         hiloCargaSegundoPlano.start();
+    }
+
+    private void btnIniciarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarPartidaActionPerformed
+        // TODO add your handling code here:
+//        jPanelInicio estePanel = this;
+//        AtomicBoolean panelesListos = new AtomicBoolean(false);
+//
+//        class HiloInicializador extends Thread{
+//            PanelTablero panelTablero;
+//            JPanelPartida panelPartida;
+//
+//            @Override
+//            public void run() {
+//                Matrix matrix = new Matrix(filas, columnas, dificultad);
+//                panelTablero = new PanelTablero(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
+//                panelPartida = new JPanelPartida(estePanel, panelTablero, frame);
+//                panelesListos.set(true);
+//                System.out.println("hilo inicializador terminado");
+//            }
+//
+//            public PanelTablero getPanelTablero() {
+//                return panelTablero;
+//            }
+//
+//            public JPanelPartida getPanelPartida() {
+//                return panelPartida;
+//            }
+//
+//        }
+//        HiloInicializador hiloCargaSegundoPlano = new HiloInicializador();
+//        hiloCargaSegundoPlano.start();
+//        inicializarMatrizPanelesPartida();
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");   //reproducimos el sonido
         new HiloAnimacion(pnlTransicion, 0, 0, 1.4).start();        //iniciamos la animación de cortinilla
 
@@ -599,18 +644,19 @@ public class jPanelInicio extends JPanel {
 //                    Thread.sleep(500);
                     //si estamos en el hilo principal
                     if (SwingUtilities.isEventDispatchThread()) {
-                        frame.mostrarPanel(hiloCargaSegundoPlano.getPanelPartida(), "");    //cambiamos de panel
+                        frame.mostrarPanel(panelPartida, "");    //cambiamos de panel
                     } else {
                         //si no estamos en el hilo principal
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                frame.mostrarPanel(hiloCargaSegundoPlano.getPanelPartida(), "");    //cambiamos de panel
+                                frame.mostrarPanel(panelPartida, "");    //cambiamos de panel
 
                             }
                         });
                     }
-                    hiloCargaSegundoPlano.getPanelTablero().animacionCarga();   //iniciamos la animacion de carga del tablero
+                    panelPartida.iniciarMusica();   //iniciamos la musica de la partida
+                    panelTablero.animacionCarga();   //iniciamos la animacion de carga del tablero
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -646,6 +692,9 @@ public class jPanelInicio extends JPanel {
                 @Override
                 public void run() {
                     frame.mostrarPanel(estePanel, TOOL_TIP_TEXT_KEY);
+//                    panelPartida = null;
+//                    panelTablero = null;
+                    inicializarMatrizPanelesPartida();
 
                 }
             });
@@ -655,6 +704,14 @@ public class jPanelInicio extends JPanel {
         new HiloAnimacion(pnlTransicion, 0, -750, 1.4).start();
         JPanel panelActual = this;
 
+    }
+
+    public void setPanelTablero(PanelTablero panelTablero) {
+        this.panelTablero = panelTablero;
+    }
+
+    public void setPanelPartida(JPanelPartida panelPartida) {
+        this.panelPartida = panelPartida;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAjustesDeTablero;
