@@ -10,12 +10,10 @@ import logicaScala.Matrix;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 /**
  * @author César Martín Guijarro
@@ -43,9 +41,12 @@ public class PanelTablero extends JPanel implements ActionListener {
     private JLabel fondo = new JLabel();
     private int dificultad=2;
     private Matrix matriz;
-
     private Thread hiloSonando;
     private Thread hiloCayendo;
+
+    private AtomicInteger botonesNoListos = new AtomicInteger(0);
+    private JLabel screenshotLabel = new JLabel();
+
 
     private boolean botonesActivos = false;
     private String ruta = "src/assets/";
@@ -64,6 +65,8 @@ public class PanelTablero extends JPanel implements ActionListener {
     private long startTime = System.currentTimeMillis();
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
     public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JPanel panelCorazones,JLabel labelPuntos, int dimXPadre, int dimYPadre, int desplazamientoXPadre, int desplazamientoYPadre) {
+        screenshotLabel.setBounds(0, 0, dimX, dimY);
+        screenshotLabel.setVisible(false);
         this.botonesColumnas = botonesX;
         this.botonesFilas = botonesFilas;
         this.matriz = matriz;
@@ -85,6 +88,7 @@ public class PanelTablero extends JPanel implements ActionListener {
             imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
         }
         botones = new JButton[botonesFilas][botonesX];
+
 //        MouseListener mouseListener = new MouseAdapter() {
 //            @Override
 //            public void mouseEntered(MouseEvent e) {
@@ -124,12 +128,18 @@ public class PanelTablero extends JPanel implements ActionListener {
                 add(botones[i][j]);
             }
         }
+
+
         fondo.setBounds(0,0, dimX, dimY);
         MetodosGUI.ponerImagenLabel(fondo, imgFondo);
         add(fondo);
     }
 
     public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas,JPanel panelCorazones, JLabel labelPuntos) {
+
+        screenshotLabel.setBounds(0, 0, dimX, dimY);
+        screenshotLabel.setVisible(false);
+        add(screenshotLabel);
         this.botonesColumnas = botonesX;
         this.botonesFilas = botonesFilas;
         this.matriz = matriz;
@@ -147,21 +157,6 @@ public class PanelTablero extends JPanel implements ActionListener {
             imagenesReescaladas[i] = MetodosGUI.reescalarImagen(imagenes[i], tamBoton, tamBoton);
         }
         botones = new JButton[botonesFilas][botonesX];
-//        MouseListener mouseListener = new MouseAdapter() {
-//            @Override
-//            public void mouseEntered(MouseEvent e) {
-//                // Código para manejar el evento de mouse entered
-//                JButton button = (JButton) e.getSource();
-//                MetodosGUI.agrandarBoton(button);
-//                System.out.println("Entraste al boton");
-//            }
-//            public void mouseExited(MouseEvent e) {
-//                // Código para manejar el evento de mouse entered
-//                JButton button = (JButton) e.getSource();
-//                MetodosGUI.encogerBoton(button);
-//                System.out.println("Saliste del boton");
-//            }
-//        };
         setLayout(null);
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -216,18 +211,22 @@ public class PanelTablero extends JPanel implements ActionListener {
             for (int i = 0; i < botonesFilas; i++) {
                 for (int j = 0; j < botonesColumnas; j++) {
                     botones[i][j].setBounds(j * tamBoton, i * tamBoton, tamBoton, tamBoton);
+                    botonesNoListos.decrementAndGet();
                 }
             }
         }else {
             for (int i = 0; i < botonesFilas; i++) {
                 for (int j = 0; j < botonesColumnas; j++) {
                     botones[i][j].setBounds(j * tamBoton, -tamBoton*5, tamBoton, tamBoton);
+                    botonesNoListos.decrementAndGet();
                 }
             }
         }
-        actualizarLabels();
+        actualizarLabels(); //TODO: hacer que solo se llame si en sí se viene de un reescalado y no solo de resetear los botones
         actualizarFondo();
         setCorazones(panelCorazones);
+        screenshotLabel.setBounds(0, 0, dimX, dimY);
+
 
     }
 
@@ -294,6 +293,7 @@ public class PanelTablero extends JPanel implements ActionListener {
                 int finalJ = j;
                 new Thread(() -> {
                     botones[finalI][finalJ].setIcon(imagenesReescaladas[listaNueva[indice]]);
+                    botonesNoListos.decrementAndGet();
                 }).start();
 
             }
@@ -301,28 +301,6 @@ public class PanelTablero extends JPanel implements ActionListener {
 
     }
 
-//    public void animacionEspeciales(int[] listaCeros,int contadorEliminados, int elementoPulsado,int fila, int columna){
-//        if (contadorEliminados==5 & elementoPulsado<7){
-//            MetodosGUI.reproducirSonido(ruta+"bomba.wav");
-//            int ancho = getWidth();
-//            int alto = getHeight();
-//            int tamBoton = Math.min(ancho / botonesColumnas, alto / botonesFilas);
-//            //para cada botón cuyo indice en listaCeros es un 0, se printea hola
-//            for (int i = 0; i < botonesFilas; i++) {
-//                for (int j = 0; j < botonesColumnas; j++) {
-//                    int indice = i * botonesColumnas + j; // calcula el índice correspondiente en la lista
-//                    int finalI = i;
-//                    int finalJ = j;
-//                        if (listaCeros[indice]==0){
-//                            System.out.println("hola");
-//                           new HiloAnimacion(botones[finalI][finalJ],columna*tamBoton,fila*tamBoton,1.2).start();
-//                        }
-//
-//                }
-//            }
-//
-//        }
-//    }
     public void accionarBoton(int fila, int columna) {
         // realiza la acción deseada con las coordenadas x e y
         if (vidas>0 && botonesActivos){
@@ -503,16 +481,60 @@ public class PanelTablero extends JPanel implements ActionListener {
                 }
             }
         }
+        botonesNoListos.set(botonesFilas*botonesColumnas*2); //reseteamos la cantidad de botones listos. Cada botón será contado dos veces. Una por resetear su posición, y otra por cargar la nueva imagen del caramelo correspondiente
+        PanelTablero estePanel = this;
         new Thread(() -> {
             //hilo que debe entrar en el while cuando todos los hilos de movimiento hayan terminado
             while (contador.get() > 0) {
             }
+
+
+            // Capture a screenshot of the panel
+            BufferedImage screenshot = captureScreenshot(this);
+
+            // Create a JLabel to display the screenshot
+            screenshotLabel.setIcon(new ImageIcon(screenshot));
+//            MetodosGUI.ponerImagenLabel(screenshotLabel,new ImageIcon(screenshot));
+            screenshotLabel.setVisible(true);
+            repaint();
+
+
+            //we stop this panel from repainting automatically
+            System.out.println("Pantalla congelada");
+
             actualizarLabels(listaNueva);
             lista = listaNueva;
             reescalar();
+            while (botonesNoListos.get()>0){
+                System.out.println("Botones no listos: "+botonesNoListos.get());
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            screenshotLabel.setVisible(false);
+            screenshotLabel.setIcon(null);
+            repaint();
+            System.out.println("Pantalla descongelada");
             botonesActivos = true;
         }).start();
     }
+
+
+    // Method to capture a screenshot of a Swing component
+    public static BufferedImage captureScreenshot(Component component) {
+        int width = component.getWidth();
+        int height = component.getHeight();
+        BufferedImage screenshot = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = screenshot.createGraphics();
+        component.paint(g2d);
+        g2d.dispose();
+
+        return screenshot;
+    }
+
 
     private void moverBoton(JButton boton, int n) {
         // Mover el botón n filas hacia abajo con una animación
@@ -535,7 +557,6 @@ public class PanelTablero extends JPanel implements ActionListener {
         int totalTime =  ((int)(endTime - startTime) / 1000);
 
         GameOver.solicitarInfo(numeroPuntos, totalTime);
-//        GameOver.mostrarPuntajes();
 
     }
 

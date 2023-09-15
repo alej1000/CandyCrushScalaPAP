@@ -113,7 +113,7 @@ public class WebcamPanel extends JPanel {
     }
 
 
-    private String convertToBase64Image(BufferedImage image) {
+    public static String convertToBase64Image(BufferedImage image) {
         String base64Image = "";
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
