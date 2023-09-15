@@ -296,25 +296,24 @@ class Matrix (private val rows: Int,private val cols: Int,private val data: List
     (new Matrix(rows,cols,rompecabezasEliminado,dificultad),contador)
 
   }
-  private def eliminarRompecabezasAux(fila: Int, columna: Int, matriz: List[Int], elemento: Int,contador:Int):(List[Int],Int) = {
-    if (Matrix.isEmpty(matriz)) (Nil,contador)
-    else {
-      val elementoActual: Int = matriz.head
-      if (elementoActual == elemento % 10) {
-        //Si elimino el elemento sumo 1 al contador
-        val (lista:List[Int],contadorRecur:Int) = eliminarRompecabezasAux(fila,columna,matriz.tail,elemento,contador+1)
-        val listaNueva:List[Int] = 0 :: lista
-        val nuevoContador:Int = contadorRecur
-        return (listaNueva,nuevoContador)
-      }
+  private def eliminarRompecabezasAux(fila: Int, columna: Int, matriz: List[Int], elemento: Int, contador: Int): (List[Int], Int) = {
+    def eliminarRecursivo(matrizRestante: List[Int], contadorActual: Int, resultadoParcial: List[Int]): (List[Int], Int) = {
+      if (matrizRestante.isEmpty) (resultadoParcial.reverse, contadorActual)
       else {
-        //Si no elimino el elemento el contador no cambia
-        val (lista: List[Int], contadorRecur: Int) = eliminarRompecabezasAux(fila, columna, matriz.tail, elemento, contador)
-        val listaNueva: List[Int] = elementoActual :: lista
-        return (listaNueva, contadorRecur)
-
+        val elementoActual: Int = matrizRestante.head
+        if (elementoActual == elemento % 10) {
+          //Si elimino elemento sumo 1 al contador
+          val listaNueva: List[Int] = 0 :: resultadoParcial
+          eliminarRecursivo(matrizRestante.tail, contadorActual + 1, listaNueva)
+        } else {
+          //Si no elimino elemento, lo añado a la lista directamente sin cambiar nada
+          val listaNueva: List[Int] = elementoActual :: resultadoParcial
+          eliminarRecursivo(matrizRestante.tail, contadorActual, listaNueva)
+        }
       }
     }
+
+    eliminarRecursivo(matriz, contador, Nil)
   }
 
 
