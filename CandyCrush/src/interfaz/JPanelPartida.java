@@ -26,6 +26,7 @@ public class JPanelPartida extends javax.swing.JPanel {
     private PanelTablero panelTablero;
 
     private int numeroVidas = 5;
+    private JPanel panelCorazones = new JPanel();
 
     private int puntos = 0;
 
@@ -55,6 +56,12 @@ public class JPanelPartida extends javax.swing.JPanel {
         labelVidas.setFont(new Font("Dialog", Font.BOLD, 20));
         this.add(labelVidas);
 
+        //Corazones
+        panelCorazones.setBounds((int)(((1183*0.2)/2)-100), 200, 200, 40);
+        panelCorazones.setVisible(true);
+        this.add(panelCorazones);
+
+
         //Dimensiones ventana: 1183, 750
         //Foto de vidas
         labelFotoVidas.setBounds((int)(((1183*0.1)/2)-50), 100, 100, 50);
@@ -63,7 +70,7 @@ public class JPanelPartida extends javax.swing.JPanel {
         this.add(labelFotoVidas);
         //Numero de puntos
         labelPuntos.setText("" + puntos);
-        labelPuntos.setBounds((int)((1183*0.94)), 150, 100, 20);
+        labelPuntos.setBounds((int)((1183*0.92)), 150, 100, 20);
         labelPuntos.setVisible(true);
         labelPuntos.setFont(new Font("Dialog", Font.BOLD, 20));
         this.add(labelPuntos);
@@ -81,6 +88,7 @@ public class JPanelPartida extends javax.swing.JPanel {
         int centroY = (int) (this.getHeight() / 2 );
         this.panelTablero.setLabelPuntos(labelPuntos);
         this.panelTablero.setLabelVidas(labelVidas);
+        this.panelTablero.setPanelCorazones(panelCorazones);
         reajustarPanel();
         //panelPartida.animacionCarga();
         this.add(this.panelTablero);

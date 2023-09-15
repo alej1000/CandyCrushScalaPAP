@@ -498,7 +498,7 @@ public class jPanelInicio extends JPanel {
             @Override
             public void run() {
                 Matrix matrix = new Matrix(filas, columnas, dificultad);
-                panelTablero = new PanelTablero(columnas, filas, columnas * 20, filas * 20, matrix, null, null);
+                panelTablero = new PanelTablero(columnas, filas, columnas * 20, filas * 20, matrix, null, null,null);
                 panelPartida = new JPanelPartida(estePanel, panelTablero, frame);
                 estePanel.setPanelTablero(panelTablero);
                 estePanel.setPanelPartida(panelPartida);

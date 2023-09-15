@@ -33,7 +33,9 @@ public class PanelTablero extends JPanel implements ActionListener {
 
     private int vidas =5;
     private JLabel labelVidas;
-    private VidasPanel corazones;
+
+    private JPanel panelCorazones;
+
 
     private  int numeroPuntos=0;
     private JLabel labelPuntos;
@@ -60,11 +62,12 @@ public class PanelTablero extends JPanel implements ActionListener {
     //time when the panel is constructed
     private long startTime = System.currentTimeMillis();
     //        setBackground(new Color(0, 0, 0, 40)); // set the background color to transparent
-    public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos, int dimXPadre, int dimYPadre, int desplazamientoXPadre, int desplazamientoYPadre) {
+    public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JPanel panelCorazones,JLabel labelPuntos, int dimXPadre, int dimYPadre, int desplazamientoXPadre, int desplazamientoYPadre) {
         this.botonesColumnas = botonesX;
         this.botonesFilas = botonesFilas;
         this.matriz = matriz;
         this.labelVidas= labelVidas;
+        this.panelCorazones= panelCorazones;
         this.labelPuntos= labelPuntos;
         this.lista = convertirListaScalaAJava(matriz.getData());
         this.dimX = dimX;   //tamaño del panel horizontalmente
@@ -125,13 +128,13 @@ public class PanelTablero extends JPanel implements ActionListener {
         add(fondo);
     }
 
-    public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas, JLabel labelPuntos) {
+    public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas,JPanel panelCorazones, JLabel labelPuntos) {
         this.botonesColumnas = botonesX;
         this.botonesFilas = botonesFilas;
         this.matriz = matriz;
         this.labelVidas= labelVidas;
+        this.panelCorazones= panelCorazones;
         this.labelPuntos= labelPuntos;
-        this.corazones = new VidasPanel(vidas);
         this.lista = convertirListaScalaAJava(matriz.getData());
         this.dimX = dimX;   //tamaño del panel horizontalmente
         this.dimY = dimY;   //tamaño del panel verticalmente
@@ -223,6 +226,7 @@ public class PanelTablero extends JPanel implements ActionListener {
         }
         actualizarLabels();
         actualizarFondo();
+        setCorazones(panelCorazones);
 
     }
 
@@ -336,6 +340,7 @@ public class PanelTablero extends JPanel implements ActionListener {
 
             this.vidas = (int) tupla._2();
             this.labelVidas.setText(""+this.vidas);
+            setCorazones(panelCorazones);
             this.numeroPuntos = Main.sumarPuntos(numeroPuntos,(int) tupla._3(),(int) tupla._4(), dificultad); //tupla._3 -> contadorEliminados; tupla._4 -> elementoEliminado
             this.labelPuntos.setText(""+this.numeroPuntos);
 
@@ -343,6 +348,20 @@ public class PanelTablero extends JPanel implements ActionListener {
                 gameOver();
             }
         }
+    }
+    private void setCorazones(JPanel panelCorazones){
+        panelCorazones.removeAll();
+
+        for (int i = 0; i < vidas; i++) {
+            //JLabel corazon = new JLabel("\u2764"); // Representación del corazón
+            JLabel corazon = new JLabel();
+            //corazon.setFont(new Font("Arial", Font.PLAIN, 36)); // Tamaño y fuente del corazón
+            corazon.setBounds(0, 0, 150/5, 35); //El Panel de todos los corazones es width 200 height 40 y el 5 son las vidas maximas
+            MetodosGUI.ponerImagenLabel(corazon, new ImageIcon("src/assets/corazon.png"));
+            panelCorazones.add(corazon);
+        }
+        panelCorazones.revalidate();
+        panelCorazones.repaint();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -513,6 +532,10 @@ public class PanelTablero extends JPanel implements ActionListener {
 
     public void setLabelPuntos(JLabel labelPuntos) {
         this.labelPuntos = labelPuntos;
+    }
+
+    public void setPanelCorazones(JPanel panelCorazones) {
+        this.panelCorazones = panelCorazones;
     }
 
     public void setDimX(int dimX) {

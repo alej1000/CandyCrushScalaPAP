@@ -27,9 +27,10 @@ public class FrameTableroSolo extends JFrame {
 
         JLabel labelVidas = new JLabel();
         JLabel labelPuntos = new JLabel();
+        JPanel panelCorazones = new JPanel();
 
 
-        PanelTablero panelTablero =new PanelTablero(columnas, filas,700,400,matrix,labelVidas,labelPuntos); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
+        PanelTablero panelTablero =new PanelTablero(columnas, filas,700,400,matrix,labelVidas,panelCorazones,labelPuntos); // Crea un objeto MiPanel con 10 botones en el eje horizontal y 10 en el eje vertical
         panelTablero.animacionCarga();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Establece la acción por defecto al cerrar la ventana
         this.add(panelTablero); // Agrega el panel al JFrame
