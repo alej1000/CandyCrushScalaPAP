@@ -206,6 +206,7 @@ public class JPanelPartida extends javax.swing.JPanel {
         MetodosGUI.reproducirSonido(ruta+"sonidoClick2.wav");
         new HiloAnimacion(btnRegresar, -96, 36, 1.2).start();   //se esconde el botón de regreso
         hiloMusica.interrupt(); //se detiene la música
+        panelTablero.pararMusica(); //se detiene el sonido de los hilos cayendo
         new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
             @Override
             public void run() {

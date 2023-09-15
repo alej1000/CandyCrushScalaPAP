@@ -42,6 +42,8 @@ public class PanelTablero extends JPanel implements ActionListener {
     private int dificultad=2;
     private Matrix matriz;
 
+    private Thread hiloSonando;
+
     private boolean botonesActivos = false;
     private String ruta = "src/assets/";
 
@@ -400,7 +402,8 @@ public class PanelTablero extends JPanel implements ActionListener {
                 }
             }
         }).start();
-        new Thread(new Runnable() { //hilo usado para esperar a que terminen los hilos de animación
+
+        Thread hiloSonidoSlide = new Thread(new Runnable() { //hilo usado para esperar a que terminen los hilos de animación
             @Override
             public void run() {
                 try {
@@ -411,11 +414,19 @@ public class PanelTablero extends JPanel implements ActionListener {
                     }
                     botonesActivos = true; // activamos los botones
                     animacionTerminada = true; // todos los hilos han terminado, ponemos el booleano en true
-                } catch (Exception e) {
+                } catch (InterruptedException ie){
+                    System.out.println("Se ha detenenido el sonido de los caramelos cayendo");
+                }catch(Exception e){
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        hiloSonidoSlide.start();
+        hiloSonando=hiloSonidoSlide;
+    }
+
+    public void pararMusica(){
+        hiloSonando.interrupt();
     }
 
     private void gravedad(int[] listaNueva) { //Muestra la animación de caída de los caramelos
