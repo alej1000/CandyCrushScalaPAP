@@ -59,6 +59,7 @@ public class JPanelPartida extends javax.swing.JPanel {
         //Corazones
         panelCorazones.setBounds((int)(((1183*0.2)/2)-100), 200, 200, 40);
         panelCorazones.setVisible(true);
+        panelCorazones.setOpaque(false);
         this.add(panelCorazones);
 
 

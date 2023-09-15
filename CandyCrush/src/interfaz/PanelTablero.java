@@ -45,6 +45,7 @@ public class PanelTablero extends JPanel implements ActionListener {
     private Matrix matriz;
 
     private Thread hiloSonando;
+    private Thread hiloCayendo;
 
     private boolean botonesActivos = false;
     private String ruta = "src/assets/";
@@ -365,17 +366,28 @@ public class PanelTablero extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        // obtiene el botón pulsado
-        JButton botonPulsado = (JButton) e.getSource();
 
-        // obtiene la coordenada del botón pulsado desde la propiedad actionCommand
-        String coordenada = botonPulsado.getActionCommand();
-        int x = Integer.parseInt(coordenada.split(",")[0]);
-        int y = Integer.parseInt(coordenada.split(",")[1]);
+        if(animacionTerminada){
+            // obtiene el botón pulsado
+            JButton botonPulsado = (JButton) e.getSource();
 
-        MetodosGUI.reproducirSonido(ruta + "sonidoClick2.wav");
-        accionarBoton(x, y); // llama al método test con las coordenadas del botón pulsado
+            // obtiene la coordenada del botón pulsado desde la propiedad actionCommand
+            String coordenada = botonPulsado.getActionCommand();
+            int x = Integer.parseInt(coordenada.split(",")[0]);
+            int y = Integer.parseInt(coordenada.split(",")[1]);
+
+            MetodosGUI.reproducirSonido(ruta + "sonidoClick2.wav");
+            accionarBoton(x, y); // llama al método test con las coordenadas del botón pulsado
+        }else{
+            //Acabo la animacion
+            animacionTerminada = true;
+            botonesActivos = true;
+            hiloCayendo.interrupt();
+            hiloSonando.interrupt();
+            reescalar();
+        }
     }
+
 
 
 
@@ -384,7 +396,7 @@ public class PanelTablero extends JPanel implements ActionListener {
 
         int delay = 45; // milisegundos que hay entre la caída de cada caramelo
 
-        new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
+        hiloCayendo = new Thread(new Runnable() { //hilo usado para insertar un delay entre cada animación
             @Override
             public void run() {
                 try {
@@ -420,7 +432,8 @@ public class PanelTablero extends JPanel implements ActionListener {
                 } catch (Exception e) {
                 }
             }
-        }).start();
+        });
+        hiloCayendo.start();
 
         Thread hiloSonidoSlide = new Thread(new Runnable() { //hilo usado para esperar a que terminen los hilos de animación
             @Override
