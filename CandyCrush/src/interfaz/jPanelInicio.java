@@ -428,6 +428,7 @@ public class jPanelInicio extends JPanel {
         MetodosGUI.reproducirSonido(ruta+"/assets/sonidoClick2.wav");
         dificultad = dificultad % 2+1;
         btnCambiarModo.setText(dificultad == 1 ? "MODO FÁCIL" : "MODO DIFÍCIL");
+        inicializarMatrizPanelesPartida();
 
     }//GEN-LAST:event_btnCambiarModoActionPerformed
 
