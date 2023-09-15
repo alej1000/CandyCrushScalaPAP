@@ -391,7 +391,7 @@ public class PanelTablero extends JPanel implements ActionListener {
                                 try {
                                     Thread.sleep(delay); // pausa para dar efecto de animación
                                 } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                    System.out.println("Se ha detenenido la animación de los caramelos cayendo");
                                 }
                             }
                         } else {
@@ -402,7 +402,7 @@ public class PanelTablero extends JPanel implements ActionListener {
                                 try {
                                     Thread.sleep(delay); // pausa para dar efecto de animación
                                 } catch (InterruptedException e) {
-                                    e.printStackTrace();
+                                    System.out.println("Se ha detenenido la animación de los caramelos cayendo");
                                 }
                             }
                         }
