@@ -383,26 +383,32 @@ public class PanelTablero extends JPanel implements ActionListener {
                     int tamBoton = Math.min(ancho / botonesColumnas, alto / botonesFilas);
 
                     for (int i = botonesFilas - 1; i >= 0; i--) {
-                        if (i % 2 == 0) { // alternar el orden de las filas
-                            for (int j = 0; j < botonesColumnas; j++) {
-                                JButton boton = botones[i][j];
-                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
-                                contador.decrementAndGet();
-                                try {
-                                    Thread.sleep(delay); // pausa para dar efecto de animación
-                                } catch (InterruptedException e) {
-                                    System.out.println("Se ha detenenido la animación de los caramelos cayendo");
+                        if (!animacionTerminada) {
+                            if (i % 2 == 0) { // alternar el orden de las filas (hacer eses en la animación)
+                                for (int j = 0; j < botonesColumnas; j++) {
+                                    if (!animacionTerminada) {
+                                        JButton boton = botones[i][j];
+                                        new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
+                                        contador.decrementAndGet();
+                                        try {
+                                            Thread.sleep(delay); // pausa para dar efecto de animación
+                                        } catch (InterruptedException e) {
+                                            System.out.println("Se ha detenenido la animación de los caramelos cayendo");
+                                        }
+                                    }
                                 }
-                            }
-                        } else {
-                            for (int j = botonesColumnas - 1; j >= 0; j--) {
-                                JButton boton = botones[i][j];
-                                new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
-                                contador.decrementAndGet();
-                                try {
-                                    Thread.sleep(delay); // pausa para dar efecto de animación
-                                } catch (InterruptedException e) {
-                                    System.out.println("Se ha detenenido la animación de los caramelos cayendo");
+                            } else {
+                                for (int j = botonesColumnas - 1; j >= 0; j--) {
+                                    if (!animacionTerminada) {
+                                        JButton boton = botones[i][j];
+                                        new HiloAnimacion(boton, j * tamBoton, i * tamBoton, 1.1).start();
+                                        contador.decrementAndGet();
+                                        try {
+                                            Thread.sleep(delay); // pausa para dar efecto de animación
+                                        } catch (InterruptedException e) {
+                                            System.out.println("Se ha detenenido la animación de los caramelos cayendo");
+                                        }
+                                    }
                                 }
                             }
                         }
