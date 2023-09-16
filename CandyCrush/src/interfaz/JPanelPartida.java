@@ -56,11 +56,11 @@ public class JPanelPartida extends javax.swing.JPanel {
         this.setBackground(Color.decode("#292930"));
 
         //Numero de Vidas
-        labelVidas.setText("" + numeroVidas);
-        labelVidas.setBounds((int)(((1183*0.2)/2)-50), 150, 100, 20);
-        labelVidas.setVisible(true);
-        labelVidas.setFont(new Font("Dialog", Font.BOLD, 20));
-        this.add(labelVidas);
+//        labelVidas.setText("" + numeroVidas);
+//        labelVidas.setBounds((int)(((1183*0.2)/2)-50), 150, 100, 20);
+//        labelVidas.setVisible(true);
+//        labelVidas.setFont(new Font("Dialog", Font.BOLD, 20));
+//        this.add(labelVidas);
 
         //Corazones
        // panelCorazones.setBounds((int)(((1183*0.2)/2)-100), 200, 200, 40);
@@ -72,18 +72,18 @@ public class JPanelPartida extends javax.swing.JPanel {
 //        labelFotoVidas.setVisible(true);
 //        this.add(labelFotoVidas);
         //Numero de puntos
-        labelPuntos.setText("" + puntos);
-        labelPuntos.setBounds((int)((1183*0.92)), 150, 100, 20);
-        labelPuntos.setVisible(true);
-        labelPuntos.setFont(new Font("Dialog", Font.BOLD, 20));
-        this.add(labelPuntos);
+//        labelPuntos.setText("" + puntos);
+//        labelPuntos.setBounds((int)((1183*0.92)), 150, 100, 20);
+//        labelPuntos.setVisible(true);
+//        labelPuntos.setFont(new Font("Dialog", Font.BOLD, 20));
+//        this.add(labelPuntos);
 
         //Dimensiones ventana: 1183, 750
         //Foto de puntos
-        labelFotoPuntos.setBounds((int)((1183*0.94))-50, 100, 100, 50);
-        MetodosGUI.ponerImagenLabel(labelFotoPuntos, new ImageIcon("src/assets/puntos.png"));
-        labelFotoPuntos.setVisible(true);
-        this.add(labelFotoPuntos);
+//        labelFotoPuntos.setBounds((int)((1183*0.94))-50, 100, 100, 50);
+//        MetodosGUI.ponerImagenLabel(labelFotoPuntos, new ImageIcon("src/assets/puntos.png"));
+//        labelFotoPuntos.setVisible(true);
+//        this.add(labelFotoPuntos);
 
         pnlInput.setBackground(new Color(0, 0, 0, 220));
 
@@ -95,6 +95,9 @@ public class JPanelPartida extends javax.swing.JPanel {
         reajustarPanel(); //Esto inicializa tambien las dimensiones del panelTablero
 
         //Dimensiones ventana: 1183, 750
+        //Dimensiones panelTablero = 714, 714 en la 9x9
+        // (1183 - panelTablero.getWidth())/2 -> Espacio que queda a la izquierda o derecha del tablero
+        // (1183 - panelTablero.getWidth())/4 -> El punto central del espacio que queda a la izquierda o derecha del tablero
         //Foto de vidas
         labelFotoVidas.setBounds(0, 100, (1183 - panelTablero.getWidth())/2, (1183 - panelTablero.getWidth())/4);
         MetodosGUI.ponerImagenLabel(labelFotoVidas, new ImageIcon("src/assets/vidas.png"));
