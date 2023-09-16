@@ -457,6 +457,7 @@ public class PanelTablero extends JPanel implements ActionListener {
             setCorazones(panelCorazones);
             this.numeroPuntos = Main.sumarPuntos(numeroPuntos,(int) tupla._3(),(int) tupla._4(), dificultad); //tupla._3 -> contadorEliminados; tupla._4 -> elementoEliminado
             this.labelPuntos.setText(""+this.numeroPuntos);
+            MetodosGUI.ajustarTexto(labelPuntos);
 
             if(this.vidas == 0){
                 gameOver();
