@@ -38,8 +38,11 @@ public class JPanelPartida extends javax.swing.JPanel {
     private JLabel labelFotoVidas = new JLabel();
 
     //Label con el número de puntos
-    JLabel labelPuntos = new JLabel();
+    private JLabel labelPuntos = new JLabel();
     private  JLabel labelFotoPuntos = new JLabel();
+
+    private int posXTablero, posYTablero;
+
 
 //    private VidasPanel corazones = vidasPanel(numeroVidas);
 
@@ -122,7 +125,7 @@ public class JPanelPartida extends javax.swing.JPanel {
         //panelPartida.animacionCarga();
         this.add(this.panelTablero);
         iniciarTransicion();
-        jLabelFondo.setBounds(0,  0, this.getPreferredSize().width, this.getPreferredSize().height);
+        jLabelFondo.setBounds(0,  -this.getPreferredSize().height, this.getPreferredSize().width, this.getPreferredSize().height);
         MetodosGUI.ponerImagenLabel(jLabelFondo, new ImageIcon(ruta+ "fondo.png"));
         add(jLabelFondo);
     }
@@ -151,7 +154,12 @@ public class JPanelPartida extends javax.swing.JPanel {
 
 
         }
-        panelTablero.setLocation((anchuraReal - panelTablero.getWidth()) / 2, (altura - panelTablero.getHeight()) / 2);
+        posXTablero = (anchuraReal - panelTablero.getWidth()) / 2;
+        posYTablero = (altura - panelTablero.getHeight()) / 2;
+        System.out.println("pos x tablero: "+ posXTablero);
+
+        System.out.println("pos y tablero: "+ posYTablero);
+        panelTablero.setLocation(posXTablero, -this.getPreferredSize().height);
         panelTablero.setDimXPadre(anchuraReal);
         panelTablero.setDimYPadre(altura);
         panelTablero.setDesplazamientoXPadre(-(anchuraReal - panelTablero.getWidth()) / 2);
@@ -254,8 +262,8 @@ public class JPanelPartida extends javax.swing.JPanel {
                 try {
                     Thread.sleep(100);
 
-                   new HiloAnimacion(panelTablero, panelTablero.getX(), -2* panelTablero.getDimY(), 1.3).start();
-                new HiloAnimacion(jLabelFondo, jLabelFondo.getX(), -2* panelTablero.getDimY(), 1.3).start();
+                    new HiloAnimacion(panelTablero, panelTablero.getX(), -(int)(1.3f* panelTablero.getDimY()), 1.3).start();
+                    new HiloAnimacion(jLabelFondo, jLabelFondo.getX(), -(int)(1.3f* panelTablero.getDimY()), 1.3).start();
 //                    new HiloAnimacion(jLabelCadena1, 182, -200, 1.3).start();
 //
 //                    Thread.sleep(80);
@@ -355,7 +363,10 @@ public class JPanelPartida extends javax.swing.JPanel {
 
     }
 
-
+    public void iniciarCortinillaTransicion(){
+        new HiloAnimacion(jLabelFondo,0,0,1.23).start();
+        new HiloAnimacion(panelTablero,posXTablero,posYTablero,1.23).start();
+    }
 
 
 

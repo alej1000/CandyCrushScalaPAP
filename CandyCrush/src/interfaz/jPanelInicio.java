@@ -640,6 +640,7 @@ public class jPanelInicio extends JPanel {
 
 
                     //esperamos a que termine la animación del cortinilla
+                    Thread.sleep(300);
                     while (!panelesListos.get()) {
                         Thread.sleep(10);
                     }
@@ -658,6 +659,7 @@ public class jPanelInicio extends JPanel {
                         });
                     }
                     panelPartida.iniciarMusica();   //iniciamos la musica de la partida
+                    panelPartida.iniciarCortinillaTransicion();
                     panelTablero.animacionCarga();   //iniciamos la animacion de carga del tablero
                 } catch (Exception e) {
                     e.printStackTrace();
