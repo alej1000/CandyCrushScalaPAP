@@ -60,18 +60,14 @@ public class JPanelPartida extends javax.swing.JPanel {
         this.add(labelVidas);
 
         //Corazones
-        panelCorazones.setBounds((int)(((1183*0.2)/2)-100), 200, 200, 40);
-        panelCorazones.setVisible(true);
-        panelCorazones.setOpaque(false);
-        this.add(panelCorazones);
-
+       // panelCorazones.setBounds((int)(((1183*0.2)/2)-100), 200, 200, 40);
 
         //Dimensiones ventana: 1183, 750
         //Foto de vidas
-        labelFotoVidas.setBounds((int)(((1183*0.1)/2)-50), 100, 100, 50);
-        MetodosGUI.ponerImagenLabel(labelFotoVidas, new ImageIcon("src/assets/vidas.png"));
-        labelFotoVidas.setVisible(true);
-        this.add(labelFotoVidas);
+//        labelFotoVidas.setBounds((int)(((1183*0.1)/2)-50), 100, 100, 50);
+//        MetodosGUI.ponerImagenLabel(labelFotoVidas, new ImageIcon("src/assets/vidas.png"));
+//        labelFotoVidas.setVisible(true);
+//        this.add(labelFotoVidas);
         //Numero de puntos
         labelPuntos.setText("" + puntos);
         labelPuntos.setBounds((int)((1183*0.92)), 150, 100, 20);
@@ -93,7 +89,36 @@ public class JPanelPartida extends javax.swing.JPanel {
         this.panelTablero.setLabelPuntos(labelPuntos);
         this.panelTablero.setLabelVidas(labelVidas);
         this.panelTablero.setPanelCorazones(panelCorazones);
-        reajustarPanel();
+        reajustarPanel(); //Esto inicializa tambien las dimensiones del panelTablero
+
+        //Dimensiones ventana: 1183, 750
+        //Foto de vidas
+        labelFotoVidas.setBounds(0, 100, (1183 - panelTablero.getWidth())/2, (1183 - panelTablero.getWidth())/4);
+        MetodosGUI.ponerImagenLabel(labelFotoVidas, new ImageIcon("src/assets/vidas.png"));
+        labelFotoVidas.setVisible(true);
+        this.add(labelFotoVidas);
+
+        //Foto de puntos
+        labelFotoPuntos.setBounds(panelTablero.getWidth() + (1183 - panelTablero.getWidth())/2, 100, (1183 - panelTablero.getWidth())/2, (1183 - panelTablero.getWidth())/4);
+        MetodosGUI.ponerImagenLabel(labelFotoPuntos, new ImageIcon("src/assets/puntos.png"));
+        labelFotoPuntos.setVisible(true);
+        this.add(labelFotoPuntos);
+        System.out.println("Panel tablero dimensiones: "+panelTablero.getWidth() + " " + panelTablero.getHeight());
+
+        //Numero de puntos
+        labelPuntos.setText("" + puntos);
+        labelPuntos.setBounds(panelTablero.getWidth() + (1183 - panelTablero.getWidth())/2, 150, (1183 - panelTablero.getWidth())/2, (1183 - panelTablero.getWidth())/2);
+        labelPuntos.setVisible(true);
+        labelPuntos.setFont(new Font("Dialog", Font.BOLD, 20));
+        this.add(labelPuntos);
+
+        //Corazones
+        panelCorazones.setVisible(true);
+        panelCorazones.setOpaque(false);
+        panelCorazones.setBounds(0,200,(1183 - panelTablero.getWidth())/2,50);
+        this.add(panelCorazones);
+
+
         //panelPartida.animacionCarga();
         this.add(this.panelTablero);
         iniciarTransicion();

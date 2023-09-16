@@ -381,7 +381,9 @@ public class PanelTablero extends JPanel implements ActionListener {
             //JLabel corazon = new JLabel("\u2764"); // Representación del corazón
             JLabel corazon = new JLabel();
             //corazon.setFont(new Font("Arial", Font.PLAIN, 36)); // Tamaño y fuente del corazón
-            corazon.setBounds(0, 0, 150/5, 150/5); //El Panel de todos los corazones es width 200 height 40 y el 5 son las vidas maximas
+//            corazon.setBounds(0, 0, 150/5, 150/5); //El Panel de todos los corazones es width 200 height 40 y el 5 son las vidas maximas
+            corazon.setBounds(0, 0,(1183 - getWidth())/10-5, (1183 - getWidth())/10-5);
+
             MetodosGUI.ponerImagenLabel(corazon, new ImageIcon("src/assets/corazon.png"));
             panelCorazones.add(corazon);
         }
