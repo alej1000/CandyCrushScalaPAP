@@ -95,6 +95,24 @@ public class MetodosGUI {
         btnElegido.setFont(new Font(fuente.getName(), fuente.getStyle(), (int) (fuente.getSize() * 1.03) + 1));
         btnElegido.setLocation(nuevaPosx, nuevaPosy);
 
+
+    }
+
+    public static void agrandarBoton(JButton btnElegido, float factor) {
+        int posx = btnElegido.getX();
+        int posy = btnElegido.getY();
+        int longitudHorizontalOriginal = btnElegido.getWidth();
+        int longitudVerticalOriginal = btnElegido.getHeight();
+        Font fuente = btnElegido.getFont();
+        int longitudHorizontal = (int) (longitudHorizontalOriginal * factor) + 1; //para un correcto redondeo sumamos 1
+        int longitudVertical = (int) (btnElegido.getHeight() * factor) + 1;       //para un correcto redondeo sumamos 1
+        int nuevaPosx = posx - (longitudHorizontal - longitudHorizontalOriginal) / 2;
+        int nuevaPosy = posy - (longitudVertical - longitudVerticalOriginal) / 2;
+        btnElegido.setSize(longitudHorizontal, longitudVertical);
+        btnElegido.setFont(new Font(fuente.getName(), fuente.getStyle(), (int) (fuente.getSize() * 1.03) + 1));
+        btnElegido.setLocation(nuevaPosx, nuevaPosy);
+
+
     }
 
     public static void encogerBoton(JButton btnElegido) {
@@ -112,6 +130,25 @@ public class MetodosGUI {
         btnElegido.setFont(new Font(fuente.getName(), fuente.getStyle(), (int) (fuente.getSize() / 1.03)));
 
         btnElegido.setLocation(nuevaPosx, nuevaPosy);
+
+    }
+
+    public static void encogerBoton(JButton btnElegido, float enlargedFactor) {
+        int posx = btnElegido.getX();
+        int posy = btnElegido.getY();
+        int longitudHorizontalOriginal = btnElegido.getWidth();
+        int longitudVerticalOriginal = btnElegido.getHeight();
+        Font fuente = btnElegido.getFont();
+
+        int longitudHorizontal = (int) (longitudHorizontalOriginal / enlargedFactor);
+        int longitudVertical = (int) (btnElegido.getHeight() / enlargedFactor);
+        int nuevaPosx = posx + (longitudHorizontalOriginal - longitudHorizontal) / 2;
+        int nuevaPosy = posy + (longitudVerticalOriginal - longitudVertical) / 2;
+        btnElegido.setSize(longitudHorizontal, longitudVertical);
+        btnElegido.setFont(new Font(fuente.getName(), fuente.getStyle(), (int) (fuente.getSize() / 1.03)));
+
+        btnElegido.setLocation(nuevaPosx, nuevaPosy);
+
     }
 
     public static void reproducirSonido(String localizacion) {

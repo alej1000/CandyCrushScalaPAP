@@ -89,6 +89,7 @@ public class PanelTablero extends JPanel implements ActionListener {
         }
         botones = new JButton[botonesFilas][botonesX];
 
+        //MouseListener que se encargará de agrandar y empequeñecer los caramelos sobre los que pasemos nuestro cursor
 //        MouseListener mouseListener = new MouseAdapter() {
 //            @Override
 //            public void mouseEntered(MouseEvent e) {
@@ -104,6 +105,8 @@ public class PanelTablero extends JPanel implements ActionListener {
 //                System.out.println("Saliste del boton");
 //            }
 //        };
+
+
         setLayout(null);
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -124,7 +127,6 @@ public class PanelTablero extends JPanel implements ActionListener {
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setBounds(j * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
                 botones[i][j].setIcon(imagenesReescaladas[lista[indice]]);
-
                 add(botones[i][j]);
             }
         }
@@ -164,6 +166,38 @@ public class PanelTablero extends JPanel implements ActionListener {
             }
         });
 
+        MouseListener mouseListenerHoverBotones = new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Código para manejar el evento de mouse entered
+                if(botonesActivos) {
+                    JButton button = (JButton) e.getSource();
+                    MetodosGUI.agrandarBoton(button, 1.2f);
+                    JButton botonEntrado = (JButton) e.getSource();
+                    String coordenada = botonEntrado.getActionCommand();
+                    int x = Integer.parseInt(coordenada.split(",")[0]);
+                    int y = Integer.parseInt(coordenada.split(",")[1]);
+                    int indice = x * botonesColumnas + y; // calcula el índice correspondiente en la lista
+                    MetodosGUI.ponerImagenbutton(botonEntrado, imagenes[lista[indice]]);
+                }
+            }
+            public void mouseExited(MouseEvent e) {
+                // Código para manejar el evento de mouse entered
+                if (botonesActivos) {
+                    int ancho = getWidth();
+                    int alto = getHeight();
+                    int tamBotonNormal = Math.min(ancho / botonesColumnas, alto / botonesFilas);
+                    JButton botonEntrado = (JButton) e.getSource();
+                    String coordenada = botonEntrado.getActionCommand();
+                    int x = Integer.parseInt(coordenada.split(",")[0]);
+                    int y = Integer.parseInt(coordenada.split(",")[1]);
+                    int indice = x * botonesColumnas + y; // calcula el índice correspondiente en la lista
+                    botonEntrado.setBounds(y * tamBotonNormal, x * tamBotonNormal, tamBotonNormal, tamBotonNormal);
+                    botonEntrado.setIcon(imagenesReescaladas[lista[indice]]);
+                }
+            }
+        };
+
         for (int i = 0; i < botonesFilas; i++) { //El bucle de la fila
             for (int j = 0; j < botonesX; j++) { //El bucle de la columna
                 int indice = i * botonesX + j; // calcula el índice correspondiente en la lista
@@ -177,6 +211,7 @@ public class PanelTablero extends JPanel implements ActionListener {
                 botones[i][j].addActionListener(this); // agregamos ActionListener
                 botones[i][j].setBounds(j * tamBoton, -2 * tamBoton, tamBoton, tamBoton);
                 botones[i][j].setIcon(imagenesReescaladas[lista[indice]]);
+                botones[i][j].addMouseListener(mouseListenerHoverBotones);
                 add(botones[i][j]);
             }
         }
@@ -349,10 +384,19 @@ public class PanelTablero extends JPanel implements ActionListener {
             // obtiene el botón pulsado
             JButton botonPulsado = (JButton) e.getSource();
 
+
+
+            //para el caso de que el botón esté agrandado por el hover, se resetea su tamaño.
+            //realmente se setea siempre, porque es más costoso calcular si está agrandado o no que símplemente siempre setearlo
+            int ancho = getWidth();
+            int alto = getHeight();
+            int tamBotonNormal = Math.min(ancho / botonesColumnas, alto / botonesFilas);
+
             // obtiene la coordenada del botón pulsado desde la propiedad actionCommand
             String coordenada = botonPulsado.getActionCommand();
             int x = Integer.parseInt(coordenada.split(",")[0]);
             int y = Integer.parseInt(coordenada.split(",")[1]);
+            botonPulsado.setBounds(y * tamBotonNormal, x * tamBotonNormal, tamBotonNormal, tamBotonNormal);
 
             MetodosGUI.reproducirSonido(ruta + "sonidoClick2.wav");
             accionarBoton(x, y); // llama al método test con las coordenadas del botón pulsado
