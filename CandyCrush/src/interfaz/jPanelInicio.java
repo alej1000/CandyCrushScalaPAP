@@ -73,6 +73,7 @@ public class jPanelInicio extends JPanel {
         pnlTransicion = new JPanel();
         pnlCover = new JPanel();
         lblLogo = new javax.swing.JLabel();
+        lblLogo.setToolTipText(null);
         pnlColor = new JPanel();
         pnlEjercicios = new JPanel();
         btnRegresar = new javax.swing.JButton();

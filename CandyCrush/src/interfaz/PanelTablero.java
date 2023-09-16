@@ -47,6 +47,8 @@ public class PanelTablero extends JPanel implements ActionListener {
     private AtomicInteger botonesNoListos = new AtomicInteger(0);
     private JLabel screenshotLabel = new JLabel();
 
+    private JButton skipAnimationButton = new JButton();
+
 
     private boolean botonesActivos = false;
     private String ruta = "src/assets/";
@@ -138,6 +140,15 @@ public class PanelTablero extends JPanel implements ActionListener {
     }
 
     public PanelTablero(int botonesX, int botonesFilas, int dimX, int dimY, Matrix matriz, JLabel labelVidas,JPanel panelCorazones, JLabel labelPuntos) {
+        skipAnimationButton.setBounds(0, 0, dimX, dimY);
+        skipAnimationButton.setOpaque(false);
+        skipAnimationButton.setContentAreaFilled(false);
+        skipAnimationButton.setBorderPainted(false);
+        skipAnimationButton.setVisible(true);
+        skipAnimationButton.setEnabled(true);
+        skipAnimationButton.addActionListener(this);
+        add(skipAnimationButton);
+        screenshotLabel.setVisible(true);
 
         screenshotLabel.setBounds(0, 0, dimX, dimY);
         screenshotLabel.setVisible(false);
@@ -171,9 +182,8 @@ public class PanelTablero extends JPanel implements ActionListener {
             public void mouseEntered(MouseEvent e) {
                 // Código para manejar el evento de mouse entered
                 if(botonesActivos) {
-                    JButton button = (JButton) e.getSource();
-                    MetodosGUI.agrandarBoton(button, 1.2f);
                     JButton botonEntrado = (JButton) e.getSource();
+                    MetodosGUI.agrandarBoton(botonEntrado, 1.2f);
                     String coordenada = botonEntrado.getActionCommand();
                     int x = Integer.parseInt(coordenada.split(",")[0]);
                     int y = Integer.parseInt(coordenada.split(",")[1]);
@@ -260,6 +270,7 @@ public class PanelTablero extends JPanel implements ActionListener {
         actualizarLabels(); //TODO: hacer que solo se llame si en sí se viene de un reescalado y no solo de resetear los botones
         actualizarFondo();
         setCorazones(panelCorazones);
+        skipAnimationButton.setBounds(0, 0, dimX, dimY);
         screenshotLabel.setBounds(0, 0, dimX, dimY);
 
 
@@ -370,13 +381,15 @@ public class PanelTablero extends JPanel implements ActionListener {
             //JLabel corazon = new JLabel("\u2764"); // Representación del corazón
             JLabel corazon = new JLabel();
             //corazon.setFont(new Font("Arial", Font.PLAIN, 36)); // Tamaño y fuente del corazón
-            corazon.setBounds(0, 0, 150/5, 35); //El Panel de todos los corazones es width 200 height 40 y el 5 son las vidas maximas
+            corazon.setBounds(0, 0, 150/5, 150/5); //El Panel de todos los corazones es width 200 height 40 y el 5 son las vidas maximas
             MetodosGUI.ponerImagenLabel(corazon, new ImageIcon("src/assets/corazon.png"));
             panelCorazones.add(corazon);
         }
         panelCorazones.revalidate();
         panelCorazones.repaint();
     }
+
+
 
     public void actionPerformed(ActionEvent e) {
 
@@ -406,6 +419,8 @@ public class PanelTablero extends JPanel implements ActionListener {
             botonesActivos = true;
             hiloCayendo.interrupt();
             hiloSonando.interrupt();
+            skipAnimationButton.setVisible(false);
+            skipAnimationButton.setEnabled(false);
             reescalar();
         }
     }
@@ -472,6 +487,8 @@ public class PanelTablero extends JPanel implements ActionListener {
                         MetodosGUI.reproducirSonido(ruta + "slide sound effect.wav");
 
                     }
+                    skipAnimationButton.setVisible(false);
+                    skipAnimationButton.setEnabled(false);
                     botonesActivos = true; // activamos los botones
                     animacionTerminada = true; // todos los hilos han terminado, ponemos el booleano en true
                 } catch (InterruptedException ie){

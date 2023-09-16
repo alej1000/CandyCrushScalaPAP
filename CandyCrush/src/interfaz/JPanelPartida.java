@@ -4,7 +4,10 @@
  */
 package interfaz;
 
+import scala.Int;
+
 import java.awt.*;
+import java.util.Random;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 
@@ -198,10 +201,14 @@ public class JPanelPartida extends javax.swing.JPanel {
     public void iniciarMusica(){
         hiloMusica = new Thread(() -> {
             Clip miClip = null;
+            String[] arrayRutasMusica = {"musicaDeFondo1.wav","Modern Attempt - TrackTribe.wav","Running Errands - TrackTribe.wav","Smoke Jacket Blues - TrackTribe.wav","The Jam - Slynk & Mr Stabalina.wav"};
+            Integer[] arrayDuraciones = {58000,160000,256000,158000,152000};
+            Random rand = new Random();
+            int indiceRuta = rand.nextInt(arrayRutasMusica.length) ;
             try {
                 while (true) {
-                    miClip = MetodosGUI.reproducirSonido(ruta + "musicaDeFondo.wav",true);
-                    Thread.sleep(58000);
+                    miClip = MetodosGUI.reproducirSonido(ruta + arrayRutasMusica[indiceRuta],true);
+                    Thread.sleep(arrayDuraciones[indiceRuta]);
                 }
             } catch (InterruptedException e) {
                 miClip.stop();
