@@ -15,6 +15,9 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.*;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * @author César Martín Guijarro
     Este panel contiene los caramelos y los botones que los representan. Se encapsulará dentro del JPanelPartida.
@@ -51,6 +54,9 @@ public class PanelTablero extends JPanel implements ActionListener {
 
 
     private boolean botonesActivos = false;
+
+    private Lock lock = new ReentrantLock();
+
     private String ruta = "src/assets/";
 
     private ImageIcon imgFondo = new ImageIcon(ruta+"fondoTransparente.jpg");
@@ -177,6 +183,18 @@ public class PanelTablero extends JPanel implements ActionListener {
             }
         });
 
+        //                if(botonesActivos) {
+//                    JButton botonEntrado = (JButton) e.getSource();
+//                    MetodosGUI.agrandarBoton(botonEntrado, 1.2f);
+//                    String coordenada = botonEntrado.getActionCommand();
+//                    int x = Integer.parseInt(coordenada.split(",")[0]);
+//                    int y = Integer.parseInt(coordenada.split(",")[1]);
+//                    int indice = x * botonesColumnas + y; // calcula el índice correspondiente en la lista
+//                    MetodosGUI.ponerImagenbutton(botonEntrado, imagenes[lista[indice]]);
+//                }
+
+
+
         MouseListener mouseListenerHoverBotones = new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -207,6 +225,77 @@ public class PanelTablero extends JPanel implements ActionListener {
                 }
             }
         };
+        
+//        MouseListener mouseListenerHoverBotones = new MouseAdapter() {
+//            @Override
+//            public void mouseEntered(MouseEvent e) {
+//                new Thread(() -> {
+//                    while (!botonesActivos) {
+//                        try {
+//                            Thread.sleep(10);
+//                        } catch (InterruptedException ex) {
+//                            throw new RuntimeException(ex);
+//                        }
+//                    }
+//                    JButton botonEntrado = (JButton) e.getSource();
+//                    String coordenada = botonEntrado.getActionCommand();
+//                    int x = Integer.parseInt(coordenada.split(",")[0]);
+//                    int y = Integer.parseInt(coordenada.split(",")[1]);
+//                    int indice = x * botonesColumnas + y; // calcula el índice correspondiente en la lista
+//
+//                    lock.lock(); // Acquire the lock to prevent mouseExited from running simultaneously
+//                    try {
+//                        MetodosGUI.agrandarBoton(botonEntrado, 1.2f);
+//                        MetodosGUI.ponerImagenbutton(botonEntrado, imagenes[lista[indice]]);
+//                    } finally {
+//                        lock.unlock(); // Release the lock when done
+//                    }
+//                }).start();
+//            }
+//
+//            @Override
+//            public void mouseExited(MouseEvent e) {
+//                new Thread(() -> {
+//                    while (!botonesActivos) {
+//                        try {
+//                            Thread.sleep(10);
+//                        } catch (InterruptedException ex) {
+//                            throw new RuntimeException(ex);
+//                        }
+//                    }
+//                    JButton botonEntrado = (JButton) e.getSource();
+//                    String coordenada = botonEntrado.getActionCommand();
+//                    int x = Integer.parseInt(coordenada.split(",")[0]);
+//                    int y = Integer.parseInt(coordenada.split(",")[1]);
+//                    int indice = x * botonesColumnas + y; // calcula el índice correspondiente en la lista
+//
+//                    lock.lock(); // Acquire the lock to wait for mouseEntered to finish if it's running
+//                    try {
+//                        int ancho = getWidth();
+//                        int alto = getHeight();
+//                        int tamBotonNormal = Math.min(ancho / botonesColumnas, alto / botonesFilas);
+//
+//                        botonEntrado.setBounds(y * tamBotonNormal, x * tamBotonNormal, tamBotonNormal, tamBotonNormal);
+//                        botonEntrado.setIcon(imagenesReescaladas[lista[indice]]);
+//                    } finally {
+//                        lock.unlock(); // Release the lock when done
+//                    }
+//                }).start();
+//            }
+//        };
+
+        //                if (botonesActivos) {
+//                    int ancho = getWidth();
+//                    int alto = getHeight();
+//                    int tamBotonNormal = Math.min(ancho / botonesColumnas, alto / botonesFilas);
+//                    JButton botonEntrado = (JButton) e.getSource();
+//                    String coordenada = botonEntrado.getActionCommand();
+//                    int x = Integer.parseInt(coordenada.split(",")[0]);
+//                    int y = Integer.parseInt(coordenada.split(",")[1]);
+//                    int indice = x * botonesColumnas + y; // calcula el índice correspondiente en la lista
+//                    botonEntrado.setBounds(y * tamBotonNormal, x * tamBotonNormal, tamBotonNormal, tamBotonNormal);
+//                    botonEntrado.setIcon(imagenesReescaladas[lista[indice]]);
+//                }
 
         for (int i = 0; i < botonesFilas; i++) { //El bucle de la fila
             for (int j = 0; j < botonesX; j++) { //El bucle de la columna
