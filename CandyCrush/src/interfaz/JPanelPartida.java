@@ -113,7 +113,7 @@ public class JPanelPartida extends javax.swing.JPanel {
 
         //Numero de puntos
         labelPuntos.setText("" + puntos);
-        labelPuntos.setBounds(panelTablero.getWidth() + (1183 - panelTablero.getWidth())/2, 200, (1183 - panelTablero.getWidth())/2-20, (1183 - panelTablero.getWidth())/4);
+        labelPuntos.setBounds(panelTablero.getWidth() + (1183 - panelTablero.getWidth())/2, 250, (1183 - panelTablero.getWidth())/2-20, 50);
         labelPuntos.setVisible(true);
         labelPuntos.setFont(new Font("Dialog", Font.BOLD, 20));
         labelPuntos.setHorizontalAlignment(SwingConstants.CENTER);
@@ -123,7 +123,7 @@ public class JPanelPartida extends javax.swing.JPanel {
         //Corazones
         panelCorazones.setVisible(true);
         panelCorazones.setOpaque(false);
-        panelCorazones.setBounds(0,200,(1183 - panelTablero.getWidth())/2,50);
+        panelCorazones.setBounds(0,250,(1183 - panelTablero.getWidth())/2,50);
         this.add(panelCorazones);
 
 
