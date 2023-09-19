@@ -451,12 +451,12 @@ public class PanelTablero extends JPanel implements ActionListener {
                     break;
                 case 8: //Es un TNT
                     System.out.println("Has encontrado un TNT");
-                    MetodosGUI.reproducirSonido(ruta+"bomba.wav");
+                    MetodosGUI.reproducirSonido(ruta+"tnt.wav");
                     break;
                 default:
                     if (elementoEliminado >= 11 && elementoEliminado <= 16) { //Es rompecabezas
                         System.out.println("Has encontrado un rompecabezas");
-                        MetodosGUI.reproducirSonido(ruta+"bomba.wav");
+                        MetodosGUI.reproducirSonido(ruta+"rompecabezas.wav");
                     }
                     break;
             }
