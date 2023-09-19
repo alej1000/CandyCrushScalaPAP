@@ -442,6 +442,25 @@ public class PanelTablero extends JPanel implements ActionListener {
             botonesActivos = false;
             scala.Tuple5<Matrix,Object,Object,Object,Matrix> tupla = matriz.consulta(fila,columna, vidas);
             matriz = tupla._1();
+
+            int elementoEliminado = (int) tupla._4();
+            switch (elementoEliminado) {
+                case 7: //Es una bomba
+                    System.out.println("Has encontrado una bomba");
+                    MetodosGUI.reproducirSonido(ruta+"bomba.wav");
+                    break;
+                case 8: //Es un TNT
+                    System.out.println("Has encontrado un TNT");
+                    MetodosGUI.reproducirSonido(ruta+"bomba.wav");
+                    break;
+                default:
+                    if (elementoEliminado >= 11 && elementoEliminado <= 16) { //Es rompecabezas
+                        System.out.println("Has encontrado un rompecabezas");
+                        MetodosGUI.reproducirSonido(ruta+"bomba.wav");
+                    }
+                    break;
+            }
+
             Matrix matrizCeros = tupla._5();
             int[] listaCeros = convertirListaScalaAJava(matrizCeros.getData());
             int[] listaNueva = convertirListaScalaAJava(matriz.getData());
