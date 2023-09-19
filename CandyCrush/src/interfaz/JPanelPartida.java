@@ -113,7 +113,7 @@ public class JPanelPartida extends javax.swing.JPanel {
 
         //Numero de puntos
         labelPuntos.setText("" + puntos);
-        labelPuntos.setBounds(panelTablero.getWidth() + (1183 - panelTablero.getWidth())/2, 250, (1183 - panelTablero.getWidth())/2-20, 50);
+        labelPuntos.setBounds(panelTablero.getWidth() + (1183 - panelTablero.getWidth())/2, 250, (1183 - panelTablero.getWidth())/2-20, (1183 - panelTablero.getWidth())/10-5);
         labelPuntos.setVisible(true);
         labelPuntos.setFont(new Font("Dialog", Font.BOLD, 20));
         labelPuntos.setHorizontalAlignment(SwingConstants.CENTER);
