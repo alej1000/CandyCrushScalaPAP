@@ -457,6 +457,20 @@ public class PanelTablero extends JPanel implements ActionListener {
                     if (elementoEliminado >= 11 && elementoEliminado <= 16) { //Es rompecabezas
                         System.out.println("Has encontrado un rompecabezas");
                         MetodosGUI.reproducirSonido(ruta+"rompecabezas.wav");
+                    }else {
+                        int contador = (int) tupla._3();
+                        if (contador == 5) {
+                            System.out.println("Has creado una bomba");
+                            MetodosGUI.reproducirSonido(ruta + "bomba.wav");
+                        }
+                        if (contador == 6) {
+                            System.out.println("Has creado un TNT");
+                            MetodosGUI.reproducirSonido(ruta + "tnt.wav");
+                        }
+                        if (contador >= 7) {
+                            System.out.println("Has creado un rompecabezas");
+                            MetodosGUI.reproducirSonido(ruta + "rompecabezas.wav");
+                        }
                     }
                     break;
             }
