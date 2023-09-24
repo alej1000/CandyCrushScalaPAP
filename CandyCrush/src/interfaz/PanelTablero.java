@@ -447,11 +447,11 @@ public class PanelTablero extends JPanel implements ActionListener {
             switch (elementoEliminado) {
                 case 7: //Es una bomba
                     System.out.println("Has encontrado una bomba");
-                    MetodosGUI.reproducirSonido(ruta+"bomba.wav");
+                    MetodosGUI.reproducirSonido(ruta+"bomb_explosion.wav");
                     break;
                 case 8: //Es un TNT
                     System.out.println("Has encontrado un TNT");
-                    MetodosGUI.reproducirSonido(ruta+"tnt.wav");
+                    MetodosGUI.reproducirSonido(ruta+"tnt_2.wav");
                     break;
                 default:
                     if (elementoEliminado >= 11 && elementoEliminado <= 16) { //Es rompecabezas
@@ -465,7 +465,7 @@ public class PanelTablero extends JPanel implements ActionListener {
                         }
                         if (contador == 6) {
                             System.out.println("Has creado un TNT");
-                            MetodosGUI.reproducirSonido(ruta + "tnt.wav");
+                            MetodosGUI.reproducirSonido(ruta + "tnt_1.wav");
                         }
                         if (contador >= 7) {
                             System.out.println("Has creado un rompecabezas");
@@ -485,9 +485,13 @@ public class PanelTablero extends JPanel implements ActionListener {
 
             gravedad(listaNueva);
 
-            this.vidas = (int) tupla._2();
-            this.labelVidas.setText(""+this.vidas);
-            setCorazones(panelCorazones);
+            //Reproducir sonido al perder vida:
+            if (vidas != (int) tupla._2()) {
+                MetodosGUI.reproducirSonido(ruta+"perderVida.wav");
+                this.vidas = (int) tupla._2();
+                this.labelVidas.setText(""+this.vidas);
+                setCorazones(panelCorazones);
+            }
             this.numeroPuntos = Main.sumarPuntos(numeroPuntos,(int) tupla._3(),(int) tupla._4(), dificultad); //tupla._3 -> contadorEliminados; tupla._4 -> elementoEliminado
             this.labelPuntos.setText(""+this.numeroPuntos);
             MetodosGUI.ajustarTexto(labelPuntos);
@@ -743,6 +747,7 @@ public class PanelTablero extends JPanel implements ActionListener {
     }
 
     private void gameOver(){
+        MetodosGUI.reproducirSonido(ruta + "gameOver.wav");
         javax.swing.JOptionPane.showMessageDialog(null, "GAME OVER");
 
         long endTime = System.currentTimeMillis();
